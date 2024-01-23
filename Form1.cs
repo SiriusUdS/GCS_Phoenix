@@ -10,7 +10,7 @@ namespace GCS_Phoenix
     public partial class Form1 : Form
     {
 
-        const float PADLEFT = 60;
+        const float PADLEFT = 60; // Offset des graphiques
 
         public Form1()
         {
@@ -21,7 +21,7 @@ namespace GCS_Phoenix
             gMapControl1.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
             gMapControl1.Dock = DockStyle.Fill;
             //gMapControl1.MapProvider = GMap.NET.MapProviders.BingMapProvider.Instance;
-            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
+            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache; // Change ServerAndCahe to Cache only for offline use
             gMapControl1.ShowCenter = false;
             gMapControl1.MinZoom = 1;
             gMapControl1.MaxZoom = 20;
@@ -50,13 +50,6 @@ namespace GCS_Phoenix
         }
 
 
-
-
-
-
-
-
-        // Temperature Graph
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -106,25 +99,11 @@ namespace GCS_Phoenix
 
 
 
-        public void AddPortToComboBox(string port)
+        public void addPortToComboBox(string port)
         {
             comboPorts.Items.Add(port);
         }
 
-
-
-
-        // Start button
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        // Stop button
-        private void button1_Click(object sender, EventArgs e)
-        {
-        }
 
         // Reset button
         private void button3_Click(object sender, EventArgs e)
@@ -150,7 +129,7 @@ namespace GCS_Phoenix
 
         }
 
-
+        // Disconnect button
         private void button5_Click(object sender, EventArgs e)
         {
             serialConnectivityLabel.Text = "Disconnected";
@@ -168,14 +147,5 @@ namespace GCS_Phoenix
 
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            //Form1.addMarker();
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

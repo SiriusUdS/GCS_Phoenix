@@ -8,16 +8,17 @@ namespace GCS_Phoenix
         [STAThread]
         static void Main()
         {
+            // Lister les ports de COM utilisable
             string[] ports = SerialPort.GetPortNames();
 
             ApplicationConfiguration.Initialize();
 
             Form1 form1 = new Form1();
 
-            //Initialize combobox with serial ports
+            // Initialiser le combobox de ports avec les ports utilisables
             foreach (string port in ports)
             {
-                form1.AddPortToComboBox(port);
+                form1.addPortToComboBox(port);
             }
 
             Application.Run(form1);
