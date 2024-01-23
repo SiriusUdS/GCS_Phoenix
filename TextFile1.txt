@@ -1,0 +1,175 @@
+﻿using ScottPlot;
+
+namespace Logger
+{
+
+
+
+    public partial class Form1 : Form
+    {
+
+        const float PADLEFT = 60;
+        const int REFRESH = 10;
+
+        double[] dataX = Array.Empty<double>();
+        double[] dataY = Array.Empty<double>();
+        int k = 0;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+        }
+
+        // Temperature Graph
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            formsPlot1.Plot.Style(Style.Blue1);
+            formsPlot1.Plot.SetAxisLimits(0, 30, 19.5, 22.5);
+            formsPlot1.Plot.Layout(PADLEFT);
+            formsPlot1.Plot.XLabel("Time (S)");
+            formsPlot1.Plot.Title("Temperature (C)");
+            formsPlot1.Render();
+
+
+        }
+
+        // Accelerometer graph
+        private void formsPlot2_Load(object sender, EventArgs e)
+        {
+
+            formsPlot2.Plot.Style(Style.Blue1);
+            formsPlot2.Plot.SetAxisLimits(0, 30, 19.5, 22.5);
+            formsPlot2.Plot.Layout(PADLEFT);
+            formsPlot2.Plot.XLabel("Time (S)");
+            formsPlot2.Plot.Title("Accelerometers (C)");
+            formsPlot2.Render();
+
+        }
+
+
+        // Altitude Graph
+        private void formsPlot3_Load(object sender, EventArgs e)
+        {
+
+            formsPlot3.Plot.Style(Style.Blue1);
+            formsPlot3.Plot.SetAxisLimits(0, 30, 19.5, 22.5);
+            formsPlot3.Plot.Layout(PADLEFT);
+            formsPlot3.Plot.XLabel("Time (S)");
+            formsPlot3.Plot.Title("Altitude (M)");
+            formsPlot3.Render();
+        }
+
+        // Magnometer Graph
+        private void formsPlot4_Load(object sender, EventArgs e)
+        {
+            formsPlot4.Plot.Style(Style.Blue1);
+            formsPlot4.Plot.SetAxisLimits(0, 30, 19.5, 22.5);
+            formsPlot4.Plot.Layout(PADLEFT);
+            formsPlot4.Plot.XLabel("Time (S)");
+            formsPlot4.Plot.Title("Magnometer (T)");
+            formsPlot4.Render();
+
+        }
+
+        void UpdateChart(FormsPlot plot)
+        {
+
+            plot.Plot.AddScatter(dataY, dataX, color: Color.Orange);
+            plot.Plot.AxisAutoX();
+            plot.Render();
+
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            k++;
+            Random random = new Random();
+            double newValue = random.NextDouble() * 2 + 20;
+
+            dataY = dataY.Append(k).ToArray();
+            dataX = dataX.Append(newValue).ToArray();
+
+            UpdateChart(formsPlot1);
+            UpdateChart(formsPlot2);
+            UpdateChart(formsPlot3);
+            UpdateChart(formsPlot4);
+
+        }
+
+
+        // Start button
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            timer1.Interval = REFRESH;
+            timer1.Start();
+        }
+
+
+        // Stop button
+        private void button1_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+        }
+
+        // Reset button
+        private void button3_Click(object sender, EventArgs e)
+        {
+            dataX = Array.Empty<double>();
+            dataY = Array.Empty<double>();
+            k = 0;
+            formsPlot1.Plot.Clear();
+            formsPlot2.Plot.Clear();
+            formsPlot3.Plot.Clear();
+            formsPlot4.Plot.Clear();
+
+
+            label3.Text = "Disconnected";
+            label3.ForeColor = Color.Red;
+
+            // After clearing the data, you can set the axis limits again:
+            formsPlot1.Plot.SetAxisLimits(0, 30, 19.5, 22.5);
+            formsPlot2.Plot.SetAxisLimits(0, 30, 19.5, 22.5);
+            formsPlot3.Plot.SetAxisLimits(0, 30, 19.5, 22.5);
+            formsPlot4.Plot.SetAxisLimits(0, 30, 19.5, 22.5);
+
+            // Finally, render the plots to reflect the changes in axis limits.
+            formsPlot1.Render();
+            formsPlot2.Render();
+            formsPlot3.Render();
+            formsPlot4.Render();
+
+        }
+
+        // Connect button
+        private void button4_Click(object sender, EventArgs e)
+        {
+            // Testing labels
+            label3.Text = "Connected";
+            label3.ForeColor = Color.Green;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+    }
+}
