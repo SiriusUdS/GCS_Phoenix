@@ -16,8 +16,9 @@ namespace GCS_Phoenix
         {
             InitializeComponent();
 
+            String cachePath = Directory.GetCurrentDirectory() + "\\Cache";
 
-            gMapControl1.CacheLocation = "C:\\Users\\berna\\OneDrive - USherbrooke\\C#\\Logger\\Cache";
+            gMapControl1.CacheLocation = cachePath;
             gMapControl1.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
             gMapControl1.Dock = DockStyle.Fill;
             //gMapControl1.MapProvider = GMap.NET.MapProviders.BingMapProvider.Instance;
