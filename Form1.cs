@@ -80,33 +80,6 @@ namespace GCS_Phoenix
 
         }
 
-        // Accelerometer graph
-        private void formsPlot2_Load(object sender, EventArgs e)
-        {
-
-            acceleroPlot.Plot.Style(Style.Blue1);
-            acceleroPlot.Plot.Layout(PADLEFT);
-            acceleroPlot.Plot.XLabel("Time (S)");
-            acceleroPlot.Plot.Title("Accelerometers (C)");
-            acceleroPlot.Render();
-
-        }
-
-
-        // Altitude Graph
-        private void formsPlot3_Load(object sender, EventArgs e)
-        {
-
-            altitudePlot.Plot.Style(Style.Blue1);
-            altitudePlot.Plot.Layout(PADLEFT);
-            altitudePlot.Plot.XLabel("Time (S)");
-            altitudePlot.Plot.Title("Altitude (M)");
-            altitudePlot.Render();
-
-        }
-
-
-
 
         public void addPortToComboBox(string port)
         {
