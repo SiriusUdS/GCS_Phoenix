@@ -2,6 +2,7 @@ using ScottPlot;
 using Color = System.Drawing.Color;
 using GMap.NET;
 using GMap.NET.WindowsForms;
+using System.IO.Ports;
 
 namespace GCS_Phoenix
 {
@@ -23,7 +24,7 @@ namespace GCS_Phoenix
 
         }
 
-
+//------------------------------------------MAP----------------------------------------------------------------------------------------//
         public void InitializeMap()
         {
             gMapControl1.CacheLocation = cachePath;
@@ -58,6 +59,37 @@ namespace GCS_Phoenix
             gMapControl1.Update();
             gMapControl1.Refresh();
         }
+//------------------------------------------FIN MAP------------------------------------------------------------------------------------//
+
+
+//------------------------------------------SERIAL PORT--------------------------------------------------------------------------------//
+
+        private void InitializeComPort()
+        {
+            // Lister les ports de COM utilisable
+            string[] ports = SerialPort.GetPortNames();
+
+            // Initialiser le combobox de ports avec les ports utilisables
+            foreach (string port in ports)
+            {
+                comboPorts.Items.Add(port);
+            }
+        }
+
+        public string GetSerialPort()
+        {
+            return comboPorts.SelectedItem.ToString();
+        }
+
+        public int GetBaudRate()
+        {
+            return (int)comboBaud.SelectedItem;
+        }
+
+//------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
+
+
+//------------------------------------------UI-----------------------------------------------------------------------------------------//
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -79,13 +111,6 @@ namespace GCS_Phoenix
             altitudePlot.Render();
 
         }
-
-
-        public void addPortToComboBox(string port)
-        {
-            comboPorts.Items.Add(port);
-        }
-
 
         // Reset button
         private void button3_Click(object sender, EventArgs e)
