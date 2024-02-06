@@ -1,6 +1,7 @@
 using ScottPlot;
 using Color = System.Drawing.Color;
 using GMap.NET;
+using GMap.NET.WindowsForms;
 
 namespace GCS_Phoenix
 {
@@ -10,23 +11,33 @@ namespace GCS_Phoenix
     public partial class Form1 : Form
     {
 
-        const float PADLEFT = 60; // Offset des graphiques
+        private const float PADLEFT = 60; // Offset des graphiques
+        private string cachePath = Directory.GetCurrentDirectory() + "\\Cache";
+        private GMapOverlay markersOverlay = new GMapOverlay("marker1");
 
         public Form1()
         {
             InitializeComponent();
+            InitializeMap();
+            AddPointToMap();
 
-            String cachePath = Directory.GetCurrentDirectory() + "\\Cache";
+        }
 
+
+        public void InitializeMap()
+        {
             gMapControl1.CacheLocation = cachePath;
             gMapControl1.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
             gMapControl1.Dock = DockStyle.Fill;
-            //gMapControl1.MapProvider = GMap.NET.MapProviders.BingMapProvider.Instance;
             GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache; // Change ServerAndCahe to Cache only for offline use
             gMapControl1.ShowCenter = false;
             gMapControl1.MinZoom = 1;
             gMapControl1.MaxZoom = 20;
-            var markersOverlay = new GMap.NET.WindowsForms.GMapOverlay("marker1");
+            
+        }
+
+        public void AddPointToMap()
+        {
 
             double latitude = 48.47583; // Your received latitude;
             double longitude = -81.330494; // Your received longitude;
@@ -46,10 +57,7 @@ namespace GCS_Phoenix
 
             gMapControl1.Update();
             gMapControl1.Refresh();
-
-
         }
-
 
         private void Form1_Load(object sender, EventArgs e)
         {
