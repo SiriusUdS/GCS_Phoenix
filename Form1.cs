@@ -20,6 +20,7 @@ namespace GCS_Phoenix
         {
             InitializeComponent();
             InitializeMap();
+            InitializeComPort();
             AddPointToMap();
 
         }
@@ -74,6 +75,7 @@ namespace GCS_Phoenix
             {
                 comboPorts.Items.Add(port);
             }
+        
         }
 
         public string GetSerialPort()
@@ -83,7 +85,8 @@ namespace GCS_Phoenix
 
         public int GetBaudRate()
         {
-            return (int)comboBaud.SelectedItem;
+            int baudRate = Int32.Parse(comboBaud.SelectedItem.ToString());
+            return baudRate;
         }
 
 //------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
@@ -124,10 +127,13 @@ namespace GCS_Phoenix
         // Connect button
         private void button4_Click(object sender, EventArgs e)
         {
-            // Testing labels
-            serialConnectivityLabel.Text = "Connected";
-            serialConnectivityLabel.ForeColor = Color.Green;
-            connectedLed.Color = Color.Green;
+            if (Program.ConnectPort())
+            {
+                serialConnectivityLabel.Text = "Connected";
+                serialConnectivityLabel.ForeColor = Color.Green;
+                connectedLed.Color = Color.Green;
+            }
+
         }
 
 
@@ -139,6 +145,7 @@ namespace GCS_Phoenix
         // Disconnect button
         private void button5_Click(object sender, EventArgs e)
         {
+            Program.DisconnectPort();
             serialConnectivityLabel.Text = "Disconnected";
             serialConnectivityLabel.ForeColor = Color.Red;
             connectedLed.Color = Color.Red;
