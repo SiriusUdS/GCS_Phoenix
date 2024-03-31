@@ -569,6 +569,7 @@
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(resetButton);
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Name = "Form1";
             Text = "Logger";
             Load += Form1_Load;

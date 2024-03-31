@@ -80,13 +80,31 @@ namespace GCS_Phoenix
 
         public string GetSerialPort()
         {
-            return comboPorts.SelectedItem.ToString();
+            try
+            {
+                return comboPorts.SelectedItem.ToString();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Please select a valid serial port. :: " + ex.Message, "Error!");
+                return "";
+            }
+            
         }
 
         public int GetBaudRate()
         {
-            int baudRate = Int32.Parse(comboBaud.SelectedItem.ToString());
-            return baudRate;
+            try
+            {
+                int baudRate = Int32.Parse(comboBaud.SelectedItem.ToString());
+                return baudRate;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Please select the baudrate. :: " + ex.Message, "Error!");
+                return 0;
+            }
+
         }
 
 //------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
@@ -160,6 +178,6 @@ namespace GCS_Phoenix
         {
 
         }
-
+//------------------------------------------FIN UI-------------------------------------------------------------------------------------//
     }
 }
