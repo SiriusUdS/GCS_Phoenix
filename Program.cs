@@ -1,26 +1,48 @@
+using Google.Protobuf.WellKnownTypes;
 using System.IO.Ports;
 
 namespace GCS_Phoenix
 {
     internal static class Program
     {
+        private static Form1 form1;
+        private static SerialPort _serialPort;
 
         [STAThread]
         static void Main()
         {
-            string[] ports = SerialPort.GetPortNames();
 
             ApplicationConfiguration.Initialize();
+            form1 = new Form1();
+            Application.Run(form1);
+        }
 
-            Form1 form1 = new Form1();
+        public static Boolean ConnectPort()
+        {
 
-            //Initialize combobox with serial ports
-            foreach (string port in ports)
+            try
             {
-                form1.AddPortToComboBox(port);
+                if (form1.GetSerialPort() == null || form1.GetBaudRate() == 0)
+                {
+                    throw new Exception("Serial port or baud rate not usable.");
+                }
+                _serialPort = new SerialPort(form1.GetSerialPort(), form1.GetBaudRate(), Parity.None, 8, StopBits.One);
+                if (!(_serialPort.IsOpen))
+                    _serialPort.Open();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error opening/writing to serial port :: " + ex.Message, "Error!");
+                return false;
             }
 
-            Application.Run(form1);
+        }
+
+        public static void DisconnectPort()
+        {
+            if (_serialPort.IsOpen)
+                _serialPort.Close();
         }
     }
 }

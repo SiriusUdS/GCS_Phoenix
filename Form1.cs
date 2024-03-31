@@ -1,6 +1,8 @@
 using ScottPlot;
 using Color = System.Drawing.Color;
 using GMap.NET;
+using GMap.NET.WindowsForms;
+using System.IO.Ports;
 
 namespace GCS_Phoenix
 {
@@ -10,22 +12,34 @@ namespace GCS_Phoenix
     public partial class Form1 : Form
     {
 
-        const float PADLEFT = 60;
+        private const float PADLEFT = 60; // Offset des graphiques
+        private string cachePath = Directory.GetCurrentDirectory() + "\\Cache";
+        private GMapOverlay markersOverlay = new GMapOverlay("marker1");
 
         public Form1()
         {
             InitializeComponent();
+            InitializeMap();
+            InitializeComPort();
+            AddPointToMap();
 
+        }
 
-            gMapControl1.CacheLocation = "C:\\Users\\berna\\OneDrive - USherbrooke\\C#\\Logger\\Cache";
+//------------------------------------------MAP----------------------------------------------------------------------------------------//
+        public void InitializeMap()
+        {
+            gMapControl1.CacheLocation = cachePath;
             gMapControl1.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
             gMapControl1.Dock = DockStyle.Fill;
-            //gMapControl1.MapProvider = GMap.NET.MapProviders.BingMapProvider.Instance;
-            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
+            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache; // Change ServerAndCahe to Cache only for offline use
             gMapControl1.ShowCenter = false;
             gMapControl1.MinZoom = 1;
             gMapControl1.MaxZoom = 20;
-            var markersOverlay = new GMap.NET.WindowsForms.GMapOverlay("marker1");
+            
+        }
+
+        public void AddPointToMap()
+        {
 
             double latitude = 48.47583; // Your received latitude;
             double longitude = -81.330494; // Your received longitude;
@@ -45,18 +59,59 @@ namespace GCS_Phoenix
 
             gMapControl1.Update();
             gMapControl1.Refresh();
+        }
+//------------------------------------------FIN MAP------------------------------------------------------------------------------------//
 
+
+//------------------------------------------SERIAL PORT--------------------------------------------------------------------------------//
+
+        private void InitializeComPort()
+        {
+            // Lister les ports de COM utilisable
+            string[] ports = SerialPort.GetPortNames();
+
+            // Initialiser le combobox de ports avec les ports utilisables
+            foreach (string port in ports)
+            {
+                comboPorts.Items.Add(port);
+            }
+        
+        }
+
+        public string GetSerialPort()
+        {
+            try
+            {
+                return comboPorts.SelectedItem.ToString();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Please select a valid serial port. :: " + ex.Message, "Error!");
+                return "";
+            }
+            
+        }
+
+        public int GetBaudRate()
+        {
+            try
+            {
+                int baudRate = Int32.Parse(comboBaud.SelectedItem.ToString());
+                return baudRate;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Please select the baudrate. :: " + ex.Message, "Error!");
+                return 0;
+            }
 
         }
 
+//------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
 
 
+//------------------------------------------UI-----------------------------------------------------------------------------------------//
 
-
-
-
-
-        // Temperature Graph
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -78,54 +133,6 @@ namespace GCS_Phoenix
 
         }
 
-        // Accelerometer graph
-        private void formsPlot2_Load(object sender, EventArgs e)
-        {
-
-            acceleroPlot.Plot.Style(Style.Blue1);
-            acceleroPlot.Plot.Layout(PADLEFT);
-            acceleroPlot.Plot.XLabel("Time (S)");
-            acceleroPlot.Plot.Title("Accelerometers (C)");
-            acceleroPlot.Render();
-
-        }
-
-
-        // Altitude Graph
-        private void formsPlot3_Load(object sender, EventArgs e)
-        {
-
-            altitudePlot.Plot.Style(Style.Blue1);
-            altitudePlot.Plot.Layout(PADLEFT);
-            altitudePlot.Plot.XLabel("Time (S)");
-            altitudePlot.Plot.Title("Altitude (M)");
-            altitudePlot.Render();
-
-        }
-
-
-
-
-        public void AddPortToComboBox(string port)
-        {
-            comboPorts.Items.Add(port);
-        }
-
-
-
-
-        // Start button
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
-        // Stop button
-        private void button1_Click(object sender, EventArgs e)
-        {
-        }
-
         // Reset button
         private void button3_Click(object sender, EventArgs e)
         {
@@ -138,10 +145,13 @@ namespace GCS_Phoenix
         // Connect button
         private void button4_Click(object sender, EventArgs e)
         {
-            // Testing labels
-            serialConnectivityLabel.Text = "Connected";
-            serialConnectivityLabel.ForeColor = Color.Green;
-            connectedLed.Color = Color.Green;
+            if (Program.ConnectPort())
+            {
+                serialConnectivityLabel.Text = "Connected";
+                serialConnectivityLabel.ForeColor = Color.Green;
+                connectedLed.Color = Color.Green;
+            }
+
         }
 
 
@@ -150,9 +160,10 @@ namespace GCS_Phoenix
 
         }
 
-
+        // Disconnect button
         private void button5_Click(object sender, EventArgs e)
         {
+            Program.DisconnectPort();
             serialConnectivityLabel.Text = "Disconnected";
             serialConnectivityLabel.ForeColor = Color.Red;
             connectedLed.Color = Color.Red;
@@ -167,15 +178,6 @@ namespace GCS_Phoenix
         {
 
         }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            //Form1.addMarker();
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
+//------------------------------------------FIN UI-------------------------------------------------------------------------------------//
     }
 }

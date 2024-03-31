@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             comboBaud = new ComboBox();
             comboPorts = new ComboBox();
             comPortLabel = new Label();
@@ -70,7 +69,6 @@
             acceleroPlot = new ScottPlot.FormsPlot();
             gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
             mapGroupBox = new GroupBox();
-            timer1 = new System.Windows.Forms.Timer(components);
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             mapGroupBox.SuspendLayout();
@@ -558,11 +556,6 @@
             mapGroupBox.TabStop = false;
             mapGroupBox.Text = "MAP";
             // 
-            // timer1
-            // 
-            timer1.Interval = 1000;
-            timer1.Tick += timer1_Tick;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -576,6 +569,7 @@
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(resetButton);
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Name = "Form1";
             Text = "Logger";
             Load += Form1_Load;
@@ -630,6 +624,5 @@
         private ScottPlot.FormsPlot acceleroPlot;
         private GMap.NET.WindowsForms.GMapControl gMapControl1;
         private GroupBox mapGroupBox;
-        private System.Windows.Forms.Timer timer1;
     }
 }
