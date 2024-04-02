@@ -15,6 +15,8 @@ namespace GCS_Phoenix
         private const float PADLEFT = 60; // Offset des graphiques
         private string cachePath = Directory.GetCurrentDirectory() + "\\Cache";
         private GMapOverlay markersOverlay = new GMapOverlay("marker1");
+        private int packetSize = 0;
+        private byte[] data;
 
         public Form1()
         {
@@ -107,10 +109,89 @@ namespace GCS_Phoenix
 
         }
 
-//------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
+        // Connect button
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (Program.ConnectPort())
+            {
+                SerialPort sp1 = Program.GetSerialPort();
+
+                serialConnectivityLabel.Text = "Connected";
+                serialConnectivityLabel.ForeColor = Color.Green;
+                connectedLed.Color = Color.Green;
+                
+                sp1.DataReceived += new SerialDataReceivedEventHandler(Sp_DataReceived);
+            }
+        }
+
+        // Add this method to subscribe to DataReceived event and handle received data
+        
+
+        // Event handler for DataReceived event
+        private void Sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            // Cast sender to SerialPort
+            SerialPort sp = (SerialPort)sender;
+
+            // Read the data from the serial port
+            int receivedData;
 
 
-//------------------------------------------UI-----------------------------------------------------------------------------------------//
+            receivedData = sp.ReadByte();
+            packetSize = receivedData+1;    
+            data = new byte[packetSize];
+            data[0] = (byte)receivedData;
+            for (int i=1; i < packetSize; i++) {
+                data[i] = (byte)sp.ReadByte(); 
+            }
+           
+
+           using (MemoryStream stream = new MemoryStream(data))
+                {
+                    // Deserialize the byte array back to a Person instance
+                    SimpleMessage deserializedPerson = SimpleMessage.Parser.ParseDelimitedFrom(stream);
+
+                    // Display the deserialized Person
+                    AppendToSerialDataBox($"Number: {deserializedPerson.LuckyNumber}");
+                }
+
+
+            // Append the received data to the RichTextBox
+        }
+
+        // Method to append data to the serialDataBox RichTextBox
+        private void AppendToSerialDataBox(string data)
+        {
+            if (serialDataBox.InvokeRequired)
+            {
+                serialDataBox.Invoke(new MethodInvoker(() => AppendToSerialDataBox(data)));
+            }
+            else
+            {
+                serialDataBox.AppendText(data + Environment.NewLine); // Append data and add a newline
+            }
+        }
+
+
+
+        // Disconnect button
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Program.DisconnectPort();
+            serialConnectivityLabel.Text = "Disconnected";
+            serialConnectivityLabel.ForeColor = Color.Red;
+            connectedLed.Color = Color.Red;
+        }
+
+
+
+
+
+
+        //------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
+
+
+        //------------------------------------------UI-----------------------------------------------------------------------------------------//
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -142,17 +223,7 @@ namespace GCS_Phoenix
 
         }
 
-        // Connect button
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (Program.ConnectPort())
-            {
-                serialConnectivityLabel.Text = "Connected";
-                serialConnectivityLabel.ForeColor = Color.Green;
-                connectedLed.Color = Color.Green;
-            }
-
-        }
+        
 
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -160,14 +231,7 @@ namespace GCS_Phoenix
 
         }
 
-        // Disconnect button
-        private void button5_Click(object sender, EventArgs e)
-        {
-            Program.DisconnectPort();
-            serialConnectivityLabel.Text = "Disconnected";
-            serialConnectivityLabel.ForeColor = Color.Red;
-            connectedLed.Color = Color.Red;
-        }
+        
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
