@@ -69,6 +69,7 @@
             acceleroPlot = new ScottPlot.FormsPlot();
             gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
             mapGroupBox = new GroupBox();
+            serialDataBox = new RichTextBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             mapGroupBox.SuspendLayout();
@@ -556,12 +557,21 @@
             mapGroupBox.TabStop = false;
             mapGroupBox.Text = "MAP";
             // 
+            // serialDataBox
+            // 
+            serialDataBox.Location = new Point(1142, 319);
+            serialDataBox.Name = "serialDataBox";
+            serialDataBox.Size = new Size(388, 368);
+            serialDataBox.TabIndex = 48;
+            serialDataBox.Text = "";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(7, 38, 59);
-            ClientSize = new Size(1361, 747);
+            ClientSize = new Size(1556, 747);
+            Controls.Add(serialDataBox);
             Controls.Add(mapGroupBox);
             Controls.Add(acceleroPlot);
             Controls.Add(altitudePlot);
@@ -624,5 +634,6 @@
         private ScottPlot.FormsPlot acceleroPlot;
         private GMap.NET.WindowsForms.GMapControl gMapControl1;
         private GroupBox mapGroupBox;
+        private RichTextBox serialDataBox;
     }
 }

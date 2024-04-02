@@ -39,10 +39,14 @@ namespace GCS_Phoenix
 
         }
 
+        public static SerialPort GetSerialPort()
+        {
+            return _serialPort;
+        }
+
         public static void DisconnectPort()
         {
-            if (_serialPort.IsOpen)
-                _serialPort.Close();
+            _serialPort.Close();
         }
     }
 }
