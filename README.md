@@ -57,3 +57,5 @@ This project is licensed under the [MIT License].
 
 - [GMap.NET](https://github.com/radioman/greatmaps) - for the mapping library.
 - [ScottPlot](https://github.com/ScottPlot/ScottPlot) - for the data visualization library.
+- [LEDBulb](https://github.com/A9G-Data-Droid/LEDBulb) - for the status indicatiors
+- [Protobuf](https://github.com/protocolbuffers/protobuf) - for the protobuf communications
