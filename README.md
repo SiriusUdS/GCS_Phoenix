@@ -28,6 +28,8 @@ GCS Phoenix is a ground control station application for managing and monitoring 
 - Select the appropriate serial port and baud rate from the dropdown menus (errors will pop-up if the connection is unsuccesful).
 - Click the "Connect" button to establish a connection.
 - Received data from the serial port will be displayed in the `serialDataBox`.
+- `Sp_DataReceived` is called everytime the serial port receives a packet.
+- With protobuf, the first byte represents the number or remaining bytes in the transmission, so the total size of the message is the first byte + 1.
 
 ### Protobuf
 
