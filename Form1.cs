@@ -295,8 +295,11 @@ namespace GCS_Phoenix
             acceleroPlot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("163020");
             acceleroPlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
             acceleroPlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
-            acceleroPlot.Plot.Axes.SetLimitsX(left: 0, right: 20);
-            acceleroPlot.Plot.Axes.SetLimitsY(top: 2, bottom: -2);
+            //acceleroPlot.Plot.Axes.SetLimitsX(left: 0, right: 20);
+            //acceleroPlot.Plot.Axes.SetLimitsY(top: 2, bottom: -2);
+            acceleroPlot.Plot.Axes.AutoScale();
+            acceleroPlot.Interaction.Disable();
+            
 
             //Adding sample data
             var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
@@ -324,8 +327,11 @@ namespace GCS_Phoenix
             altitudePlot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("163020");
             altitudePlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
             altitudePlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
-            altitudePlot.Plot.Axes.SetLimitsX(left: 0, right: 250);
-            altitudePlot.Plot.Axes.SetLimitsY(top: 4000, bottom: 0);
+            //altitudePlot.Plot.Axes.SetLimitsX(left: 0, right: 250);
+            altitudePlot.Plot.Axes.AutoScale();
+            //altitudePlot.Plot.Axes.SetLimitsY(top: 4000, bottom: 0);
+            altitudePlot.Interaction.Disable();
+
 
 
 
