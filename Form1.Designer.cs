@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             comboBaud = new ComboBox();
             comboPorts = new ComboBox();
             comPortLabel = new Label();
@@ -67,12 +68,20 @@
             currentStageLabel = new Label();
             gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
             mapGroupBox = new GroupBox();
+            groupBox3 = new GroupBox();
             serialDataBox = new RichTextBox();
             acceleroPlot = new ScottPlot.WinForms.FormsPlot();
             altitudePlot = new ScottPlot.WinForms.FormsPlot();
+            groupBox4 = new GroupBox();
+            msgReceivedLabel = new Label();
+            rxErrorsLabel = new Label();
+            pictureBox1 = new PictureBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             mapGroupBox.SuspendLayout();
+            groupBox3.SuspendLayout();
+            groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // comboBaud
@@ -117,7 +126,7 @@
             // resetButton
             // 
             resetButton.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            resetButton.Location = new Point(673, 420);
+            resetButton.Location = new Point(453, 418);
             resetButton.Name = "resetButton";
             resetButton.Size = new Size(102, 23);
             resetButton.TabIndex = 12;
@@ -128,7 +137,7 @@
             // connectSerialButton
             // 
             connectSerialButton.ForeColor = SystemColors.ActiveCaptionText;
-            connectSerialButton.Location = new Point(12, 113);
+            connectSerialButton.Location = new Point(12, 116);
             connectSerialButton.Name = "connectSerialButton";
             connectSerialButton.Size = new Size(139, 32);
             connectSerialButton.TabIndex = 13;
@@ -141,7 +150,7 @@
             serialConnectivityLabel.AutoSize = true;
             serialConnectivityLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             serialConnectivityLabel.ForeColor = Color.Red;
-            serialConnectivityLabel.Location = new Point(12, 205);
+            serialConnectivityLabel.Location = new Point(15, 208);
             serialConnectivityLabel.Name = "serialConnectivityLabel";
             serialConnectivityLabel.Size = new Size(139, 30);
             serialConnectivityLabel.TabIndex = 14;
@@ -459,7 +468,7 @@
             groupBox1.Size = new Size(273, 449);
             groupBox1.TabIndex = 41;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Status";
+            groupBox1.Text = "STATUS";
             // 
             // groupBox2
             // 
@@ -472,12 +481,12 @@
             groupBox2.Controls.Add(comboBaud);
             groupBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             groupBox2.ForeColor = Color.FromArgb(198, 169, 105);
-            groupBox2.Location = new Point(13, 13);
+            groupBox2.Location = new Point(877, 536);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(273, 251);
+            groupBox2.Size = new Size(249, 249);
             groupBox2.TabIndex = 42;
             groupBox2.TabStop = false;
-            groupBox2.Text = "Serial";
+            groupBox2.Text = "SERIAL";
             // 
             // disconnectSerialButton
             // 
@@ -493,13 +502,13 @@
             // currentStageLabel
             // 
             currentStageLabel.AutoSize = true;
-            currentStageLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            currentStageLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             currentStageLabel.ForeColor = Color.FromArgb(198, 169, 105);
-            currentStageLabel.Location = new Point(13, 284);
+            currentStageLabel.Location = new Point(6, 33);
             currentStageLabel.Name = "currentStageLabel";
-            currentStageLabel.Size = new Size(166, 30);
+            currentStageLabel.Size = new Size(148, 21);
             currentStageLabel.TabIndex = 43;
-            currentStageLabel.Text = "Current stage : 0";
+            currentStageLabel.Text = "CURRENT STAGE : 0";
             // 
             // gMapControl1
             // 
@@ -535,26 +544,39 @@
             mapGroupBox.ForeColor = Color.FromArgb(198, 169, 105);
             mapGroupBox.Location = new Point(305, 336);
             mapGroupBox.Name = "mapGroupBox";
-            mapGroupBox.Size = new Size(781, 449);
+            mapGroupBox.Size = new Size(561, 449);
             mapGroupBox.TabIndex = 47;
             mapGroupBox.TabStop = false;
             mapGroupBox.Text = "MAP";
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(serialDataBox);
+            groupBox3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            groupBox3.ForeColor = Color.FromArgb(198, 169, 105);
+            groupBox3.Location = new Point(1136, 336);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(276, 449);
+            groupBox3.TabIndex = 51;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "SERIAL CONSOLE";
             // 
             // serialDataBox
             // 
             serialDataBox.BackColor = Color.FromArgb(48, 77, 48);
             serialDataBox.BorderStyle = BorderStyle.None;
+            serialDataBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             serialDataBox.ForeColor = Color.FromArgb(198, 169, 105);
-            serialDataBox.Location = new Point(1106, 347);
+            serialDataBox.Location = new Point(6, 22);
             serialDataBox.Name = "serialDataBox";
-            serialDataBox.Size = new Size(438, 438);
+            serialDataBox.Size = new Size(263, 419);
             serialDataBox.TabIndex = 48;
             serialDataBox.Text = "";
             // 
             // acceleroPlot
             // 
             acceleroPlot.DisplayScale = 1F;
-            acceleroPlot.Location = new Point(336, 1);
+            acceleroPlot.Location = new Point(833, 1);
             acceleroPlot.Name = "acceleroPlot";
             acceleroPlot.Size = new Size(544, 313);
             acceleroPlot.TabIndex = 49;
@@ -562,35 +584,85 @@
             // altitudePlot
             // 
             altitudePlot.DisplayScale = 1F;
-            altitudePlot.Location = new Point(950, 1);
+            altitudePlot.Location = new Point(292, 1);
             altitudePlot.Name = "altitudePlot";
             altitudePlot.Size = new Size(544, 313);
             altitudePlot.TabIndex = 50;
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(msgReceivedLabel);
+            groupBox4.Controls.Add(rxErrorsLabel);
+            groupBox4.Controls.Add(currentStageLabel);
+            groupBox4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            groupBox4.ForeColor = Color.FromArgb(198, 169, 105);
+            groupBox4.Location = new Point(877, 336);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(249, 194);
+            groupBox4.TabIndex = 52;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "STATS";
+            // 
+            // msgReceivedLabel
+            // 
+            msgReceivedLabel.AutoSize = true;
+            msgReceivedLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            msgReceivedLabel.ForeColor = Color.FromArgb(198, 169, 105);
+            msgReceivedLabel.Location = new Point(6, 93);
+            msgReceivedLabel.Name = "msgReceivedLabel";
+            msgReceivedLabel.Size = new Size(165, 21);
+            msgReceivedLabel.TabIndex = 45;
+            msgReceivedLabel.Text = "PACKETS RECEIVED : 0";
+            // 
+            // rxErrorsLabel
+            // 
+            rxErrorsLabel.AutoSize = true;
+            rxErrorsLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            rxErrorsLabel.ForeColor = Color.FromArgb(198, 169, 105);
+            rxErrorsLabel.Location = new Point(6, 64);
+            rxErrorsLabel.Name = "rxErrorsLabel";
+            rxErrorsLabel.Size = new Size(112, 21);
+            rxErrorsLabel.TabIndex = 44;
+            rxErrorsLabel.Text = "RX ERRORS : 0";
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(-4, 27);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(290, 237);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 53;
+            pictureBox1.TabStop = false;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(22, 48, 32);
-            ClientSize = new Size(1556, 814);
+            ClientSize = new Size(1424, 814);
+            Controls.Add(pictureBox1);
+            Controls.Add(groupBox4);
+            Controls.Add(groupBox3);
             Controls.Add(altitudePlot);
             Controls.Add(acceleroPlot);
-            Controls.Add(serialDataBox);
             Controls.Add(mapGroupBox);
-            Controls.Add(currentStageLabel);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "Form1";
-            Text = "Logger";
+            Text = "Phoenix GCS";
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             mapGroupBox.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -636,5 +708,10 @@
         private RichTextBox serialDataBox;
         private ScottPlot.WinForms.FormsPlot acceleroPlot;
         private ScottPlot.WinForms.FormsPlot altitudePlot;
+        private GroupBox groupBox3;
+        private GroupBox groupBox4;
+        private Label rxErrorsLabel;
+        private Label msgReceivedLabel;
+        private PictureBox pictureBox1;
     }
 }

@@ -18,6 +18,8 @@ namespace GCS_Phoenix
         private GMapOverlay markersOverlay = new GMapOverlay("marker1");            //Markers overlay for the map.
         private int _packetSize = 0;                                                //The size of the receiving packet
         private byte[] _data;                                                       //Byte array to store the protobuf message.
+        private int rxErrors = 0;                                                   //Number of reception errors
+        private int msgReceived = 0;                                                //Number of messages correctly received
 
         public Form1()
         {
@@ -26,11 +28,11 @@ namespace GCS_Phoenix
             InitializeComPort();
 
             //TODO remove when we start to receive real values and move into another method.
-            AddPointToMap(5,5);
+            AddPointToMap(5, 5);
 
         }
 
-//------------------------------------------MAP----------------------------------------------------------------------------------------//
+        //------------------------------------------MAP----------------------------------------------------------------------------------------//
 
         /// <summary>
         /// Code to initialize the map.
@@ -44,9 +46,9 @@ namespace GCS_Phoenix
             gMapControl1.ShowCenter = false;
             gMapControl1.MinZoom = 1;
             gMapControl1.MaxZoom = 20;
-            
+
         }
-        
+
         /// <summary>
         /// Adds a marker to the map using the provides latitude and longitude.
         /// </summary>
@@ -211,13 +213,19 @@ namespace GCS_Phoenix
                 {
                     SimpleMessage deserializedPerson = SimpleMessage.Parser.ParseDelimitedFrom(stream);
                     AppendToSerialDataBox($"Number: {deserializedPerson.LuckyNumber}");
+
+                    msgReceived++;
+                    msgReceivedLabel.Text = $"PACKETS RECEIVED : {msgReceived}";
+
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
+                    rxErrors++;
+                    rxErrorsLabel.Text = $"RX ERRORS : {rxErrors}";
                     MessageBox.Show("Error parsing protobuf data packet :: " + ex.Message, "Error!");
                 }
-                
+
             }
         }
 
@@ -291,9 +299,9 @@ namespace GCS_Phoenix
             acceleroPlot.Plot.Axes.SetLimitsY(top: 2, bottom: -2);
 
             //Adding sample data
-            var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .2));
-            var sigY = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .4));
-            var sigZ = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .6));
+            var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
+            var sigY = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .6));
+            var sigZ = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .9));
 
             sigX.Label = "X";
             sigY.Label = "Y";
@@ -316,9 +324,31 @@ namespace GCS_Phoenix
             altitudePlot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("163020");
             altitudePlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
             altitudePlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
-            altitudePlot.Plot.Axes.SetLimitsX(left: 0, right: 20);
-            altitudePlot.Plot.Axes.SetLimitsY(top: 20000, bottom: 0);
+            altitudePlot.Plot.Axes.SetLimitsX(left: 0, right: 250);
+            altitudePlot.Plot.Axes.SetLimitsY(top: 4000, bottom: 0);
+
+
+
+
+            double[] x = new double[239];
+            double[] y = new double[239];
+            for (int i = 0; i < 239; i++)
+            {
+                x[i] = i;
+                y[i] = -(0.0453337 * Math.Pow(i, 2)) + 2.26424 * i + 1878.92;
+            }
+
+
+            var alt = altitudePlot.Plot.Add.Scatter(x, y);
+
         }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
 
 
         //------------------------------------------FIN UI-------------------------------------------------------------------------------------//
