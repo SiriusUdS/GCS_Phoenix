@@ -9,7 +9,7 @@ GCS Phoenix is a ground control station application for managing and monitoring 
 - **Data Visualization**: Visualizes data from sensors such as accelerometers and altitude sensors.
 
 ## Installation
-
+*Make sure to have Visual Studio 2022 installed*
 1. Clone or download the repository.
 2. Open the solution file (`GCS_Phoenix.sln`) in Visual Studio.
 3. Build the solution to resolve dependencies.
