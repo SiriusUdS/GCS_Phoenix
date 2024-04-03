@@ -65,11 +65,11 @@
             groupBox2 = new GroupBox();
             disconnectSerialButton = new Button();
             currentStageLabel = new Label();
-            altitudePlot = new ScottPlot.FormsPlot();
-            acceleroPlot = new ScottPlot.FormsPlot();
             gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
             mapGroupBox = new GroupBox();
             serialDataBox = new RichTextBox();
+            acceleroPlot = new ScottPlot.WinForms.FormsPlot();
+            altitudePlot = new ScottPlot.WinForms.FormsPlot();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             mapGroupBox.SuspendLayout();
@@ -79,11 +79,10 @@
             // 
             comboBaud.FormattingEnabled = true;
             comboBaud.Items.AddRange(new object[] { "9600", "19200", "38400", "115200", "256000" });
-            comboBaud.Location = new Point(12, 63);
+            comboBaud.Location = new Point(11, 70);
             comboBaud.Name = "comboBaud";
             comboBaud.Size = new Size(140, 29);
             comboBaud.TabIndex = 4;
-            comboBaud.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // comboPorts
             // 
@@ -97,7 +96,7 @@
             // 
             comPortLabel.AutoSize = true;
             comPortLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            comPortLabel.ForeColor = SystemColors.ActiveCaption;
+            comPortLabel.ForeColor = Color.FromArgb(198, 169, 105);
             comPortLabel.Location = new Point(158, 31);
             comPortLabel.Name = "comPortLabel";
             comPortLabel.Size = new Size(88, 21);
@@ -108,8 +107,8 @@
             // 
             baudRateLabel.AutoSize = true;
             baudRateLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            baudRateLabel.ForeColor = SystemColors.ActiveCaption;
-            baudRateLabel.Location = new Point(158, 66);
+            baudRateLabel.ForeColor = Color.FromArgb(198, 169, 105);
+            baudRateLabel.Location = new Point(158, 73);
             baudRateLabel.Name = "baudRateLabel";
             baudRateLabel.Size = new Size(90, 21);
             baudRateLabel.TabIndex = 10;
@@ -117,7 +116,8 @@
             // 
             // resetButton
             // 
-            resetButton.Location = new Point(1220, 706);
+            resetButton.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            resetButton.Location = new Point(673, 420);
             resetButton.Name = "resetButton";
             resetButton.Size = new Size(102, 23);
             resetButton.TabIndex = 12;
@@ -128,7 +128,7 @@
             // connectSerialButton
             // 
             connectSerialButton.ForeColor = SystemColors.ActiveCaptionText;
-            connectSerialButton.Location = new Point(12, 98);
+            connectSerialButton.Location = new Point(12, 113);
             connectSerialButton.Name = "connectSerialButton";
             connectSerialButton.Size = new Size(139, 32);
             connectSerialButton.TabIndex = 13;
@@ -141,7 +141,7 @@
             serialConnectivityLabel.AutoSize = true;
             serialConnectivityLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             serialConnectivityLabel.ForeColor = Color.Red;
-            serialConnectivityLabel.Location = new Point(12, 171);
+            serialConnectivityLabel.Location = new Point(12, 205);
             serialConnectivityLabel.Name = "serialConnectivityLabel";
             serialConnectivityLabel.Size = new Size(139, 30);
             serialConnectivityLabel.TabIndex = 14;
@@ -163,7 +163,7 @@
             // 
             touchDownLabel.AutoSize = true;
             touchDownLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            touchDownLabel.ForeColor = SystemColors.ActiveCaption;
+            touchDownLabel.ForeColor = Color.FromArgb(198, 169, 105);
             touchDownLabel.Location = new Point(42, 35);
             touchDownLabel.Name = "touchDownLabel";
             touchDownLabel.Size = new Size(89, 21);
@@ -184,7 +184,7 @@
             // 
             drogueDescentLabel.AutoSize = true;
             drogueDescentLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            drogueDescentLabel.ForeColor = SystemColors.ActiveCaption;
+            drogueDescentLabel.ForeColor = Color.FromArgb(198, 169, 105);
             drogueDescentLabel.Location = new Point(42, 122);
             drogueDescentLabel.Name = "drogueDescentLabel";
             drogueDescentLabel.Size = new Size(119, 21);
@@ -205,7 +205,7 @@
             // 
             mainDescentLabel.AutoSize = true;
             mainDescentLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            mainDescentLabel.ForeColor = SystemColors.ActiveCaption;
+            mainDescentLabel.ForeColor = Color.FromArgb(198, 169, 105);
             mainDescentLabel.Location = new Point(42, 64);
             mainDescentLabel.Name = "mainDescentLabel";
             mainDescentLabel.Size = new Size(102, 21);
@@ -228,7 +228,7 @@
             // 
             mainDeployedLabel.AutoSize = true;
             mainDeployedLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            mainDeployedLabel.ForeColor = SystemColors.ActiveCaption;
+            mainDeployedLabel.ForeColor = Color.FromArgb(198, 169, 105);
             mainDeployedLabel.Location = new Point(42, 93);
             mainDeployedLabel.Name = "mainDeployedLabel";
             mainDeployedLabel.Size = new Size(113, 21);
@@ -239,7 +239,7 @@
             // 
             drogueDeployedLabel.AutoSize = true;
             drogueDeployedLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            drogueDeployedLabel.ForeColor = SystemColors.ActiveCaption;
+            drogueDeployedLabel.ForeColor = Color.FromArgb(198, 169, 105);
             drogueDeployedLabel.Location = new Point(42, 152);
             drogueDeployedLabel.Name = "drogueDeployedLabel";
             drogueDeployedLabel.Size = new Size(130, 21);
@@ -260,7 +260,7 @@
             // 
             freeFallLabel.AutoSize = true;
             freeFallLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            freeFallLabel.ForeColor = SystemColors.ActiveCaption;
+            freeFallLabel.ForeColor = Color.FromArgb(198, 169, 105);
             freeFallLabel.Location = new Point(42, 185);
             freeFallLabel.Name = "freeFallLabel";
             freeFallLabel.Size = new Size(65, 21);
@@ -281,7 +281,7 @@
             // 
             apogeeLabel.AutoSize = true;
             apogeeLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            apogeeLabel.ForeColor = SystemColors.ActiveCaption;
+            apogeeLabel.ForeColor = Color.FromArgb(198, 169, 105);
             apogeeLabel.Location = new Point(42, 218);
             apogeeLabel.Name = "apogeeLabel";
             apogeeLabel.Size = new Size(63, 21);
@@ -302,7 +302,7 @@
             // 
             unpFlightLabel.AutoSize = true;
             unpFlightLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            unpFlightLabel.ForeColor = SystemColors.ActiveCaption;
+            unpFlightLabel.ForeColor = Color.FromArgb(198, 169, 105);
             unpFlightLabel.Location = new Point(42, 251);
             unpFlightLabel.Name = "unpFlightLabel";
             unpFlightLabel.Size = new Size(131, 21);
@@ -323,7 +323,7 @@
             // 
             poweredFlightLabel.AutoSize = true;
             poweredFlightLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            poweredFlightLabel.ForeColor = SystemColors.ActiveCaption;
+            poweredFlightLabel.ForeColor = Color.FromArgb(198, 169, 105);
             poweredFlightLabel.Location = new Point(42, 281);
             poweredFlightLabel.Name = "poweredFlightLabel";
             poweredFlightLabel.Size = new Size(110, 21);
@@ -344,7 +344,7 @@
             // 
             liftOffLabel.AutoSize = true;
             liftOffLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            liftOffLabel.ForeColor = SystemColors.ActiveCaption;
+            liftOffLabel.ForeColor = Color.FromArgb(198, 169, 105);
             liftOffLabel.Location = new Point(42, 312);
             liftOffLabel.Name = "liftOffLabel";
             liftOffLabel.Size = new Size(51, 21);
@@ -365,7 +365,7 @@
             // 
             armedLabel.AutoSize = true;
             armedLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            armedLabel.ForeColor = SystemColors.ActiveCaption;
+            armedLabel.ForeColor = Color.FromArgb(198, 169, 105);
             armedLabel.Location = new Point(42, 342);
             armedLabel.Name = "armedLabel";
             armedLabel.Size = new Size(57, 21);
@@ -386,7 +386,7 @@
             // 
             safedLabel.AutoSize = true;
             safedLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            safedLabel.ForeColor = SystemColors.ActiveCaption;
+            safedLabel.ForeColor = Color.FromArgb(198, 169, 105);
             safedLabel.Location = new Point(42, 375);
             safedLabel.Name = "safedLabel";
             safedLabel.Size = new Size(49, 21);
@@ -407,7 +407,7 @@
             // 
             connectedLabel.AutoSize = true;
             connectedLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            connectedLabel.ForeColor = SystemColors.ActiveCaption;
+            connectedLabel.ForeColor = Color.FromArgb(198, 169, 105);
             connectedLabel.Location = new Point(42, 408);
             connectedLabel.Name = "connectedLabel";
             connectedLabel.Size = new Size(84, 21);
@@ -453,14 +453,13 @@
             groupBox1.Controls.Add(touchDownLabel);
             groupBox1.Controls.Add(touchdownLed);
             groupBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            groupBox1.ForeColor = SystemColors.ActiveCaption;
-            groupBox1.Location = new Point(13, 280);
+            groupBox1.ForeColor = Color.FromArgb(198, 169, 105);
+            groupBox1.Location = new Point(13, 336);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(273, 449);
             groupBox1.TabIndex = 41;
             groupBox1.TabStop = false;
             groupBox1.Text = "Status";
-            groupBox1.Enter += groupBox1_Enter;
             // 
             // groupBox2
             // 
@@ -472,10 +471,10 @@
             groupBox2.Controls.Add(comboPorts);
             groupBox2.Controls.Add(comboBaud);
             groupBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            groupBox2.ForeColor = SystemColors.ActiveCaption;
+            groupBox2.ForeColor = Color.FromArgb(198, 169, 105);
             groupBox2.Location = new Point(13, 13);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(273, 213);
+            groupBox2.Size = new Size(273, 251);
             groupBox2.TabIndex = 42;
             groupBox2.TabStop = false;
             groupBox2.Text = "Serial";
@@ -483,7 +482,7 @@
             // disconnectSerialButton
             // 
             disconnectSerialButton.ForeColor = SystemColors.ActiveCaptionText;
-            disconnectSerialButton.Location = new Point(11, 136);
+            disconnectSerialButton.Location = new Point(12, 161);
             disconnectSerialButton.Name = "disconnectSerialButton";
             disconnectSerialButton.Size = new Size(139, 32);
             disconnectSerialButton.TabIndex = 15;
@@ -495,29 +494,12 @@
             // 
             currentStageLabel.AutoSize = true;
             currentStageLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            currentStageLabel.ForeColor = SystemColors.ActiveCaption;
-            currentStageLabel.Location = new Point(13, 240);
+            currentStageLabel.ForeColor = Color.FromArgb(198, 169, 105);
+            currentStageLabel.Location = new Point(13, 284);
             currentStageLabel.Name = "currentStageLabel";
             currentStageLabel.Size = new Size(166, 30);
             currentStageLabel.TabIndex = 43;
             currentStageLabel.Text = "Current stage : 0";
-            currentStageLabel.Click += currentStageLabel_Click;
-            // 
-            // altitudePlot
-            // 
-            altitudePlot.Location = new Point(328, 27);
-            altitudePlot.Margin = new Padding(4, 3, 4, 3);
-            altitudePlot.Name = "altitudePlot";
-            altitudePlot.Size = new Size(469, 286);
-            altitudePlot.TabIndex = 44;
-            // 
-            // acceleroPlot
-            // 
-            acceleroPlot.Location = new Point(805, 27);
-            acceleroPlot.Margin = new Padding(4, 3, 4, 3);
-            acceleroPlot.Name = "acceleroPlot";
-            acceleroPlot.Size = new Size(469, 286);
-            acceleroPlot.TabIndex = 45;
             // 
             // gMapControl1
             // 
@@ -547,39 +529,58 @@
             // 
             // mapGroupBox
             // 
+            mapGroupBox.Controls.Add(resetButton);
             mapGroupBox.Controls.Add(gMapControl1);
             mapGroupBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            mapGroupBox.ForeColor = SystemColors.ActiveCaption;
-            mapGroupBox.Location = new Point(378, 313);
+            mapGroupBox.ForeColor = Color.FromArgb(198, 169, 105);
+            mapGroupBox.Location = new Point(305, 336);
             mapGroupBox.Name = "mapGroupBox";
-            mapGroupBox.Size = new Size(708, 416);
+            mapGroupBox.Size = new Size(781, 449);
             mapGroupBox.TabIndex = 47;
             mapGroupBox.TabStop = false;
             mapGroupBox.Text = "MAP";
             // 
             // serialDataBox
             // 
-            serialDataBox.Location = new Point(1142, 319);
+            serialDataBox.BackColor = Color.FromArgb(48, 77, 48);
+            serialDataBox.BorderStyle = BorderStyle.None;
+            serialDataBox.ForeColor = Color.FromArgb(198, 169, 105);
+            serialDataBox.Location = new Point(1106, 347);
             serialDataBox.Name = "serialDataBox";
-            serialDataBox.Size = new Size(388, 368);
+            serialDataBox.Size = new Size(438, 438);
             serialDataBox.TabIndex = 48;
             serialDataBox.Text = "";
+            // 
+            // acceleroPlot
+            // 
+            acceleroPlot.DisplayScale = 1F;
+            acceleroPlot.Location = new Point(336, 1);
+            acceleroPlot.Name = "acceleroPlot";
+            acceleroPlot.Size = new Size(544, 313);
+            acceleroPlot.TabIndex = 49;
+            // 
+            // altitudePlot
+            // 
+            altitudePlot.DisplayScale = 1F;
+            altitudePlot.Location = new Point(950, 1);
+            altitudePlot.Name = "altitudePlot";
+            altitudePlot.Size = new Size(544, 313);
+            altitudePlot.TabIndex = 50;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(7, 38, 59);
-            ClientSize = new Size(1556, 747);
+            BackColor = Color.FromArgb(22, 48, 32);
+            ClientSize = new Size(1556, 814);
+            Controls.Add(altitudePlot);
+            Controls.Add(acceleroPlot);
             Controls.Add(serialDataBox);
             Controls.Add(mapGroupBox);
-            Controls.Add(acceleroPlot);
-            Controls.Add(altitudePlot);
             Controls.Add(currentStageLabel);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(resetButton);
-            FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "Form1";
             Text = "Logger";
             Load += Form1_Load;
@@ -630,10 +631,10 @@
         private GroupBox groupBox2;
         private Button disconnectSerialButton;
         private Label currentStageLabel;
-        private ScottPlot.FormsPlot altitudePlot;
-        private ScottPlot.FormsPlot acceleroPlot;
         private GMap.NET.WindowsForms.GMapControl gMapControl1;
         private GroupBox mapGroupBox;
         private RichTextBox serialDataBox;
+        private ScottPlot.WinForms.FormsPlot acceleroPlot;
+        private ScottPlot.WinForms.FormsPlot altitudePlot;
     }
 }
