@@ -122,8 +122,14 @@ namespace GCS_Phoenix
         {
             try
             {
+                string? port = comboPorts.SelectedItem?.ToString();
+                
                 // Return the selected serial port name
-                return comboPorts.SelectedItem.ToString();
+                if (port != null)
+                    return port;
+                else
+                    return "";
+
             }
             catch (Exception ex)
             {
@@ -141,8 +147,13 @@ namespace GCS_Phoenix
         {
             try
             {
+                string? baudString = comboBaud.SelectedItem?.ToString();
+                
                 // Parse and return the selected baud rate
-                return int.Parse(comboBaud.SelectedItem.ToString());
+                if (baudString != null)
+                    return int.Parse(baudString);
+                else
+                    return 0;
             }
             catch (Exception ex)
             {
@@ -327,10 +338,11 @@ namespace GCS_Phoenix
             altitudePlot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("163020");
             altitudePlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
             altitudePlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
-            //altitudePlot.Plot.Axes.SetLimitsX(left: 0, right: 250);
             altitudePlot.Plot.Axes.AutoScale();
+            //altitudePlot.Plot.Axes.SetLimitsX(left: 0, right: 250);
             //altitudePlot.Plot.Axes.SetLimitsY(top: 4000, bottom: 0);
-            altitudePlot.Interaction.Disable();
+            SetGraphsBehaviors(altitudePlot);
+            SetGraphsBehaviors(acceleroPlot);
 
 
 
@@ -348,6 +360,35 @@ namespace GCS_Phoenix
             var alt = altitudePlot.Plot.Add.Scatter(x, y);
 
         }
+
+
+
+
+        /// <summary>
+        /// Sets custom bindings when the mouse is inside a graph. 
+        /// Left click to drag, right click to open contextual menu, middle click to resize
+        /// </summary>
+        private void SetGraphsBehaviors(ScottPlot.IPlotControl plot)
+        {
+
+            ScottPlot.Control.InputBindings inputBindings = new()
+            {
+                DragPanButton = ScottPlot.Control.MouseButton.Left,
+                ZoomInWheelDirection = ScottPlot.Control.MouseWheelDirection.Up,
+                ZoomOutWheelDirection = ScottPlot.Control.MouseWheelDirection.Down,
+                ClickAutoAxisButton = ScottPlot.Control.MouseButton.Middle,
+                ClickContextMenuButton = ScottPlot.Control.MouseButton.Right,
+            };
+
+            ScottPlot.Control.Interaction interaction = new(plot)
+            {
+                Inputs = inputBindings,
+            };
+
+            plot.Interaction = interaction;
+
+        }
+
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {

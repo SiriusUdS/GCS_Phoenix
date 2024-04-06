@@ -27,7 +27,7 @@ namespace GCS_Phoenix
 
             try
             {
-                if (form1.GetSerialPort() == null || form1.GetBaudRate() == 0)
+                if (form1.GetSerialPort().Equals("")|| form1.GetBaudRate().Equals(0))
                 {
                     throw new Exception("Serial port or baud rate not usable.");
                 }
@@ -58,7 +58,22 @@ namespace GCS_Phoenix
         /// </summary>
         public static void DisconnectPort()
         {
-            _serialPort.Close();
+            try
+            {
+                if (_serialPort == null)
+                    MessageBox.Show("Error, no ports open.", "Error!");
+                else
+                {
+                    _serialPort.Close();
+                    _serialPort.Dispose();
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Exception when closing port :: {ex.Message}", "Error!");
+            }
+
+            
         }
     }
 }
