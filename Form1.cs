@@ -13,13 +13,32 @@ namespace GCS_Phoenix
     public partial class Form1 : Form
     {
 
-        private const float PADLEFT = 60;                                           // Offset des graphiques
-        private string cachePath = Directory.GetCurrentDirectory() + "\\Cache";     //Path of the cache folder for the map.
+        private readonly string cachePath = Directory.GetCurrentDirectory() + "\\Cache";     //Path of the cache folder for the map.
         private GMapOverlay markersOverlay = new GMapOverlay("marker1");            //Markers overlay for the map.
-        private int _packetSize = 0;                                                //The size of the receiving packet
         private byte[] _data;                                                       //Byte array to store the protobuf message.
+
         private int rxErrors = 0;                                                   //Number of reception errors
         private int msgReceived = 0;                                                //Number of messages correctly received
+        private int _packetSize = 0;                                                //The size of the receiving packet
+
+        private List<DataPoint> _altitude = new List<DataPoint>();                  //List that contains altitude data
+        private List<DataPoint> _accX = new List<DataPoint>();                      //List that contains acceleration in X data
+        private List<DataPoint> _accY = new List<DataPoint>();                      //List that contains acceleration in Y data
+        private List<DataPoint> _accZ = new List<DataPoint>();                      //List that contains acceleration in Z data
+
+        public struct DataPoint
+        {
+            private float X;
+            private int Y;
+
+            public DataPoint(float x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+        }
+
+
 
         public Form1()
         {
@@ -42,7 +61,7 @@ namespace GCS_Phoenix
             gMapControl1.CacheLocation = cachePath;
             gMapControl1.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
             gMapControl1.Dock = DockStyle.Fill;
-            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.CacheOnly; // Change ServerAndCahe to Cache only for offline use
+            GMaps.Instance.Mode = AccessMode.CacheOnly; // Change ServerAndCahe to Cache only for offline use
             gMapControl1.ShowCenter = false;
             gMapControl1.MinZoom = 1;
             gMapControl1.MaxZoom = 20;
@@ -306,8 +325,6 @@ namespace GCS_Phoenix
             acceleroPlot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("163020");
             acceleroPlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
             acceleroPlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
-            //acceleroPlot.Plot.Axes.SetLimitsX(left: 0, right: 20);
-            //acceleroPlot.Plot.Axes.SetLimitsY(top: 2, bottom: -2);
             acceleroPlot.Plot.Axes.AutoScale();
             acceleroPlot.Interaction.Disable();
             
@@ -339,13 +356,11 @@ namespace GCS_Phoenix
             altitudePlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
             altitudePlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
             altitudePlot.Plot.Axes.AutoScale();
-            //altitudePlot.Plot.Axes.SetLimitsX(left: 0, right: 250);
-            //altitudePlot.Plot.Axes.SetLimitsY(top: 4000, bottom: 0);
             SetGraphsBehaviors(altitudePlot);
             SetGraphsBehaviors(acceleroPlot);
 
 
-
+            
 
 
             double[] x = new double[239];
