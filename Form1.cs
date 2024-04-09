@@ -25,6 +25,7 @@ namespace GCS_Phoenix
         private List<DataPoint> _accX = new List<DataPoint>();                      //List that contains acceleration in X data
         private List<DataPoint> _accY = new List<DataPoint>();                      //List that contains acceleration in Y data
         private List<DataPoint> _accZ = new List<DataPoint>();                      //List that contains acceleration in Z data
+        private List<GpsPoint> _gpsPoints = new List<GpsPoint>();
 
         public struct DataPoint
         {
@@ -35,6 +36,18 @@ namespace GCS_Phoenix
             {
                 X = x;
                 Y = y;
+            }
+        }
+
+        public struct GpsPoint
+        {
+            private float LAT;
+            private float LONG;
+
+            public GpsPoint(float lat, float _long)
+            {
+                LAT = lat;
+                LONG = _long;
             }
         }
 
