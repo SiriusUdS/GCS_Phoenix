@@ -1,0 +1,30 @@
+pipeline {
+     agent {
+               docker {image 'mcr.microsoft.com/dotnet/sdk:8.0'}
+            }
+     environment {
+            DOTNET_CLI_HOME = "/tmp/DOTNET_CLI_HOME"
+        }
+    stages {
+        stage('Build') {
+           
+            steps {
+                // Your build commands go here
+                // Example:
+                script {
+                    sh '''
+                     dotnet build 
+                    '''
+                }
+            }
+        }
+    }
+    post {
+        always {
+            // Post-build actions like cleaning up, notifications, etc.
+            echo 'Build process completed.'
+            cleanWs()
+                    
+        }
+    }
+}
