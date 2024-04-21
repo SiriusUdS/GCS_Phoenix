@@ -31,9 +31,17 @@ namespace GCS_Phoenix
                 {
                     throw new Exception("Serial port or baud rate not usable.");
                 }
-                _serialPort = new SerialPort(form1.GetSerialPort(), form1.GetBaudRate(), Parity.None, 8, StopBits.One);
+                if(_serialPort == null)
+                    _serialPort = new SerialPort(form1.GetSerialPort(), form1.GetBaudRate(), Parity.None, 8, StopBits.One);
+                else
+                {
+                    DisconnectPort();
+                    _serialPort = new SerialPort(form1.GetSerialPort(), form1.GetBaudRate(), Parity.None, 8, StopBits.One);
+                }
+
                 if (!(_serialPort.IsOpen))
                     _serialPort.Open();
+                
                 return true;
             }
             catch (Exception ex)

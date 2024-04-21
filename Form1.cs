@@ -219,6 +219,26 @@ namespace GCS_Phoenix
             }
         }
 
+
+        /// <summary>
+        /// Event handler for the Disconnect button click event.
+        /// Closes the connection to the serial port and updates the UI.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void button5_Click(object sender, EventArgs e)
+        {
+            // Disconnect from the serial port
+            Program.DisconnectPort();
+
+            // Update UI elements to indicate disconnection
+            serialConnectivityLabel.Text = "Disconnected";
+            serialConnectivityLabel.ForeColor = Color.Red;
+            connectedLed.Color = Color.Red;
+        }
+
+
+
         /// <summary>
         /// Event handler for the serial port data received event.
         /// Reads incoming data, processes it, and updates the UI.
@@ -288,24 +308,6 @@ namespace GCS_Phoenix
                 // Append data to the serial data box
                 serialDataBox.AppendText(data + Environment.NewLine);
             }
-        }
-
-
-        /// <summary>
-        /// Event handler for the Disconnect button click event.
-        /// Closes the connection to the serial port and updates the UI.
-        /// </summary>
-        /// <param name="sender">The object that raised the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void button5_Click(object sender, EventArgs e)
-        {
-            // Disconnect from the serial port
-            Program.DisconnectPort();
-
-            // Update UI elements to indicate disconnection
-            serialConnectivityLabel.Text = "Disconnected";
-            serialConnectivityLabel.ForeColor = Color.Red;
-            connectedLed.Color = Color.Red;
         }
 
 

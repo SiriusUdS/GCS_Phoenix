@@ -87,7 +87,7 @@
             // comboBaud
             // 
             comboBaud.FormattingEnabled = true;
-            comboBaud.Items.AddRange(new object[] { "9600", "19200", "38400", "115200", "256000" });
+            comboBaud.Items.AddRange(new object[] { "9600", "19200", "38400", "57600", "115200" });
             comboBaud.Location = new Point(11, 70);
             comboBaud.Name = "comboBaud";
             comboBaud.Size = new Size(140, 29);
