@@ -116,7 +116,7 @@ namespace GCS_Phoenix
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button3_Click(object sender, EventArgs e)
+        private void resetButton_Click(object sender, EventArgs e)
         {
             gMapControl1.Position = new PointLatLng(48.47583, -81.330494);
             gMapControl1.Zoom = 15;
@@ -155,7 +155,7 @@ namespace GCS_Phoenix
             try
             {
                 string? port = comboPorts.SelectedItem?.ToString();
-                
+
                 // Return the selected serial port name
                 if (port != null)
                     return port;
@@ -180,7 +180,7 @@ namespace GCS_Phoenix
             try
             {
                 string? baudString = comboBaud.SelectedItem?.ToString();
-                
+
                 // Parse and return the selected baud rate
                 if (baudString != null)
                     return int.Parse(baudString);
@@ -201,7 +201,7 @@ namespace GCS_Phoenix
         /// </summary>
         /// <param name="sender">The object that raised the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void button4_Click(object sender, EventArgs e)
+        private void connectSerialButton_Click(object sender, EventArgs e)
         {
             // Attempt to connect to the serial port
             if (Program.ConnectPort())
@@ -226,7 +226,7 @@ namespace GCS_Phoenix
         /// </summary>
         /// <param name="sender">The object that raised the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void button5_Click(object sender, EventArgs e)
+        private void disconnectSerialButton_Click(object sender, EventArgs e)
         {
             // Disconnect from the serial port
             Program.DisconnectPort();
@@ -342,7 +342,7 @@ namespace GCS_Phoenix
             acceleroPlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
             acceleroPlot.Plot.Axes.AutoScale();
             acceleroPlot.Interaction.Disable();
-            
+
 
             //Adding sample data
             var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
@@ -375,7 +375,7 @@ namespace GCS_Phoenix
             SetGraphsBehaviors(acceleroPlot);
 
 
-            
+
 
 
             double[] x = new double[239];
@@ -424,6 +424,9 @@ namespace GCS_Phoenix
         {
 
         }
+
+
+
 
 
 
