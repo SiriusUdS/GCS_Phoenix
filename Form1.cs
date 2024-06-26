@@ -4,6 +4,9 @@ using GMap.NET;
 using GMap.NET.WindowsForms;
 using System.IO.Ports;
 using ScottPlot;
+using GCS_Phoenix.Models;
+using DataPoint = GCS_Phoenix.Models.DataPoint;
+using ScottPlot.Plottables;
 
 namespace GCS_Phoenix
 {
@@ -25,33 +28,16 @@ namespace GCS_Phoenix
         private List<DataPoint> _accX = new List<DataPoint>();                      //List that contains acceleration in X data
         private List<DataPoint> _accY = new List<DataPoint>();                      //List that contains acceleration in Y data
         private List<DataPoint> _accZ = new List<DataPoint>();                      //List that contains acceleration in Z data
-        private List<GpsPoint> _gpsPoints = new List<GpsPoint>();
-
-        public struct DataPoint
-        {
-            private float X;
-            private int Y;
-
-            public DataPoint(float x, int y)
-            {
-                X = x;
-                Y = y;
-            }
-        }
-
-        public struct GpsPoint
-        {
-            private float LAT;
-            private float LONG;
-
-            public GpsPoint(float lat, float _long)
-            {
-                LAT = lat;
-                LONG = _long;
-            }
-        }
+        private List<GpsPoint> _gpsPoints = new List<GpsPoint>();                   //List that holds the gps telemetry data
+        private List<DataPoint> _Temp = new List<DataPoint>();                      //List that holds Temperature data
+        private List<PhoenixPacket> _Telemetry = new List<PhoenixPacket>();         //List to hold all of the receiving data
 
 
+        private DataLogger sigX;
+        private DataLogger sigY;
+        private DataLogger sigZ;
+        private DataLogger alt;
+       
 
         public Form1()
         {
@@ -274,12 +260,8 @@ namespace GCS_Phoenix
             {
                 try
                 {
-                    SimpleMessage deserializedPerson = SimpleMessage.Parser.ParseDelimitedFrom(stream);
-                    AppendToSerialDataBox($"Number: {deserializedPerson.LuckyNumber}");
-
-                    msgReceived++;
-                    msgReceivedLabel.Text = $"PACKETS RECEIVED : {msgReceived}";
-
+                    PhoenixPacket deserializedPacket = PhoenixPacket.Parser.ParseDelimitedFrom(stream);
+                    InsertData(deserializedPacket);
                 }
 
                 catch (Exception ex)
@@ -314,6 +296,42 @@ namespace GCS_Phoenix
         //------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
 
 
+        //------------------------------------------DATA---------------------------------------------------------------------------------------//
+
+        /// <summary>
+        /// Method to add data to ui and local memory
+        /// </summary>
+        /// <param name="packet">The received packet</param>
+        public void InsertData(PhoenixPacket packet)
+        {
+            //Log data to local variables
+            _Telemetry.Add(packet);
+            _altitude.Add(new DataPoint { Id = msgReceived, Value = packet.Altitude });
+            _accX.Add(new DataPoint { Id = msgReceived, Value = packet.AccelerationX });
+            _accY.Add(new DataPoint { Id = msgReceived, Value = packet.AccelerationY });
+            _accZ.Add(new DataPoint { Id = msgReceived, Value = packet.AccelerationZ });
+            _gpsPoints.Add(new GpsPoint { Id = msgReceived, LAT = packet.Lattitude, LONG = packet.Longitude });
+            _Temp.Add(new DataPoint { Id = msgReceived, Value = packet.Temperature });
+
+            //Add packet data to graphs
+            sigX.Add(msgReceived, packet.AccelerationX);
+            sigY.Add(msgReceived, packet.AccelerationY);
+            sigZ.Add(msgReceived, packet.AccelerationZ);
+            alt.Add(msgReceived, packet.Altitude);
+
+            //Refresh Graphs
+            acceleroPlot.Refresh();
+            altitudePlot.Refresh();
+
+            //Increment number of packets
+            msgReceived++;
+            msgReceivedLabel.Text = $"PACKETS RECEIVED : {msgReceived}";
+        }
+
+
+
+        //------------------------------------------FIN DATA-----------------------------------------------------------------------------------//
+
         //------------------------------------------UI-----------------------------------------------------------------------------------------//
 
         /// <summary>
@@ -345,19 +363,25 @@ namespace GCS_Phoenix
 
 
             //Adding sample data
-            var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
-            var sigY = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .6));
-            var sigZ = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .9));
 
-            sigX.Label = "X";
-            sigY.Label = "Y";
-            sigZ.Label = "Z";
+            //var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
+            //var sigY = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .6));
+            //var sigZ = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .9));
 
+            sigX = acceleroPlot.Plot.Add.DataLogger();
+            sigY = acceleroPlot.Plot.Add.DataLogger();
+            sigZ = acceleroPlot.Plot.Add.DataLogger();
+
+            sigX.LegendText = "X";
+            sigY.LegendText = "Y";
+            sigZ.LegendText = "Z";
+
+            
             acceleroPlot.Plot.Legend.IsVisible = true;
             acceleroPlot.Plot.Legend.Orientation = ScottPlot.Orientation.Horizontal;
             acceleroPlot.Plot.Legend.OutlineStyle.Color = ScottPlot.Color.FromHex("C6A969");
-            acceleroPlot.Plot.Legend.BackgroundFill.Color = ScottPlot.Color.FromHex("304D30");
-            acceleroPlot.Plot.Legend.Font.Color = ScottPlot.Color.FromHex("C6A969");
+            acceleroPlot.Plot.Legend.BackgroundColor = ScottPlot.Color.FromHex("304D30");
+            acceleroPlot.Plot.Legend.FontColor = ScottPlot.Color.FromHex("C6A969");
         }
 
         /// <summary>
@@ -378,17 +402,17 @@ namespace GCS_Phoenix
 
 
 
-            double[] x = new double[239];
-            double[] y = new double[239];
-            for (int i = 0; i < 239; i++)
-            {
-                x[i] = i;
-                y[i] = -(0.0453337 * Math.Pow(i, 2)) + 2.26424 * i + 1878.92;
-            }
+            //double[] x = new double[239];
+            //double[] y = new double[239];
+            //for (int i = 0; i < 239; i++)
+            //{
+            //    x[i] = i;
+            //    y[i] = -(0.0453337 * Math.Pow(i, 2)) + 2.26424 * i + 1878.92;
+            //}
 
 
-            var alt = altitudePlot.Plot.Add.Scatter(x, y);
-
+            alt = altitudePlot.Plot.Add.DataLogger(); 
+            
         }
 
 

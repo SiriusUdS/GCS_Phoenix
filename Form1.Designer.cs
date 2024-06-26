@@ -520,7 +520,7 @@
             tabPage2.Padding = new Padding(3);
             tabPage2.Size = new Size(1427, 791);
             tabPage2.TabIndex = 1;
-            tabPage2.Text = "SERIAL";
+            tabPage2.Text = "SETTINGS";
             // 
             // groupBox4
             // 

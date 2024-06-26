@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+message PhoenixPacket {
+    required float Lattitude = 1;
+    required float Longitude = 2;
+    required float AccelerationX = 3;
+    required float AccelerationY = 4;
+    required float AccelerationZ = 5;
+    required float GyroX = 6;
+    required float GyroY = 7;
+    required float GyroZ = 8;
+    required float Altitude = 9;
+    required float Temperature = 10;
+    required bool DrogueDeployed = 11;
+    required bool MainDeployed = 12;
+}
