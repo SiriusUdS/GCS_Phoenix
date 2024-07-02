@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tabControl = new TabControl();
             tabPage1 = new TabPage();
@@ -79,6 +80,8 @@
             comPortLabel = new Label();
             comboPorts = new ComboBox();
             comboBaud = new ComboBox();
+            timer1 = new System.Windows.Forms.Timer(components);
+            gyroPlot = new ScottPlot.WinForms.FormsPlot();
             tabControl.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -104,6 +107,7 @@
             // 
             tabPage1.BackColor = Color.FromArgb(22, 48, 32);
             tabPage1.BackgroundImageLayout = ImageLayout.None;
+            tabPage1.Controls.Add(gyroPlot);
             tabPage1.Controls.Add(pictureBox1);
             tabPage1.Controls.Add(altitudePlot);
             tabPage1.Controls.Add(acceleroPlot);
@@ -684,6 +688,19 @@
             comboBaud.Size = new Size(140, 29);
             comboBaud.TabIndex = 4;
             // 
+            // timer1
+            // 
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
+            // 
+            // gyroPlot
+            // 
+            gyroPlot.DisplayScale = 1F;
+            gyroPlot.Location = new Point(871, 347);
+            gyroPlot.Name = "gyroPlot";
+            gyroPlot.Size = new Size(544, 313);
+            gyroPlot.TabIndex = 62;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -712,55 +729,57 @@
 
         #endregion
 
-        private TabControl tabControl;
-        private TabPage tabPage1;
-        private PictureBox pictureBox1;
-        private ScottPlot.WinForms.FormsPlot altitudePlot;
-        private ScottPlot.WinForms.FormsPlot acceleroPlot;
-        private GroupBox mapGroupBox;
-        private Button resetButton;
-        private GMap.NET.WindowsForms.GMapControl gMapControl1;
-        private GroupBox groupBox1;
-        private Label connectedLabel;
-        private Bulb.LedBulb connectedLed;
-        private Label safedLabel;
-        private Bulb.LedBulb safedLed;
-        private Label armedLabel;
-        private Bulb.LedBulb armedLed;
-        private Label liftOffLabel;
-        private Bulb.LedBulb liftOffLed;
-        private Label poweredFlightLabel;
-        private Bulb.LedBulb poweredFlightLed;
-        private Label unpFlightLabel;
-        private Bulb.LedBulb unpFlightLed;
-        private Label apogeeLabel;
-        private Bulb.LedBulb apogeeLed;
-        private Label freeFallLabel;
-        private Bulb.LedBulb freeFallLed;
-        private Label drogueDeployedLabel;
-        private Bulb.LedBulb drogueDeployedLed;
-        private Label mainDeployedLabel;
-        private Bulb.LedBulb mainDeployedLed;
-        private Label mainDescentLabel;
-        private Bulb.LedBulb mainDescentLed;
-        private Label drogueDescentLabel;
-        private Bulb.LedBulb drogueDescentLed;
-        private Label touchDownLabel;
-        private Bulb.LedBulb touchdownLed;
-        private TabPage tabPage2;
-        private GroupBox groupBox4;
-        private Label msgReceivedLabel;
-        private Label rxErrorsLabel;
-        private Label currentStageLabel;
-        private GroupBox groupBox3;
-        private RichTextBox serialDataBox;
-        private GroupBox groupBox2;
-        private Button disconnectSerialButton;
-        private Label serialConnectivityLabel;
-        private Button connectSerialButton;
-        private Label baudRateLabel;
-        private Label comPortLabel;
-        private ComboBox comboPorts;
-        private ComboBox comboBaud;
+        public TabControl tabControl;
+        public TabPage tabPage1;
+        public PictureBox pictureBox1;
+        public ScottPlot.WinForms.FormsPlot altitudePlot;
+        public ScottPlot.WinForms.FormsPlot acceleroPlot;
+        public GroupBox mapGroupBox;
+        public Button resetButton;
+        public GMap.NET.WindowsForms.GMapControl gMapControl1;
+        public GroupBox groupBox1;
+        public Label connectedLabel;
+        public Bulb.LedBulb connectedLed;
+        public Label safedLabel;
+        public Bulb.LedBulb safedLed;
+        public Label armedLabel;
+        public Bulb.LedBulb armedLed;
+        public Label liftOffLabel;
+        public Bulb.LedBulb liftOffLed;
+        public Label poweredFlightLabel;
+        public Bulb.LedBulb poweredFlightLed;
+        public Label unpFlightLabel;
+        public Bulb.LedBulb unpFlightLed;
+        public Label apogeeLabel;
+        public Bulb.LedBulb apogeeLed;
+        public Label freeFallLabel;
+        public Bulb.LedBulb freeFallLed;
+        public Label drogueDeployedLabel;
+        public Bulb.LedBulb drogueDeployedLed;
+        public Label mainDeployedLabel;
+        public Bulb.LedBulb mainDeployedLed;
+        public Label mainDescentLabel;
+        public Bulb.LedBulb mainDescentLed;
+        public Label drogueDescentLabel;
+        public Bulb.LedBulb drogueDescentLed;
+        public Label touchDownLabel;
+        public Bulb.LedBulb touchdownLed;
+        public TabPage tabPage2;
+        public GroupBox groupBox4;
+        public Label msgReceivedLabel;
+        public Label rxErrorsLabel;
+        public Label currentStageLabel;
+        public GroupBox groupBox3;
+        public RichTextBox serialDataBox;
+        public GroupBox groupBox2;
+        public Button disconnectSerialButton;
+        public Label serialConnectivityLabel;
+        public Button connectSerialButton;
+        public Label baudRateLabel;
+        public Label comPortLabel;
+        public ComboBox comboPorts;
+        public ComboBox comboBaud;
+        private System.Windows.Forms.Timer timer1;
+        public ScottPlot.WinForms.FormsPlot gyroPlot;
     }
 }
