@@ -32,11 +32,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tabControl = new TabControl();
             tabPage1 = new TabPage();
+            viewSlideBtn = new Button();
+            viewFullBtn = new Button();
+            gyroPlot = new ScottPlot.WinForms.FormsPlot();
             pictureBox1 = new PictureBox();
             altitudePlot = new ScottPlot.WinForms.FormsPlot();
             acceleroPlot = new ScottPlot.WinForms.FormsPlot();
             mapGroupBox = new GroupBox();
-            resetButton = new Button();
+            resetMapBtn = new Button();
             gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
             groupBox1 = new GroupBox();
             connectedLabel = new Label();
@@ -81,7 +84,6 @@
             comboPorts = new ComboBox();
             comboBaud = new ComboBox();
             timer1 = new System.Windows.Forms.Timer(components);
-            gyroPlot = new ScottPlot.WinForms.FormsPlot();
             tabControl.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -107,6 +109,8 @@
             // 
             tabPage1.BackColor = Color.FromArgb(22, 48, 32);
             tabPage1.BackgroundImageLayout = ImageLayout.None;
+            tabPage1.Controls.Add(viewSlideBtn);
+            tabPage1.Controls.Add(viewFullBtn);
             tabPage1.Controls.Add(gyroPlot);
             tabPage1.Controls.Add(pictureBox1);
             tabPage1.Controls.Add(altitudePlot);
@@ -121,6 +125,36 @@
             tabPage1.Size = new Size(1427, 791);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "DATA";
+            // 
+            // viewSlideBtn
+            // 
+            viewSlideBtn.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            viewSlideBtn.Location = new Point(159, 280);
+            viewSlideBtn.Name = "viewSlideBtn";
+            viewSlideBtn.Size = new Size(102, 23);
+            viewSlideBtn.TabIndex = 64;
+            viewSlideBtn.Text = "View Slide";
+            viewSlideBtn.UseVisualStyleBackColor = true;
+            viewSlideBtn.Click += viewSlideBtn_Click;
+            // 
+            // viewFullBtn
+            // 
+            viewFullBtn.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            viewFullBtn.Location = new Point(14, 280);
+            viewFullBtn.Name = "viewFullBtn";
+            viewFullBtn.Size = new Size(102, 23);
+            viewFullBtn.TabIndex = 63;
+            viewFullBtn.Text = "View Full";
+            viewFullBtn.UseVisualStyleBackColor = true;
+            viewFullBtn.Click += viewFullBtn_Click;
+            // 
+            // gyroPlot
+            // 
+            gyroPlot.DisplayScale = 1F;
+            gyroPlot.Location = new Point(871, 347);
+            gyroPlot.Name = "gyroPlot";
+            gyroPlot.Size = new Size(544, 313);
+            gyroPlot.TabIndex = 62;
             // 
             // pictureBox1
             // 
@@ -150,7 +184,7 @@
             // 
             // mapGroupBox
             // 
-            mapGroupBox.Controls.Add(resetButton);
+            mapGroupBox.Controls.Add(resetMapBtn);
             mapGroupBox.Controls.Add(gMapControl1);
             mapGroupBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             mapGroupBox.ForeColor = Color.FromArgb(198, 169, 105);
@@ -161,16 +195,16 @@
             mapGroupBox.TabStop = false;
             mapGroupBox.Text = "MAP";
             // 
-            // resetButton
+            // resetMapBtn
             // 
-            resetButton.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            resetButton.Location = new Point(453, 418);
-            resetButton.Name = "resetButton";
-            resetButton.Size = new Size(102, 23);
-            resetButton.TabIndex = 12;
-            resetButton.Text = "Reset Map";
-            resetButton.UseVisualStyleBackColor = true;
-            resetButton.Click += resetButton_Click;
+            resetMapBtn.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            resetMapBtn.Location = new Point(453, 418);
+            resetMapBtn.Name = "resetMapBtn";
+            resetMapBtn.Size = new Size(102, 23);
+            resetMapBtn.TabIndex = 12;
+            resetMapBtn.Text = "Reset Map";
+            resetMapBtn.UseVisualStyleBackColor = true;
+            resetMapBtn.Click += resetMapBtn_Click;
             // 
             // gMapControl1
             // 
@@ -690,16 +724,7 @@
             // 
             // timer1
             // 
-            timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
-            // 
-            // gyroPlot
-            // 
-            gyroPlot.DisplayScale = 1F;
-            gyroPlot.Location = new Point(871, 347);
-            gyroPlot.Name = "gyroPlot";
-            gyroPlot.Size = new Size(544, 313);
-            gyroPlot.TabIndex = 62;
             // 
             // Form1
             // 
@@ -735,7 +760,7 @@
         public ScottPlot.WinForms.FormsPlot altitudePlot;
         public ScottPlot.WinForms.FormsPlot acceleroPlot;
         public GroupBox mapGroupBox;
-        public Button resetButton;
+        public Button resetMapBtn;
         public GMap.NET.WindowsForms.GMapControl gMapControl1;
         public GroupBox groupBox1;
         public Label connectedLabel;
@@ -781,5 +806,7 @@
         public ComboBox comboBaud;
         private System.Windows.Forms.Timer timer1;
         public ScottPlot.WinForms.FormsPlot gyroPlot;
+        public Button viewSlideBtn;
+        public Button viewFullBtn;
     }
 }

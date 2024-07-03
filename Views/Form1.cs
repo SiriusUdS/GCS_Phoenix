@@ -2,6 +2,7 @@ using Color = System.Drawing.Color;
 using GMap.NET.WindowsForms;
 using System.IO.Ports;
 using GCS_Phoenix.Controllers;
+using ScottPlot.AxisPanels;
 
 namespace GCS_Phoenix
 {
@@ -11,8 +12,7 @@ namespace GCS_Phoenix
     public partial class Form1 : Form
     {
 
-        public readonly string cachePath;                                          //Path of the cache folder for the map.
-        public GMapOverlay markersOverlay;                                         //Markers overlay for the map.
+
         public byte[] _data;                                                       //Byte array to store the protobuf message.
         public MapController mapController;                                        //Controller that handles operations on the map.
         public DataController dataController;                                      //Controller that handles the data.
@@ -23,8 +23,7 @@ namespace GCS_Phoenix
 
         public Form1()
         {
-            cachePath = Directory.GetCurrentDirectory() + "\\Cache";
-            markersOverlay = new GMapOverlay("marker1");
+
 
             InitializeComponent();
             InitializeComPort();
@@ -43,10 +42,11 @@ namespace GCS_Phoenix
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void resetButton_Click(object sender, EventArgs e)
+        private void resetMapBtn_Click(object sender, EventArgs e)
         {
             mapController.ResetMap();
         }
+
         //------------------------------------------SERIAL PORT--------------------------------------------------------------------------------//
 
         /// <summary>
@@ -200,6 +200,7 @@ namespace GCS_Phoenix
                 {
                     rxErrors++;
                     rxErrorsLabel.Text = $"RX ERRORS : {rxErrors}";
+                    sp.DiscardInBuffer();
                     MessageBox.Show("Error parsing protobuf data packet :: " + ex.Message, "Error!");
                 }
 
@@ -305,6 +306,7 @@ namespace GCS_Phoenix
             altitudePlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
             altitudePlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
             altitudePlot.Plot.Axes.AutoScale();
+
         }
 
 
@@ -366,6 +368,16 @@ namespace GCS_Phoenix
         private void timer1_Tick(object sender, EventArgs e)
         {
             dataController.InsertDataPacket(GeneratePhoenixPacket());
+        }
+
+        private void viewSlideBtn_Click(object sender, EventArgs e)
+        {
+            dataController.EnableGraphSlide();
+        }
+
+        private void viewFullBtn_Click(object sender, EventArgs e)
+        {
+            dataController.EnableGraphFull();
         }
 
 

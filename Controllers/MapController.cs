@@ -8,11 +8,15 @@ namespace GCS_Phoenix.Controllers
 
         public Form1 form;
         public GMapControl mapControl;
+        public readonly string cachePath;                                          //Path of the cache folder for the map.
+        public GMapOverlay markersOverlay;                                         //Markers overlay for the map.
 
         public MapController(Form1 form, GMapControl mapControl)
         {
             this.form = form;
             this.mapControl = mapControl;
+            cachePath = Directory.GetCurrentDirectory() + "\\Cache";
+            markersOverlay = new GMapOverlay("marker1");
         }
 
 
@@ -21,7 +25,7 @@ namespace GCS_Phoenix.Controllers
         /// </summary>
         public void InitializeMap()
         {
-            mapControl.CacheLocation = form.cachePath;
+            mapControl.CacheLocation = cachePath;
             mapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
             mapControl.Dock = DockStyle.Fill;
             GMaps.Instance.Mode = AccessMode.CacheOnly; // Change ServerAndCahe to Cache only for offline use
@@ -39,28 +43,17 @@ namespace GCS_Phoenix.Controllers
         /// <param name="_long">The longitude of the marker to add.</param>
         public void AddPointToMap(double _lat, double _long)
         {
-            if(form.markersOverlay.Markers.Count != 0)
-                form.markersOverlay.Markers.LastOrDefault().Size = new Size(6, 10);
+            if(markersOverlay.Markers.Count != 0)
+                markersOverlay.Markers.LastOrDefault().Size = new Size(6, 10);
 
             double latitude = 48.47583; // Your received latitude;
             double longitude = -81.330494; // Your received longitude;
 
-            //mapControl.Position = new PointLatLng(_lat, _long);
-            //mapControl.Zoom = 20;
+            
             var marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
                     new PointLatLng(_lat, _long), GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_small);
-            form.markersOverlay.Markers.Add(marker);
-            mapControl.Overlays.Add(form.markersOverlay);
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    latitude += 0.0005;
-            //    longitude += 0.0005;
-            //    var marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
-            //        new PointLatLng(latitude, longitude), GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_small);
-            //    form.markersOverlay.Markers.Add(marker);
-            //    mapControl.Overlays.Add(form.markersOverlay);
-            //}
-
+            markersOverlay.Markers.Add(marker);
+            mapControl.Overlays.Add(markersOverlay);
 
             mapControl.Update();
             mapControl.Refresh();

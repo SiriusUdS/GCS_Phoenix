@@ -41,13 +41,14 @@ namespace GCS_Phoenix.Controllers
             gyroY = form.gyroPlot.Plot.Add.DataLogger();
             gyroZ = form.gyroPlot.Plot.Add.DataLogger();
 
-
             sigX.LegendText = "X";
             sigY.LegendText = "Y";
             sigZ.LegendText = "Z";
             gyroX.LegendText = "X";
             gyroY.LegendText = "Y";
             gyroZ.LegendText = "Z";
+
+            
         }
 
 
@@ -57,7 +58,7 @@ namespace GCS_Phoenix.Controllers
         /// <param name="packet">The received packet</param>
         public void InsertDataPacket(PhoenixPacket packet)
         {
-            int packetNumber = form.msgReceived;
+            int packetNumber = form.msgReceived +1;
             //Log data to local variables
             _Telemetry.Add(packet);
             _altitude.Add(new DataPoint { Id = packetNumber, Value = packet.Altitude });
@@ -76,7 +77,7 @@ namespace GCS_Phoenix.Controllers
             gyroZ.Add(packetNumber, packet.GyroZ);
             alt.Add(packetNumber, packet.Altitude);
 
-            form.mapController.AddPointToMap(packet.Lattitude, packet.Longitude);
+            //form.mapController.AddPointToMap(packet.Lattitude, packet.Longitude);
 
             form.acceleroPlot.Refresh();
             form.altitudePlot.Refresh();
@@ -88,6 +89,30 @@ namespace GCS_Phoenix.Controllers
 
 
         }
+
+        public void EnableGraphFull()
+        {
+            alt.ViewFull();
+            sigX.ViewFull();
+            sigY.ViewFull();
+            sigZ.ViewFull();
+            gyroX.ViewFull();
+            gyroY.ViewFull();
+            gyroZ.ViewFull();
+        }
+
+        public void EnableGraphSlide()
+        {
+            alt.ViewSlide(10);
+            sigX.ViewSlide(10);
+            sigY.ViewSlide(10);
+            sigZ.ViewSlide(10);
+            gyroX.ViewSlide(10);
+            gyroY.ViewSlide(10);
+            gyroZ.ViewSlide(10);
+
+        }
+
     }
 }
 
