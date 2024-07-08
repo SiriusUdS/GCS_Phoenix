@@ -1,4 +1,3 @@
-using Google.Protobuf.WellKnownTypes;
 using System.IO.Ports;
 
 namespace GCS_Phoenix

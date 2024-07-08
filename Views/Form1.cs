@@ -1,12 +1,8 @@
-using ScottPlot.WinForms;
 using Color = System.Drawing.Color;
-using GMap.NET;
 using GMap.NET.WindowsForms;
 using System.IO.Ports;
-using ScottPlot;
-using GCS_Phoenix.Models;
-using DataPoint = GCS_Phoenix.Models.DataPoint;
-using ScottPlot.Plottables;
+using GCS_Phoenix.Controllers;
+using ScottPlot.AxisPanels;
 
 namespace GCS_Phoenix
 {
@@ -16,104 +12,40 @@ namespace GCS_Phoenix
     public partial class Form1 : Form
     {
 
-        private readonly string cachePath = Directory.GetCurrentDirectory() + "\\Cache";     //Path of the cache folder for the map.
-        private GMapOverlay markersOverlay = new GMapOverlay("marker1");            //Markers overlay for the map.
-        private byte[] _data;                                                       //Byte array to store the protobuf message.
 
-        private int rxErrors = 0;                                                   //Number of reception errors
-        private int msgReceived = 0;                                                //Number of messages correctly received
-        private int _packetSize = 0;                                                //The size of the receiving packet
+        public byte[] _data;                                                       //Byte array to store the protobuf message.
+        public MapController mapController;                                        //Controller that handles operations on the map.
+        public DataController dataController;                                      //Controller that handles the data.
 
-        private List<DataPoint> _altitude = new List<DataPoint>();                  //List that contains altitude data
-        private List<DataPoint> _accX = new List<DataPoint>();                      //List that contains acceleration in X data
-        private List<DataPoint> _accY = new List<DataPoint>();                      //List that contains acceleration in Y data
-        private List<DataPoint> _accZ = new List<DataPoint>();                      //List that contains acceleration in Z data
-        private List<GpsPoint> _gpsPoints = new List<GpsPoint>();                   //List that holds the gps telemetry data
-        private List<DataPoint> _Temp = new List<DataPoint>();                      //List that holds Temperature data
-        private List<PhoenixPacket> _Telemetry = new List<PhoenixPacket>();         //List to hold all of the receiving data
-
-
-        private DataLogger sigX;
-        private DataLogger sigY;
-        private DataLogger sigZ;
-        private DataLogger alt;
-       
+        public int rxErrors = 0;                                                   //Number of reception errors
+        public int msgReceived = 0;                                                //Number of messages correctly received
+        public int _packetSize = 0;                                                //The size of the receiving packet
 
         public Form1()
         {
+
+
             InitializeComponent();
-            InitializeMap();
             InitializeComPort();
+            timer1.Start();
 
-            //TODO remove when we start to receive real values and move into another method.
-            AddPointToMap(5, 5);
+            mapController = new MapController(this, gMapControl1);
+            dataController = new DataController(this);
 
-        }
 
-        //------------------------------------------MAP----------------------------------------------------------------------------------------//
-
-        /// <summary>
-        /// Code to initialize the map.
-        /// </summary>
-        public void InitializeMap()
-        {
-            gMapControl1.CacheLocation = cachePath;
-            gMapControl1.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
-            gMapControl1.Dock = DockStyle.Fill;
-            GMaps.Instance.Mode = AccessMode.CacheOnly; // Change ServerAndCahe to Cache only for offline use
-            gMapControl1.ShowCenter = false;
-            gMapControl1.MinZoom = 1;
-            gMapControl1.MaxZoom = 20;
+            mapController.InitializeMap();
 
         }
-
-        /// <summary>
-        /// Adds a marker to the map using the provides latitude and longitude.
-        /// </summary>
-        /// <param name="_lat">The latitude of the marker to add.</param>
-        /// <param name="_long">The longitude of the marker to add.</param>
-        public void AddPointToMap(double _lat, double _long)
-        {
-
-            double latitude = 48.47583; // Your received latitude;
-            double longitude = -81.330494; // Your received longitude;
-
-            gMapControl1.Position = new PointLatLng(latitude, longitude);
-            gMapControl1.Zoom = 15;
-            for (int i = 0; i < 10; i++)
-            {
-                latitude += 0.0005;
-                longitude += 0.0005;
-                var marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
-                    new PointLatLng(latitude, longitude), GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_small);
-                markersOverlay.Markers.Add(marker);
-                gMapControl1.Overlays.Add(markersOverlay);
-            }
-
-
-            gMapControl1.Update();
-            gMapControl1.Refresh();
-        }
-
-
 
         /// <summary>
         /// Resets the position of the map when the reset map button is pressed.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void resetButton_Click(object sender, EventArgs e)
+        private void resetMapBtn_Click(object sender, EventArgs e)
         {
-            gMapControl1.Position = new PointLatLng(48.47583, -81.330494);
-            gMapControl1.Zoom = 15;
-            gMapControl1.Update();
-            gMapControl1.Refresh();
-
+            mapController.ResetMap();
         }
-
-
-        //------------------------------------------FIN MAP------------------------------------------------------------------------------------//
-
 
         //------------------------------------------SERIAL PORT--------------------------------------------------------------------------------//
 
@@ -261,13 +193,14 @@ namespace GCS_Phoenix
                 try
                 {
                     PhoenixPacket deserializedPacket = PhoenixPacket.Parser.ParseDelimitedFrom(stream);
-                    InsertData(deserializedPacket);
+                    dataController.InsertDataPacket(deserializedPacket);
                 }
 
                 catch (Exception ex)
                 {
                     rxErrors++;
                     rxErrorsLabel.Text = $"RX ERRORS : {rxErrors}";
+                    sp.DiscardInBuffer();
                     MessageBox.Show("Error parsing protobuf data packet :: " + ex.Message, "Error!");
                 }
 
@@ -296,41 +229,6 @@ namespace GCS_Phoenix
         //------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
 
 
-        //------------------------------------------DATA---------------------------------------------------------------------------------------//
-
-        /// <summary>
-        /// Method to add data to ui and local memory
-        /// </summary>
-        /// <param name="packet">The received packet</param>
-        public void InsertData(PhoenixPacket packet)
-        {
-            //Log data to local variables
-            _Telemetry.Add(packet);
-            _altitude.Add(new DataPoint { Id = msgReceived, Value = packet.Altitude });
-            _accX.Add(new DataPoint { Id = msgReceived, Value = packet.AccelerationX });
-            _accY.Add(new DataPoint { Id = msgReceived, Value = packet.AccelerationY });
-            _accZ.Add(new DataPoint { Id = msgReceived, Value = packet.AccelerationZ });
-            _gpsPoints.Add(new GpsPoint { Id = msgReceived, LAT = packet.Lattitude, LONG = packet.Longitude });
-            _Temp.Add(new DataPoint { Id = msgReceived, Value = packet.Temperature });
-
-            //Add packet data to graphs
-            sigX.Add(msgReceived, packet.AccelerationX);
-            sigY.Add(msgReceived, packet.AccelerationY);
-            sigZ.Add(msgReceived, packet.AccelerationZ);
-            alt.Add(msgReceived, packet.Altitude);
-
-            //Refresh Graphs
-            acceleroPlot.Refresh();
-            altitudePlot.Refresh();
-
-            //Increment number of packets
-            msgReceived++;
-            msgReceivedLabel.Text = $"PACKETS RECEIVED : {msgReceived}";
-        }
-
-
-
-        //------------------------------------------FIN DATA-----------------------------------------------------------------------------------//
 
         //------------------------------------------UI-----------------------------------------------------------------------------------------//
 
@@ -344,6 +242,11 @@ namespace GCS_Phoenix
             //Setup graphs
             SetupGraphAccelero();
             SetupGraphAltitude();
+            SetupGraphGyro();
+            SetGraphsBehaviors(altitudePlot);
+            SetGraphsBehaviors(acceleroPlot);
+            SetGraphsBehaviors(gyroPlot);
+            dataController.SetupData();
 
         }
 
@@ -362,26 +265,34 @@ namespace GCS_Phoenix
             acceleroPlot.Interaction.Disable();
 
 
-            //Adding sample data
 
-            //var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
-            //var sigY = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .6));
-            //var sigZ = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .9));
-
-            sigX = acceleroPlot.Plot.Add.DataLogger();
-            sigY = acceleroPlot.Plot.Add.DataLogger();
-            sigZ = acceleroPlot.Plot.Add.DataLogger();
-
-            sigX.LegendText = "X";
-            sigY.LegendText = "Y";
-            sigZ.LegendText = "Z";
-
-            
             acceleroPlot.Plot.Legend.IsVisible = true;
             acceleroPlot.Plot.Legend.Orientation = ScottPlot.Orientation.Horizontal;
             acceleroPlot.Plot.Legend.OutlineStyle.Color = ScottPlot.Color.FromHex("C6A969");
             acceleroPlot.Plot.Legend.BackgroundColor = ScottPlot.Color.FromHex("304D30");
             acceleroPlot.Plot.Legend.FontColor = ScottPlot.Color.FromHex("C6A969");
+        }
+
+        /// <summary>
+        /// Sets up the Accelerometer graph styles and limits.
+        /// </summary>
+        private void SetupGraphGyro()
+        {
+            gyroPlot.Plot.Axes.Left.Label.Text = "Gyroscopes (°/s)";
+            gyroPlot.Plot.Axes.Left.IsVisible = true;
+            gyroPlot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("163020");
+            gyroPlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
+            gyroPlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
+            gyroPlot.Plot.Axes.AutoScale();
+            gyroPlot.Interaction.Disable();
+
+
+
+            gyroPlot.Plot.Legend.IsVisible = true;
+            gyroPlot.Plot.Legend.Orientation = ScottPlot.Orientation.Horizontal;
+            gyroPlot.Plot.Legend.OutlineStyle.Color = ScottPlot.Color.FromHex("C6A969");
+            gyroPlot.Plot.Legend.BackgroundColor = ScottPlot.Color.FromHex("304D30");
+            gyroPlot.Plot.Legend.FontColor = ScottPlot.Color.FromHex("C6A969");
         }
 
         /// <summary>
@@ -395,24 +306,7 @@ namespace GCS_Phoenix
             altitudePlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
             altitudePlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
             altitudePlot.Plot.Axes.AutoScale();
-            SetGraphsBehaviors(altitudePlot);
-            SetGraphsBehaviors(acceleroPlot);
 
-
-
-
-
-            //double[] x = new double[239];
-            //double[] y = new double[239];
-            //for (int i = 0; i < 239; i++)
-            //{
-            //    x[i] = i;
-            //    y[i] = -(0.0453337 * Math.Pow(i, 2)) + 2.26424 * i + 1878.92;
-            //}
-
-
-            alt = altitudePlot.Plot.Add.DataLogger(); 
-            
         }
 
 
@@ -451,8 +345,41 @@ namespace GCS_Phoenix
 
 
 
+        public static PhoenixPacket GeneratePhoenixPacket()
+        {
+            Random random = new Random();
+            return new PhoenixPacket()
+            {
+                Lattitude = (float)(random.NextDouble() * (48.5 - 48.4) + 48.4), // Lat 48-49
+                Longitude = (float)(random.NextDouble() * (-81.3 - (-81.4)) - 81.4), // Lon -81..-82
+                AccelerationX = (float)(random.NextDouble() * (20) - 10), // Accel -10..10
+                AccelerationY = (float)(random.NextDouble() * (20) - 10),
+                AccelerationZ = (float)(random.NextDouble() * (20) - 10),
+                GyroX = (float)(random.NextDouble() * (20) - 10),
+                GyroY = (float)(random.NextDouble() * (20) - 10),
+                GyroZ = (float)(random.NextDouble() * (20) - 10),
+                Altitude = (float)(random.NextDouble() * (20) - 10),
+                Temperature = (float)random.NextDouble(),
+                DrogueDeployed = random.Next(2) == 1,
+                MainDeployed = random.Next(2) == 1,
+            };
+        }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //Comment to stop random data from appearing
+            dataController.InsertDataPacket(GeneratePhoenixPacket());
+        }
 
+        private void viewSlideBtn_Click(object sender, EventArgs e)
+        {
+            dataController.EnableGraphSlide();
+        }
+
+        private void viewFullBtn_Click(object sender, EventArgs e)
+        {
+            dataController.EnableGraphFull();
+        }
 
 
         //------------------------------------------FIN UI-------------------------------------------------------------------------------------//

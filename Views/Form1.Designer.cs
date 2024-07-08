@@ -28,14 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tabControl = new TabControl();
             tabPage1 = new TabPage();
+            viewSlideBtn = new Button();
+            viewFullBtn = new Button();
+            gyroPlot = new ScottPlot.WinForms.FormsPlot();
             pictureBox1 = new PictureBox();
             altitudePlot = new ScottPlot.WinForms.FormsPlot();
             acceleroPlot = new ScottPlot.WinForms.FormsPlot();
             mapGroupBox = new GroupBox();
-            resetButton = new Button();
+            resetMapBtn = new Button();
             gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
             groupBox1 = new GroupBox();
             connectedLabel = new Label();
@@ -79,6 +83,7 @@
             comPortLabel = new Label();
             comboPorts = new ComboBox();
             comboBaud = new ComboBox();
+            timer1 = new System.Windows.Forms.Timer(components);
             tabControl.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -104,6 +109,9 @@
             // 
             tabPage1.BackColor = Color.FromArgb(22, 48, 32);
             tabPage1.BackgroundImageLayout = ImageLayout.None;
+            tabPage1.Controls.Add(viewSlideBtn);
+            tabPage1.Controls.Add(viewFullBtn);
+            tabPage1.Controls.Add(gyroPlot);
             tabPage1.Controls.Add(pictureBox1);
             tabPage1.Controls.Add(altitudePlot);
             tabPage1.Controls.Add(acceleroPlot);
@@ -117,6 +125,36 @@
             tabPage1.Size = new Size(1427, 791);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "DATA";
+            // 
+            // viewSlideBtn
+            // 
+            viewSlideBtn.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            viewSlideBtn.Location = new Point(159, 280);
+            viewSlideBtn.Name = "viewSlideBtn";
+            viewSlideBtn.Size = new Size(102, 23);
+            viewSlideBtn.TabIndex = 64;
+            viewSlideBtn.Text = "View Slide";
+            viewSlideBtn.UseVisualStyleBackColor = true;
+            viewSlideBtn.Click += viewSlideBtn_Click;
+            // 
+            // viewFullBtn
+            // 
+            viewFullBtn.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            viewFullBtn.Location = new Point(14, 280);
+            viewFullBtn.Name = "viewFullBtn";
+            viewFullBtn.Size = new Size(102, 23);
+            viewFullBtn.TabIndex = 63;
+            viewFullBtn.Text = "View Full";
+            viewFullBtn.UseVisualStyleBackColor = true;
+            viewFullBtn.Click += viewFullBtn_Click;
+            // 
+            // gyroPlot
+            // 
+            gyroPlot.DisplayScale = 1F;
+            gyroPlot.Location = new Point(871, 347);
+            gyroPlot.Name = "gyroPlot";
+            gyroPlot.Size = new Size(544, 313);
+            gyroPlot.TabIndex = 62;
             // 
             // pictureBox1
             // 
@@ -146,7 +184,7 @@
             // 
             // mapGroupBox
             // 
-            mapGroupBox.Controls.Add(resetButton);
+            mapGroupBox.Controls.Add(resetMapBtn);
             mapGroupBox.Controls.Add(gMapControl1);
             mapGroupBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
             mapGroupBox.ForeColor = Color.FromArgb(198, 169, 105);
@@ -157,16 +195,16 @@
             mapGroupBox.TabStop = false;
             mapGroupBox.Text = "MAP";
             // 
-            // resetButton
+            // resetMapBtn
             // 
-            resetButton.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            resetButton.Location = new Point(453, 418);
-            resetButton.Name = "resetButton";
-            resetButton.Size = new Size(102, 23);
-            resetButton.TabIndex = 12;
-            resetButton.Text = "Reset Map";
-            resetButton.UseVisualStyleBackColor = true;
-            resetButton.Click += resetButton_Click;
+            resetMapBtn.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            resetMapBtn.Location = new Point(453, 418);
+            resetMapBtn.Name = "resetMapBtn";
+            resetMapBtn.Size = new Size(102, 23);
+            resetMapBtn.TabIndex = 12;
+            resetMapBtn.Text = "Reset Map";
+            resetMapBtn.UseVisualStyleBackColor = true;
+            resetMapBtn.Click += resetMapBtn_Click;
             // 
             // gMapControl1
             // 
@@ -684,6 +722,10 @@
             comboBaud.Size = new Size(140, 29);
             comboBaud.TabIndex = 4;
             // 
+            // timer1
+            // 
+            timer1.Tick += timer1_Tick;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -712,55 +754,59 @@
 
         #endregion
 
-        private TabControl tabControl;
-        private TabPage tabPage1;
-        private PictureBox pictureBox1;
-        private ScottPlot.WinForms.FormsPlot altitudePlot;
-        private ScottPlot.WinForms.FormsPlot acceleroPlot;
-        private GroupBox mapGroupBox;
-        private Button resetButton;
-        private GMap.NET.WindowsForms.GMapControl gMapControl1;
-        private GroupBox groupBox1;
-        private Label connectedLabel;
-        private Bulb.LedBulb connectedLed;
-        private Label safedLabel;
-        private Bulb.LedBulb safedLed;
-        private Label armedLabel;
-        private Bulb.LedBulb armedLed;
-        private Label liftOffLabel;
-        private Bulb.LedBulb liftOffLed;
-        private Label poweredFlightLabel;
-        private Bulb.LedBulb poweredFlightLed;
-        private Label unpFlightLabel;
-        private Bulb.LedBulb unpFlightLed;
-        private Label apogeeLabel;
-        private Bulb.LedBulb apogeeLed;
-        private Label freeFallLabel;
-        private Bulb.LedBulb freeFallLed;
-        private Label drogueDeployedLabel;
-        private Bulb.LedBulb drogueDeployedLed;
-        private Label mainDeployedLabel;
-        private Bulb.LedBulb mainDeployedLed;
-        private Label mainDescentLabel;
-        private Bulb.LedBulb mainDescentLed;
-        private Label drogueDescentLabel;
-        private Bulb.LedBulb drogueDescentLed;
-        private Label touchDownLabel;
-        private Bulb.LedBulb touchdownLed;
-        private TabPage tabPage2;
-        private GroupBox groupBox4;
-        private Label msgReceivedLabel;
-        private Label rxErrorsLabel;
-        private Label currentStageLabel;
-        private GroupBox groupBox3;
-        private RichTextBox serialDataBox;
-        private GroupBox groupBox2;
-        private Button disconnectSerialButton;
-        private Label serialConnectivityLabel;
-        private Button connectSerialButton;
-        private Label baudRateLabel;
-        private Label comPortLabel;
-        private ComboBox comboPorts;
-        private ComboBox comboBaud;
+        public TabControl tabControl;
+        public TabPage tabPage1;
+        public PictureBox pictureBox1;
+        public ScottPlot.WinForms.FormsPlot altitudePlot;
+        public ScottPlot.WinForms.FormsPlot acceleroPlot;
+        public GroupBox mapGroupBox;
+        public Button resetMapBtn;
+        public GMap.NET.WindowsForms.GMapControl gMapControl1;
+        public GroupBox groupBox1;
+        public Label connectedLabel;
+        public Bulb.LedBulb connectedLed;
+        public Label safedLabel;
+        public Bulb.LedBulb safedLed;
+        public Label armedLabel;
+        public Bulb.LedBulb armedLed;
+        public Label liftOffLabel;
+        public Bulb.LedBulb liftOffLed;
+        public Label poweredFlightLabel;
+        public Bulb.LedBulb poweredFlightLed;
+        public Label unpFlightLabel;
+        public Bulb.LedBulb unpFlightLed;
+        public Label apogeeLabel;
+        public Bulb.LedBulb apogeeLed;
+        public Label freeFallLabel;
+        public Bulb.LedBulb freeFallLed;
+        public Label drogueDeployedLabel;
+        public Bulb.LedBulb drogueDeployedLed;
+        public Label mainDeployedLabel;
+        public Bulb.LedBulb mainDeployedLed;
+        public Label mainDescentLabel;
+        public Bulb.LedBulb mainDescentLed;
+        public Label drogueDescentLabel;
+        public Bulb.LedBulb drogueDescentLed;
+        public Label touchDownLabel;
+        public Bulb.LedBulb touchdownLed;
+        public TabPage tabPage2;
+        public GroupBox groupBox4;
+        public Label msgReceivedLabel;
+        public Label rxErrorsLabel;
+        public Label currentStageLabel;
+        public GroupBox groupBox3;
+        public RichTextBox serialDataBox;
+        public GroupBox groupBox2;
+        public Button disconnectSerialButton;
+        public Label serialConnectivityLabel;
+        public Button connectSerialButton;
+        public Label baudRateLabel;
+        public Label comPortLabel;
+        public ComboBox comboPorts;
+        public ComboBox comboBaud;
+        private System.Windows.Forms.Timer timer1;
+        public ScottPlot.WinForms.FormsPlot gyroPlot;
+        public Button viewSlideBtn;
+        public Button viewFullBtn;
     }
 }
