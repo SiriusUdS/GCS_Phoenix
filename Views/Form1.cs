@@ -367,6 +367,7 @@ namespace GCS_Phoenix
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            //Comment to stop random data from appearing
             dataController.InsertDataPacket(GeneratePhoenixPacket());
         }
 
