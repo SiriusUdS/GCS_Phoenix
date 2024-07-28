@@ -132,7 +132,7 @@
             resetButton.TabIndex = 12;
             resetButton.Text = "Reset Map";
             resetButton.UseVisualStyleBackColor = true;
-            resetButton.Click += resetButton_Click;
+            resetButton.Click += ResetButton_Click;
             // 
             // connectSerialButton
             // 
@@ -143,7 +143,7 @@
             connectSerialButton.TabIndex = 13;
             connectSerialButton.Text = "Connect";
             connectSerialButton.UseVisualStyleBackColor = true;
-            connectSerialButton.Click += connectSerialButton_Click;
+            connectSerialButton.Click += ConnectSerialButton_Click;
             // 
             // serialConnectivityLabel
             // 
@@ -497,7 +497,7 @@
             disconnectSerialButton.TabIndex = 15;
             disconnectSerialButton.Text = "Disconnect";
             disconnectSerialButton.UseVisualStyleBackColor = true;
-            disconnectSerialButton.Click += disconnectSerialButton_Click;
+            disconnectSerialButton.Click += DisconnectSerialButton_Click;
             // 
             // currentStageLabel
             // 

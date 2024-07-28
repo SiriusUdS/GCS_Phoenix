@@ -61,7 +61,6 @@ namespace GCS_Phoenix
       serialPortManager = new SerialPortManager();
     }
 
-		//------------------------------------------MAP----------------------------------------------------------------------------------------//
 		public void InitializeMap()
 		{
 			gMapControl1.CacheLocation = cachePath;
@@ -94,17 +93,14 @@ namespace GCS_Phoenix
 			gMapControl1.Refresh();
 		}
 
-		private void resetButton_Click(object sender, EventArgs e)
+		private void ResetButton_Click(object sender, EventArgs e)
 		{
 			gMapControl1.Position = new PointLatLng(48.47583, -81.330494);
 			gMapControl1.Zoom = 15;
 			gMapControl1.Update();
 			gMapControl1.Refresh();
 		}
-		//------------------------------------------FIN MAP------------------------------------------------------------------------------------//
 
-
-		//------------------------------------------SERIAL PORT--------------------------------------------------------------------------------//
 		private void InitializeComPort()
 		{
 			string[] ports = SerialPort.GetPortNames();
@@ -151,7 +147,7 @@ namespace GCS_Phoenix
 			}
 		}
 
-		private void connectSerialButton_Click(object sender, EventArgs e)
+		private void ConnectSerialButton_Click(object sender, EventArgs e)
 		{
 			string portName = GetSelectedSerialPort();
 			int baudRate = GetSelectedBaudRate();
@@ -195,7 +191,7 @@ namespace GCS_Phoenix
 			}
 		}
 
-		private void disconnectSerialButton_Click(object sender, EventArgs e)
+		private void DisconnectSerialButton_Click(object sender, EventArgs e)
 		{
 			Program.DisconnectPort();
 
@@ -203,11 +199,6 @@ namespace GCS_Phoenix
 			serialConnectivityLabel.ForeColor = Color.Red;
 			connectedLed.Color = Color.Red;
 		}
-
-		//------------------------------------------FIN SERIAL PORT----------------------------------------------------------------------------//
-
-
-		//------------------------------------------UI-----------------------------------------------------------------------------------------//
 
 		private void DashboardForm_Load(object sender, EventArgs e)
 		{
