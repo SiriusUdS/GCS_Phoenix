@@ -16,6 +16,8 @@ namespace GCS_Phoenix.Communication
 
     public SerialPort Port { get => _serialPort; set => _serialPort = value; }
 
+    public SerialPortManager() { }
+
     public SerialPortManager(SerialSettings serialSettings)
     {
       _serialPort = new SerialPort(

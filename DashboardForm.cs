@@ -8,23 +8,19 @@ using System.Data;
 using System.Xml;
 using System;
 using GCS_Phoenix.Communication;
+using GCS_Phoenix.Exception;
 
 namespace GCS_Phoenix
 {
 	public partial class DashboardForm : Form
 	{
-		private readonly string cachePath = Directory.GetCurrentDirectory() + "\\Cache";     //Path of the cache folder for the map.
-		private GMapOverlay markersOverlay = new GMapOverlay("marker1");            //Markers overlay for the map.
-		private byte[] _data;                                                       //Byte array to store the protobuf message.
+		private readonly string cachePath = Directory.GetCurrentDirectory() + "\\Cache";
+		private GMapOverlay markersOverlay = new GMapOverlay("marker1");
 
-		private int rxErrors = 0;                                                   //Number of reception errors
-		private int msgReceived = 0;                                                //Number of messages correctly received
-		private int _packetSize = 0;                                                //The size of the receiving packet
-
-		private List<DataPoint> _altitude = new List<DataPoint>();                  //List that contains altitude data
-		private List<DataPoint> _accX = new List<DataPoint>();                      //List that contains acceleration in X data
-		private List<DataPoint> _accY = new List<DataPoint>();                      //List that contains acceleration in Y data
-		private List<DataPoint> _accZ = new List<DataPoint>();                      //List that contains acceleration in Z data
+		private List<DataPoint> _altitude = new List<DataPoint>();
+		private List<DataPoint> _accX = new List<DataPoint>();
+		private List<DataPoint> _accY = new List<DataPoint>();
+		private List<DataPoint> _accZ = new List<DataPoint>();
 		private List<GpsPoint> _gpsPoints = new List<GpsPoint>();
 
 		private SerialPortManager serialPortManager;
@@ -61,7 +57,9 @@ namespace GCS_Phoenix
 
 			//TODO remove when we start to receive real values and move into another method.
 			AddPointToMap(5, 5);
-		}
+
+      serialPortManager = new SerialPortManager();
+    }
 
 		//------------------------------------------MAP----------------------------------------------------------------------------------------//
 		public void InitializeMap()
@@ -117,7 +115,7 @@ namespace GCS_Phoenix
 			}
 		}
 
-		public string GetSerialPort()
+		public string GetSelectedSerialPort()
 		{
 			try
 			{
@@ -135,7 +133,7 @@ namespace GCS_Phoenix
 			}
 		}
 
-		public int GetBaudRate()
+		public int GetSelectedBaudRate()
 		{
 			try
 			{
@@ -155,83 +153,33 @@ namespace GCS_Phoenix
 
 		private void connectSerialButton_Click(object sender, EventArgs e)
 		{
-			if (Program.ConnectPort())
+			string portName = GetSelectedSerialPort();
+			int baudRate = GetSelectedBaudRate();
+
+			serialPortManager.Port.PortName = portName;
+      serialPortManager.Port.BaudRate = baudRate;
+
+			try
 			{
-				SerialPort sp1 = Program.GetSerialPort();
-
-				serialConnectivityLabel.Text = "Connected";
-				serialConnectivityLabel.ForeColor = Color.Green;
-				connectedLed.Color = Color.Green;
-
-				serialPortManager.Port = sp1;
-				//sp1.DataReceived += SerialPort_DataReceived;
-				sp1.DataReceived += PB_Sp_DataReceived;
-			}
-		}
-
-		private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-		{
-					
-		}
-
-		//private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
-		//{
-		//  while ((serialPort1.IsOpen) && (serialPort1.BytesToRead > 0))
-		//  {
-		//    rxString = string.Empty;
-		//    try
-		//    {
-		//      rxString = serialPort1.ReadTo("\r\n");//read line from grbl, discard CR LF
-		//      dataProcessing = true;
-		//      this.Invoke(new EventHandler(dataRx));//tigger rx process
-		//      while ((serialPort1.IsOpen) && (dataProcessing)) ;//wait previous data line processed done
-		//    }
-		//    catch (Exception errort)
-		//    {
-		//      mens = "Error reading line from serial port";
-		//      ClosePort();
-		//      err = errort;
-		//      this.Invoke(new EventHandler(logErrorThr));
-		//    }
-		//  }
-		//}
-
-		private void PB_Sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
-		{
-			SerialPort sp = (SerialPort)sender;
-
-			int receivedData;
-			receivedData = sp.ReadByte();
-
-			AppendToSerialDataBox(receivedData.ToString());
-
-			_packetSize = receivedData + 1;
-			_data = new byte[_packetSize];
-			_data[0] = (byte)receivedData;
-
-			for (int i = 1; i < _packetSize; i++)
+				serialPortManager.Connect();
+        serialConnectivityLabel.Text = "Connected";
+        serialConnectivityLabel.ForeColor = Color.Green;
+        connectedLed.Color = Color.Green;
+      }
+			catch (CannotConnectSerialPortException ex)
 			{
-				byte received = (byte)sp.ReadByte();
-				_data[i] = received;
-				AppendToSerialDataBox(System.Text.Encoding.ASCII.GetString(_data));
+				MessageBox.Show("Error connecting to serial port: " + Environment.NewLine + ex.Message, "Error!");
 			}
 
-			//using (MemoryStream stream = new MemoryStream(_data))
+   //   if (Program.ConnectPort())
 			//{
-			//	try
-			//	{
-			//		SimpleMessage deserializedPerson = SimpleMessage.Parser.ParseDelimitedFrom(stream);
-			//		AppendToSerialDataBox($"Number: {deserializedPerson.LuckyNumber}");
+			//	SerialPort sp1 = Program.GetSerialPort();
 
-			//		msgReceived++;
-			//		msgReceivedLabel.Text = $"PACKETS RECEIVED : {msgReceived}";
-			//	}
-			//	catch (Exception ex)
-			//	{
-			//		rxErrors++;
-			//		rxErrorsLabel.Text = $"RX ERRORS : {rxErrors}";
-			//		MessageBox.Show("Error parsing protobuf data packet :: " + ex.Message, "Error!");
-			//	}
+			//	serialConnectivityLabel.Text = "Connected";
+			//	serialConnectivityLabel.ForeColor = Color.Green;
+			//	connectedLed.Color = Color.Green;
+
+			//	serialPortManager.Port = sp1;
 			//}
 		}
 
@@ -250,7 +198,6 @@ namespace GCS_Phoenix
 		private void disconnectSerialButton_Click(object sender, EventArgs e)
 		{
 			Program.DisconnectPort();
-			//serialPortManager.Port
 
 			serialConnectivityLabel.Text = "Disconnected";
 			serialConnectivityLabel.ForeColor = Color.Red;
@@ -262,7 +209,7 @@ namespace GCS_Phoenix
 
 		//------------------------------------------UI-----------------------------------------------------------------------------------------//
 
-		private void Form1_Load(object sender, EventArgs e)
+		private void DashboardForm_Load(object sender, EventArgs e)
 		{
 			SetupGraphAccelero();
 			SetupGraphAltitude();

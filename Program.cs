@@ -27,11 +27,11 @@ namespace GCS_Phoenix
 
             try
             {
-                if (form1.GetSerialPort().Equals("")|| form1.GetBaudRate().Equals(0))
+                if (form1.GetSelectedSerialPort().Equals("")|| form1.GetSelectedBaudRate().Equals(0))
                 {
                     throw new System.Exception("Serial port or baud rate not usable.");
                 }
-                _serialPort = new SerialPort(form1.GetSerialPort(), form1.GetBaudRate(), Parity.None, 8, StopBits.One);
+                _serialPort = new SerialPort(form1.GetSelectedSerialPort(), form1.GetSelectedBaudRate(), Parity.None, 8, StopBits.One);
                 if (!(_serialPort.IsOpen))
                     _serialPort.Open();
                 return true;
