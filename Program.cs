@@ -5,7 +5,7 @@ namespace GCS_Phoenix
 {
     internal static class Program
     {
-        private static Form1 form1;
+        private static DashboardForm form1;
         private static SerialPort _serialPort;
 
         [STAThread]
@@ -13,7 +13,7 @@ namespace GCS_Phoenix
         {
 
             ApplicationConfiguration.Initialize();
-            form1 = new Form1();
+            form1 = new DashboardForm();
             Application.Run(form1);
         }
 
@@ -29,14 +29,14 @@ namespace GCS_Phoenix
             {
                 if (form1.GetSerialPort().Equals("")|| form1.GetBaudRate().Equals(0))
                 {
-                    throw new Exception("Serial port or baud rate not usable.");
+                    throw new System.Exception("Serial port or baud rate not usable.");
                 }
                 _serialPort = new SerialPort(form1.GetSerialPort(), form1.GetBaudRate(), Parity.None, 8, StopBits.One);
                 if (!(_serialPort.IsOpen))
                     _serialPort.Open();
                 return true;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 MessageBox.Show("Error opening/writing to serial port :: " + ex.Message, "Error!");
                 return false;
@@ -68,7 +68,7 @@ namespace GCS_Phoenix
                     _serialPort.Dispose();
                 }
             }
-            catch(Exception ex)
+            catch(System.Exception ex)
             {
                 MessageBox.Show($"Exception when closing port :: {ex.Message}", "Error!");
             }

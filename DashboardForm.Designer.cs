@@ -1,6 +1,6 @@
 ﻿namespace GCS_Phoenix
 {
-    partial class Form1
+    partial class DashboardForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardForm));
             comboBaud = new ComboBox();
             comboPorts = new ComboBox();
             comPortLabel = new Label();
@@ -132,7 +132,7 @@
             resetButton.TabIndex = 12;
             resetButton.Text = "Reset Map";
             resetButton.UseVisualStyleBackColor = true;
-            resetButton.Click += button3_Click;
+            resetButton.Click += resetButton_Click;
             // 
             // connectSerialButton
             // 
@@ -143,7 +143,7 @@
             connectSerialButton.TabIndex = 13;
             connectSerialButton.Text = "Connect";
             connectSerialButton.UseVisualStyleBackColor = true;
-            connectSerialButton.Click += button4_Click;
+            connectSerialButton.Click += connectSerialButton_Click;
             // 
             // serialConnectivityLabel
             // 
@@ -497,7 +497,7 @@
             disconnectSerialButton.TabIndex = 15;
             disconnectSerialButton.Text = "Disconnect";
             disconnectSerialButton.UseVisualStyleBackColor = true;
-            disconnectSerialButton.Click += button5_Click;
+            disconnectSerialButton.Click += disconnectSerialButton_Click;
             // 
             // currentStageLabel
             // 
