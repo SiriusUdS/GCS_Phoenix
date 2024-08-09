@@ -23,6 +23,15 @@ namespace GCS_Phoenix.Communication
 
     public SerialSettings() { }
 
+    public SerialSettings(string portName, int baudRate)
+    {
+      _portName = portName;
+      _baudRate = baudRate;
+      _parity = Parity.None;
+      _dataBits = 8;
+      _stopBits = StopBits.One;
+    }
+
     public SerialSettings(string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits)
     {
       _portName = portName;

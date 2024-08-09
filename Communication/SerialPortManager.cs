@@ -75,21 +75,25 @@ namespace GCS_Phoenix.Communication
 
     private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
     {
-      int receivedData;
-      receivedData = _serialPort.ReadByte();
-
-      //AppendToSerialDataBox(receivedData.ToString());
-
-      int packetSize = receivedData + 1;
-      byte[] data = new byte[packetSize];
-      data[0] = (byte)receivedData;
-
-      for (int i = 1; i < packetSize; i++)
+      try
       {
-        byte received = (byte)_serialPort.ReadByte();
-        data[i] = received;
-        DataReceived?.Invoke(this, data);
-        //AppendToSerialDataBox(System.Text.Encoding.ASCII.GetString(_data));
+        int receivedData;
+        receivedData = _serialPort.ReadByte();
+
+        int packetSize = receivedData + 1;
+        byte[] data = new byte[packetSize];
+        data[0] = (byte)receivedData;
+
+        for (int i = 1; i < packetSize; i++)
+        {
+          byte received = (byte)_serialPort.ReadByte();
+          data[i] = received;
+        }
+        DataReceived?.Invoke(this._serialPort, data);
+      }
+      catch (System.OperationCanceledException ex)
+      {
+        MessageBox.Show("Serial port has been closed while reading its buffer.\n" + ex.Message, "Error!");
       }
     }
   }

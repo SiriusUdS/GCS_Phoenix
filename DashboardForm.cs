@@ -1,14 +1,11 @@
-using ScottPlot.WinForms;
 using Color = System.Drawing.Color;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using System.IO.Ports;
 using ScottPlot;
-using System.Data;
-using System.Xml;
-using System;
 using GCS_Phoenix.Communication;
 using GCS_Phoenix.Exception;
+using System.Text;
 
 namespace GCS_Phoenix
 {
@@ -27,14 +24,19 @@ namespace GCS_Phoenix
 
 			//TODO remove when we start to receive real values and move into another method.
 			AddPointToMap(5, 5);
-
-      serialPortManager = new SerialPortManager();
-      serialPortManager.DataReceived += SerialPortManager_DataReceived;
     }
 
     private void SerialPortManager_DataReceived(object? sender, byte[] e)
     {
-      throw new NotImplementedException();
+			if (e is null || e.Length <= 0)
+			{
+				return;
+			}
+			for (int i = 0; i < e.Length; i++)
+      {
+        byte[] singleByteArray = new byte[] { e[i] };
+        AppendToSerialDataBox(ASCIIEncoding.ASCII.GetString(singleByteArray), addNewLine: false);
+      }
     }
 
     public void InitializeMap()
@@ -128,10 +130,10 @@ namespace GCS_Phoenix
 			string portName = GetSelectedSerialPort();
 			int baudRate = GetSelectedBaudRate();
 
-			serialPortManager.Port.PortName = portName;
-      serialPortManager.Port.BaudRate = baudRate;
+			serialPortManager = new SerialPortManager(new SerialSettings(portName, baudRate));
+      serialPortManager.DataReceived += SerialPortManager_DataReceived;
 
-			try
+      try
 			{
 				serialPortManager.Connect();
         serialConnectivityLabel.Text = "Connected";
@@ -142,20 +144,9 @@ namespace GCS_Phoenix
 			{
 				MessageBox.Show("Error connecting to serial port: " + Environment.NewLine + ex.Message, "Error!");
 			}
-
-   //   if (Program.ConnectPort())
-			//{
-			//	SerialPort sp1 = Program.GetSerialPort();
-
-			//	serialConnectivityLabel.Text = "Connected";
-			//	serialConnectivityLabel.ForeColor = Color.Green;
-			//	connectedLed.Color = Color.Green;
-
-			//	serialPortManager.Port = sp1;
-			//}
 		}
 
-		private void AppendToSerialDataBox(string data)
+		private void AppendToSerialDataBox(string data, bool addNewLine = true)
 		{
 			if (serialDataBox.InvokeRequired)
 			{
@@ -163,13 +154,21 @@ namespace GCS_Phoenix
 			}
 			else
 			{
-				serialDataBox.AppendText(data + Environment.NewLine);
+				if (addNewLine)
+				{
+          serialDataBox.AppendText(data + Environment.NewLine);
+				}
+        else
+				{
+					serialDataBox.Text += data;
+				}
 			}
 		}
 
 		private void DisconnectSerialButton_Click(object sender, EventArgs e)
 		{
 			serialPortManager.Disconnect();
+			serialPortManager.DataReceived -= SerialPortManager_DataReceived;
 
 			serialConnectivityLabel.Text = "Disconnected";
 			serialConnectivityLabel.ForeColor = Color.Red;
