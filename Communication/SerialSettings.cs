@@ -7,14 +7,6 @@ using System.Threading.Tasks;
 
 namespace GCS_Phoenix.Communication
 {
-  //struct SerialSettings
-  //{
-  //  public string PortName;
-  //  public int BaudRate;
-  //  public Parity Parity;
-  //  public int DataBits;
-  //  public StopBits StopBits;
-  //}
   internal class SerialSettings
   {
     private string _portName = String.Empty;

@@ -14,6 +14,4 @@ namespace GCS_Phoenix.Exception
 
     public SerialPortClosedException(string message, System.Exception inner) : base(message, inner) { }
   }
-  {
-  }
 }

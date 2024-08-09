@@ -17,37 +17,7 @@ namespace GCS_Phoenix
 		private readonly string cachePath = Directory.GetCurrentDirectory() + "\\Cache";
 		private GMapOverlay markersOverlay = new GMapOverlay("marker1");
 
-		private List<DataPoint> _altitude = new List<DataPoint>();
-		private List<DataPoint> _accX = new List<DataPoint>();
-		private List<DataPoint> _accY = new List<DataPoint>();
-		private List<DataPoint> _accZ = new List<DataPoint>();
-		private List<GpsPoint> _gpsPoints = new List<GpsPoint>();
-
 		private SerialPortManager serialPortManager;
-
-		public struct DataPoint
-		{
-			private float X;
-			private int Y;
-
-			public DataPoint(float x, int y)
-			{
-				X = x;
-				Y = y;
-			}
-		}
-
-		public struct GpsPoint
-		{
-			private float LAT;
-			private float LONG;
-
-			public GpsPoint(float lat, float _long)
-			{
-				LAT = lat;
-				LONG = _long;
-			}
-		}
 
 		public DashboardForm()
 		{
@@ -59,9 +29,15 @@ namespace GCS_Phoenix
 			AddPointToMap(5, 5);
 
       serialPortManager = new SerialPortManager();
+      serialPortManager.DataReceived += SerialPortManager_DataReceived;
     }
 
-		public void InitializeMap()
+    private void SerialPortManager_DataReceived(object? sender, byte[] e)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void InitializeMap()
 		{
 			gMapControl1.CacheLocation = cachePath;
 			gMapControl1.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
@@ -193,7 +169,7 @@ namespace GCS_Phoenix
 
 		private void DisconnectSerialButton_Click(object sender, EventArgs e)
 		{
-			Program.DisconnectPort();
+			serialPortManager.Disconnect();
 
 			serialConnectivityLabel.Text = "Disconnected";
 			serialConnectivityLabel.ForeColor = Color.Red;
@@ -273,11 +249,6 @@ namespace GCS_Phoenix
 			};
 
 			plot.Interaction = interaction;
-		}
-
-		private void pictureBox1_Click(object sender, EventArgs e)
-		{
-
 		}
 	}
 }
