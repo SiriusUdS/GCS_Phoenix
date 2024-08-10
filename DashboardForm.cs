@@ -34,9 +34,11 @@ namespace GCS_Phoenix
 			}
 			for (int i = 0; i < e.Length; i++)
       {
-        byte[] singleByteArray = new byte[] { e[i] };
-        string hexValue = singleByteArray[0].ToString("X2");
-        AppendToSerialDataBox(hexValue, addNewLine: false);
+        float floatValue = BitConverter.ToSingle(e, 0);
+				AppendToSerialDataBox(floatValue.ToString(), addNewLine: false);
+        //byte[] singleByteArray = new byte[] { e[i] };
+        //string hexValue = singleByteArray[0].ToString("X2");
+        //AppendToSerialDataBox(hexValue, addNewLine: false);
         //AppendToSerialDataBox(ASCIIEncoding.ASCII.GetString(singleByteArray), addNewLine: false);
       }
     }
