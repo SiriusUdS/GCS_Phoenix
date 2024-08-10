@@ -6,6 +6,7 @@ using ScottPlot;
 using GCS_Phoenix.Communication;
 using GCS_Phoenix.Exception;
 using System.Text;
+using GCS_Phoenix.Communication.Packet;
 
 namespace GCS_Phoenix
 {
@@ -28,19 +29,94 @@ namespace GCS_Phoenix
 
     private void SerialPortManager_DataReceived(object? sender, byte[] e)
     {
-			if (e is null || e.Length <= 0)
+		string displayText = "";
+		if (e is null || e.Length <= 0)
+		{
+			return;
+		}
+
+		for (int i = 0; i < e.Length - 3; i++)
+		{
+            displayText = "";
+            if (e[i] == 0xA5U && e[i + 1] == 0x5AU && e[i + 2] == 0xA5U)
 			{
-				return;
+				switch (e[i + 3])
+				{
+					case (byte)0x10U:
+						if (e.Length - (i + 3) >= 8)
+						{
+							byte[] accelerometerData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11] };
+							AccelerometerPacket packet = new AccelerometerPacket(accelerometerData);
+
+                            displayText += "TimeStamp Accelerometre : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
+                            displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
+                            displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
+                        }
+						break;
+                    case (byte)0x20U:
+                        if (e.Length - (i + 3) >= 4)
+                        {
+                            byte[] altimeterData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
+                            AltimeterPacket packet = new AltimeterPacket(altimeterData);
+
+                            displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
+                        }
+                        break;
+                    case (byte)0x30U:
+                        if (e.Length - (i + 3) >= 8)
+                        {
+                            byte[] gyroscopeData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11] };
+                            GyroscopePacket packet = new GyroscopePacket(gyroscopeData);
+
+                            displayText += "TimeStamp Gyroscope : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Rotation X : " + packet.getRotationX_dps().ToString() + Environment.NewLine;
+                            displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
+                            displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
+                        }
+                        break;
+                    case (byte)0x40U:
+                        if (e.Length - (i + 3) >= 14)
+                        {
+                            byte[] gpsData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11], e[i + 12], e[i + 13], e[i + 14], e[i + 15], e[i + 16], e[i + 17] };
+                            GPSPacket packet = new GPSPacket(gpsData);
+
+                            displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Latitude : " + packet.getLatitude() + Environment.NewLine;
+                            displayText += "Longitude : " + packet.getLongitude() + Environment.NewLine;
+                        }
+                        break;
+                    case (byte)0x50U:
+                        if (e.Length - (i + 3) >= 10)
+                        {
+                            byte[] thermocouplePC0Data = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
+                            byte[] thermocouplePC1Data = { e[i + 4], e[i + 5], e[i + 8], e[i + 9] };
+                            byte[] thermocouplePC2Data = { e[i + 4], e[i + 5], e[i + 10], e[i + 11] };
+                            byte[] thermocouplePC3Data = { e[i + 4], e[i + 5], e[i + 12], e[i + 13] };
+                            ThermocouplePacket packetPC0 = new ThermocouplePacket(thermocouplePC0Data);
+                            ThermocouplePacket packetPC1 = new ThermocouplePacket(thermocouplePC1Data);
+                            ThermocouplePacket packetPC2 = new ThermocouplePacket(thermocouplePC2Data);
+                            ThermocouplePacket packetPC3 = new ThermocouplePacket(thermocouplePC3Data);
+
+                            displayText += "TimeStamp Thermocouple : " + packetPC0.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Temperature PC0 : " + packetPC0.getTemperature_C().ToString() + Environment.NewLine;
+                            displayText += "Temperature PC1 : " + packetPC1.getTemperature_C().ToString() + Environment.NewLine;
+                            displayText += "Temperature PC2 : " + packetPC2.getTemperature_C().ToString() + Environment.NewLine;
+                            displayText += "Temperature PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
+                        }
+                        break;
+                    default:
+						break;
+				}
 			}
-			for (int i = 0; i < e.Length; i++)
-      {
-        float floatValue = BitConverter.ToSingle(e, 0);
-				AppendToSerialDataBox(floatValue.ToString(), addNewLine: false);
-        //byte[] singleByteArray = new byte[] { e[i] };
-        //string hexValue = singleByteArray[0].ToString("X2");
-        //AppendToSerialDataBox(hexValue, addNewLine: false);
-        //AppendToSerialDataBox(ASCIIEncoding.ASCII.GetString(singleByteArray), addNewLine: false);
-      }
+			//float floatValue = BitConverter.ToSingle(e, 0);
+			AppendToSerialDataBox(displayText, addNewLine: false);
+			//byte[] singleByteArray = new byte[] { e[i] };
+			//string hexValue = singleByteArray[0].ToString("X2");
+			//AppendToSerialDataBox(hexValue, addNewLine: false);
+			//AppendToSerialDataBox(ASCIIEncoding.ASCII.GetString(singleByteArray), addNewLine: false);
+		}
     }
 
     public void InitializeMap()

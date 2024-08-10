@@ -1,3 +1,4 @@
+using GCS_Phoenix.Communication.Packet;
 using Google.Protobuf.WellKnownTypes;
 using System.IO.Ports;
 
@@ -5,7 +6,7 @@ namespace GCS_Phoenix
 {
     internal static class Program
     {
-        private static DashboardForm form1;
+        private static DashboardForm dashboardForm;
         private static SerialPort _serialPort;
 
         [STAThread]
@@ -13,8 +14,24 @@ namespace GCS_Phoenix
         {
 
             ApplicationConfiguration.Initialize();
-            form1 = new DashboardForm();
-            Application.Run(form1);
+            dashboardForm = new DashboardForm();
+
+            byte[] altimeterRawData = { 216, 4, 244, 114 };
+            AltimeterPacket altimeterPacket = new AltimeterPacket(altimeterRawData);
+
+            byte[] accelerometerRawData = { 54, 4, 169, 255, 3, 0, 232, 3 };
+            AccelerometerPacket accelerometerPacket = new AccelerometerPacket(accelerometerRawData);
+
+            byte[] gyroscopeRawData = { 58, 4, 96, 253, 252, 255, 248, 255 };
+            GyroscopePacket gyroscopePacket = new GyroscopePacket(gyroscopeRawData);
+
+            byte[] gpsRawData = { 111, 4, 78, 0, 45, 0, 189, 90, 87, 0, 71, 0, 169, 216 };
+            GPSPacket gPSPacket = new GPSPacket(gpsRawData);
+
+            byte[] thermocoupleData = { 84, 4, 8, 135 };
+            ThermocouplePacket thermocouplePacket = new ThermocouplePacket(thermocoupleData);
+
+            Application.Run(dashboardForm);
         }
 
 
@@ -27,11 +44,11 @@ namespace GCS_Phoenix
 
             try
             {
-                if (form1.GetSelectedSerialPort().Equals("")|| form1.GetSelectedBaudRate().Equals(0))
+                if (dashboardForm.GetSelectedSerialPort().Equals("")|| dashboardForm.GetSelectedBaudRate().Equals(0))
                 {
                     throw new System.Exception("Serial port or baud rate not usable.");
                 }
-                _serialPort = new SerialPort(form1.GetSelectedSerialPort(), form1.GetSelectedBaudRate(), Parity.None, 8, StopBits.One);
+                _serialPort = new SerialPort(dashboardForm.GetSelectedSerialPort(), dashboardForm.GetSelectedBaudRate(), Parity.None, 8, StopBits.One);
                 if (!(_serialPort.IsOpen))
                     _serialPort.Open();
                 return true;
