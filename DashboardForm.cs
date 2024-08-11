@@ -81,7 +81,7 @@ namespace GCS_Phoenix
                     case (byte)0x40U:
                         if (e.Length - (i + 3) > 14)
                         {
-                            byte[] gpsData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11], e[i + 12], e[i + 13], e[i + 14], e[i + 15], e[i + 16], e[i + 17] };
+                            byte[] gpsData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11], e[i + 12], e[i + 13], e[i + 14], e[i + 15], e[i + 16], e[i + 17] };
                             GPSPacket packet = new GPSPacket(gpsData);
 
                             displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
