@@ -17,6 +17,8 @@ namespace GCS_Phoenix
 
 		private SerialPortManager serialPortManager;
 
+		private List<byte> uartBuffer = new List<byte>();
+
 		public DashboardForm()
 		{
 			InitializeComponent();
@@ -38,57 +40,57 @@ namespace GCS_Phoenix
 		for (int i = 0; i < e.Length - 3; i++)
 		{
             displayText = "";
-            if (e[i] == 0xA5U && e[i + 1] == 0x5AU && e[i + 2] == 0xA5U)
+            if (e[i] == 0x5AU && e[i + 1] == 0xA5U && e[i + 3] == 0xA5U)
 			{
-				switch (e[i + 3])
+				switch (e[i + 2])
 				{
 					case (byte)0x10U:
-						if (e.Length - (i + 3) >= 8)
+						if (e.Length - (i + 3) > 8)
 						{
 							byte[] accelerometerData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11] };
 							AccelerometerPacket packet = new AccelerometerPacket(accelerometerData);
 
-                            displayText += "TimeStamp Accelerometre : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
-                            displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
-                            displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
+                            //displayText += "TimeStamp Accelerometre : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            //displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
+                            //displayText += "Acceleration Y : " + packet.getAccelerationY_g().ToString() + Environment.NewLine;
+                            //displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
                         }
 						break;
                     case (byte)0x20U:
-                        if (e.Length - (i + 3) >= 4)
+                        if (e.Length - (i + 3) > 4)
                         {
                             byte[] altimeterData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
                             AltimeterPacket packet = new AltimeterPacket(altimeterData);
 
-                            displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
+                            //displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            //displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
                         }
                         break;
                     case (byte)0x30U:
-                        if (e.Length - (i + 3) >= 8)
+                        if (e.Length - (i + 3) > 8)
                         {
                             byte[] gyroscopeData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11] };
                             GyroscopePacket packet = new GyroscopePacket(gyroscopeData);
 
-                            displayText += "TimeStamp Gyroscope : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Rotation X : " + packet.getRotationX_dps().ToString() + Environment.NewLine;
-                            displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
-                            displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
+                            //displayText += "TimeStamp Gyroscope : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            //displayText += "Rotation X : " + packet.getRotationX_dps().ToString() + Environment.NewLine;
+                            //displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
+                            //displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
                         }
                         break;
                     case (byte)0x40U:
-                        if (e.Length - (i + 3) >= 14)
+                        if (e.Length - (i + 3) > 14)
                         {
                             byte[] gpsData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11], e[i + 12], e[i + 13], e[i + 14], e[i + 15], e[i + 16], e[i + 17] };
                             GPSPacket packet = new GPSPacket(gpsData);
 
-                            displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Latitude : " + packet.getLatitude() + Environment.NewLine;
-                            displayText += "Longitude : " + packet.getLongitude() + Environment.NewLine;
+                            //displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            //displayText += "Latitude : " + packet.getLatitude() + Environment.NewLine;
+                            //displayText += "Longitude : " + packet.getLongitude() + Environment.NewLine;
                         }
                         break;
                     case (byte)0x50U:
-                        if (e.Length - (i + 3) >= 10)
+                        if (e.Length - (i + 3) > 10)
                         {
                             byte[] thermocouplePC0Data = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
                             byte[] thermocouplePC1Data = { e[i + 4], e[i + 5], e[i + 8], e[i + 9] };
@@ -100,10 +102,10 @@ namespace GCS_Phoenix
                             ThermocouplePacket packetPC3 = new ThermocouplePacket(thermocouplePC3Data);
 
                             displayText += "TimeStamp Thermocouple : " + packetPC0.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Temperature PC0 : " + packetPC0.getTemperature_C().ToString() + Environment.NewLine;
-                            displayText += "Temperature PC1 : " + packetPC1.getTemperature_C().ToString() + Environment.NewLine;
-                            displayText += "Temperature PC2 : " + packetPC2.getTemperature_C().ToString() + Environment.NewLine;
-                            displayText += "Temperature PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
+                            displayText += "Resistance PC0 : " + packetPC0.getTemperature_C().ToString() + Environment.NewLine;
+                            displayText += "Resistance PC1 : " + packetPC1.getTemperature_C().ToString() + Environment.NewLine;
+                            displayText += "Resistance PC2 : " + packetPC2.getTemperature_C().ToString() + Environment.NewLine;
+                            displayText += "Resistance PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
                         }
                         break;
                     default:

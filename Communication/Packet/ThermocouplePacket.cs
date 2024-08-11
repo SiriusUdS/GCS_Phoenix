@@ -25,7 +25,7 @@ namespace GCS_Phoenix.Communication.Packet
                 byte[] temperatureData = { rawData[2], rawData[3] };
 
                 _timeStamp_ms = _rawDataParser.parseUInt16(timeStampData) * 10U;
-                _temperature_C = Convert.ToSingle(_rawDataParser.parseUInt16(temperatureData)) / 100.0f;
+                _temperature_C = Convert.ToSingle(_rawDataParser.parseUInt16(temperatureData));
             }
             else
             {

@@ -16,7 +16,7 @@ namespace GCS_Phoenix
             ApplicationConfiguration.Initialize();
             dashboardForm = new DashboardForm();
 
-            byte[] altimeterRawData = { 216, 4, 244, 114 };
+            /*byte[] altimeterRawData = { 216, 4, 244, 114 };
             AltimeterPacket altimeterPacket = new AltimeterPacket(altimeterRawData);
 
             byte[] accelerometerRawData = { 54, 4, 169, 255, 3, 0, 232, 3 };
@@ -29,7 +29,7 @@ namespace GCS_Phoenix
             GPSPacket gPSPacket = new GPSPacket(gpsRawData);
 
             byte[] thermocoupleData = { 84, 4, 8, 135 };
-            ThermocouplePacket thermocouplePacket = new ThermocouplePacket(thermocoupleData);
+            ThermocouplePacket thermocouplePacket = new ThermocouplePacket(thermocoupleData);*/
 
             Application.Run(dashboardForm);
         }
