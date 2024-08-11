@@ -47,13 +47,13 @@ namespace GCS_Phoenix
 					case (byte)0x10U:
 						if (e.Length - (i + 3) > 8)
 						{
-							byte[] accelerometerData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11] };
+							byte[] accelerometerData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11] };
 							AccelerometerPacket packet = new AccelerometerPacket(accelerometerData);
 
-                            //displayText += "TimeStamp Accelerometre : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            //displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
-                            //displayText += "Acceleration Y : " + packet.getAccelerationY_g().ToString() + Environment.NewLine;
-                            //displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
+                            displayText += "TimeStamp Accelerometre : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
+                            displayText += "Acceleration Y : " + packet.getAccelerationY_g().ToString() + Environment.NewLine;
+                            displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
                         }
 						break;
                     case (byte)0x20U:
@@ -62,20 +62,20 @@ namespace GCS_Phoenix
                             byte[] altimeterData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
                             AltimeterPacket packet = new AltimeterPacket(altimeterData);
 
-                            //displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            //displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
+                            displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
                         }
                         break;
                     case (byte)0x30U:
                         if (e.Length - (i + 3) > 8)
                         {
-                            byte[] gyroscopeData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11] };
+                            byte[] gyroscopeData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11] };
                             GyroscopePacket packet = new GyroscopePacket(gyroscopeData);
 
-                            //displayText += "TimeStamp Gyroscope : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            //displayText += "Rotation X : " + packet.getRotationX_dps().ToString() + Environment.NewLine;
-                            //displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
-                            //displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
+                            displayText += "TimeStamp Gyroscope : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Rotation X : " + packet.getRotationX_dps().ToString() + Environment.NewLine;
+                            displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
+                            displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
                         }
                         break;
                     case (byte)0x40U:
@@ -84,9 +84,9 @@ namespace GCS_Phoenix
                             byte[] gpsData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[1 + 9], e[i + 10], e[i + 11], e[i + 12], e[i + 13], e[i + 14], e[i + 15], e[i + 16], e[i + 17] };
                             GPSPacket packet = new GPSPacket(gpsData);
 
-                            //displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            //displayText += "Latitude : " + packet.getLatitude() + Environment.NewLine;
-                            //displayText += "Longitude : " + packet.getLongitude() + Environment.NewLine;
+                            displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
+                            displayText += "Latitude : " + packet.getLatitude() + Environment.NewLine;
+                            displayText += "Longitude : " + packet.getLongitude() + Environment.NewLine;
                         }
                         break;
                     case (byte)0x50U:
