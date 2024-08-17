@@ -10,6 +10,7 @@ using GCS_Phoenix.Communication.Packet;
 using GCS_Phoenix.Models.Sensors;
 using CsvHelper;
 using System.Globalization;
+using GCS_Phoenix.Managers;
 
 namespace GCS_Phoenix
 {
@@ -22,13 +23,7 @@ namespace GCS_Phoenix
 
 		private List<byte> uartBuffer = new List<byte>();
 
-		private readonly string csvPath = Directory.GetCurrentDirectory() + "\\Data";
-
-		private List<AccelerometerModel> accelerometerDataList = new List<AccelerometerModel>();
-		private List<AltimeterModel> altimeterDataList = new List<AltimeterModel>();
-		private List<GyroscopeModel> gyroscopeDataList = new List<GyroscopeModel>();
-		private List<GPSModel> gpsDataList = new List<GPSModel>();
-		private List<ThermocoupleModel> thermocoupleDataList = new List<ThermocoupleModel>();
+		private CsvFileManager csvFileManager = new CsvFileManager();
 
 		public DashboardForm()
 		{
@@ -38,10 +33,6 @@ namespace GCS_Phoenix
 
 			//TODO remove when we start to receive real values and move into another method.
 			AddPointToMap(5, 5);
-			if (!Directory.Exists(csvPath))
-			{
-				Directory.CreateDirectory(csvPath);
-			}
     }
 
     private void SerialPortManager_DataReceived(object? sender, byte[] data)
@@ -70,15 +61,8 @@ namespace GCS_Phoenix
 			          displayText += "Acceleration Y : " + packet.getAccelerationY_g().ToString() + Environment.NewLine;
 			          displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
 
-								accelerometerDataList.Add(new AccelerometerModel
-                {
-                  TimeStamp_ms =		packet.getTimeStamp_ms(),
-                  AccelerationX_g = packet.getAccelerationX_g(),
-                  AccelerationY_g = packet.getAccelerationY_g(),
-                  AccelerationZ_g = packet.getAccelerationZ_g()
-                });
-
-			        }
+                csvFileManager.AddAccelerometerData(packet);
+              }
 							break;
 			      case (byte)0x20U:
 			        if (data.Length - (i + 3) > 4)
@@ -89,11 +73,7 @@ namespace GCS_Phoenix
 			          displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
 			          displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
 
-								altimeterDataList.Add(new AltimeterModel
-                {
-                  TimeStamp_ms =	packet.getTimeStamp_ms(),
-                  Altitude_m =		packet.getAltitude_m()
-                });
+								csvFileManager.AddAltimeterData(packet);
 			        }
 			        break;
 			      case (byte)0x30U:
@@ -107,13 +87,7 @@ namespace GCS_Phoenix
 			          displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
 			          displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
 
-								gyroscopeDataList.Add(new GyroscopeModel
-                {
-                  TimeStamp_ms =	packet.getTimeStamp_ms(),
-                  RotationX_dps = packet.getRotationX_dps(),
-                  RotationY_dps = packet.getRotationY_dps(),
-                  RotationZ_dps = packet.getRotationZ_dps()
-                });
+								csvFileManager.AddGyroscopeData(packet);
 			        }
 			        break;
 			      case (byte)0x40U:
@@ -126,16 +100,7 @@ namespace GCS_Phoenix
 			          displayText += "Latitude : " + packet.getLatitudeFormatted() + Environment.NewLine;
 			          displayText += "Longitude : " + packet.getLongitudeFormatted() + Environment.NewLine;
 
-								gpsDataList.Add(new GPSModel
-                {
-                  TimeStamp_ms =	packet.getTimeStamp_ms(),
-									LatitudeDirection = packet.getLatitudeDirection(),
-									LatitudeDegrees = packet.getLatitudeDegrees(),
-									LatitudeMinutes = packet.getLatitudeMinutes(),
-									LongitudeDirection = packet.getLongitudeDirection(),
-									LongitudeDegrees = packet.getLongitudeDegrees(),
-									LongitudeMinutes = packet.getLongitudeMinutes()
-                });
+								csvFileManager.AddGPSData(packet);
 			        }
 			        break;
 			      case (byte)0x50U:
@@ -156,11 +121,7 @@ namespace GCS_Phoenix
 			          displayText += "Resistance PC2 : " + packetPC2.getTemperature_C().ToString() + Environment.NewLine;
 			          displayText += "Resistance PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
 
-								thermocoupleDataList.Add(new ThermocoupleModel
-                {
-                  TimeStamp_ms = packetPC0.getTimeStamp_ms(),
-                  Temperature_C = packetPC0.getTemperature_C()
-                });
+								csvFileManager.AddThermocoupleData(packetPC0);
 			        }
 			        break;
 			      default:
@@ -170,76 +131,7 @@ namespace GCS_Phoenix
 				AppendToSerialDataBox(displayText, addNewLine: false);
 			}
 			// TODO: Check if new data is available for sensor before opening the file
-			using (StreamWriter sw = new StreamWriter(csvPath + "\\AccelerometerData.csv", append: true))
-			{
-				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
-				{
-					cw.Context.RegisterClassMap<AccelerometerMap>();
-					if (sw.BaseStream.Length == 0)
-					{
-						cw.WriteHeader<AccelerometerModel>();
-						cw.NextRecord();
-					}
-					cw.WriteRecords(accelerometerDataList);
-					accelerometerDataList.Clear();
-				}
-			}
-			using (StreamWriter sw = new StreamWriter(csvPath + "\\AltimeterData.csv", append: true))
-			{
-				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
-				{
-					cw.Context.RegisterClassMap<AltimeterMap>();
-					if (sw.BaseStream.Length == 0)
-					{
-						cw.WriteHeader<AltimeterModel>();
-						cw.NextRecord();
-					}
-					cw.WriteRecords(altimeterDataList);
-					altimeterDataList.Clear();
-				}
-			}
-			using (StreamWriter sw = new StreamWriter(csvPath + "\\GyroscopeData.csv", append: true))
-			{
-				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
-				{
-					cw.Context.RegisterClassMap<GyroscopeMap>();
-					if (sw.BaseStream.Length == 0)
-					{
-						cw.WriteHeader<GyroscopeModel>();
-						cw.NextRecord();
-					}
-					cw.WriteRecords(gyroscopeDataList);
-					gyroscopeDataList.Clear();
-				}
-			}
-			using (StreamWriter sw = new StreamWriter(csvPath + "\\GPSData.csv", append: true))
-			{
-				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
-				{
-					cw.Context.RegisterClassMap<GPSMap>();
-					if (sw.BaseStream.Length == 0)
-					{
-						cw.WriteHeader<GPSModel>();
-						cw.NextRecord();
-					}
-					cw.WriteRecords(gpsDataList);
-					gpsDataList.Clear();
-				}
-			}
-			using (StreamWriter sw = new StreamWriter(csvPath + "\\ThermocoupleData.csv", append: true))
-			{
-				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
-				{
-					cw.Context.RegisterClassMap<ThermocoupleMap>();
-					if (sw.BaseStream.Length == 0)
-					{
-						cw.WriteHeader<ThermocoupleModel>();
-						cw.NextRecord();
-					}
-					cw.WriteRecords(thermocoupleDataList);
-					thermocoupleDataList.Clear();
-				}
-			}
+			csvFileManager.WriteDataFiles();
     }
 
     public void InitializeMap()
