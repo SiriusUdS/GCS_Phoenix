@@ -38,6 +38,10 @@ namespace GCS_Phoenix
 
 			//TODO remove when we start to receive real values and move into another method.
 			AddPointToMap(5, 5);
+			if (!Directory.Exists(csvPath))
+			{
+				Directory.CreateDirectory(csvPath);
+			}
     }
 
     private void SerialPortManager_DataReceived(object? sender, byte[] data)
