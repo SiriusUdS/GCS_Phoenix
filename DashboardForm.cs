@@ -177,6 +177,7 @@ namespace GCS_Phoenix
 						cw.NextRecord();
 					}
 					cw.WriteRecords(accelerometerDataList);
+					accelerometerDataList.Clear();
 				}
 			}
 			using (StreamWriter sw = new StreamWriter(csvPath + "\\AltimeterData.csv", append: true))
@@ -190,6 +191,7 @@ namespace GCS_Phoenix
 						cw.NextRecord();
 					}
 					cw.WriteRecords(altimeterDataList);
+					altimeterDataList.Clear();
 				}
 			}
 			using (StreamWriter sw = new StreamWriter(csvPath + "\\GyroscopeData.csv", append: true))
@@ -203,6 +205,7 @@ namespace GCS_Phoenix
 						cw.NextRecord();
 					}
 					cw.WriteRecords(gyroscopeDataList);
+					gyroscopeDataList.Clear();
 				}
 			}
 			using (StreamWriter sw = new StreamWriter(csvPath + "\\GPSData.csv", append: true))
@@ -216,6 +219,7 @@ namespace GCS_Phoenix
 						cw.NextRecord();
 					}
 					cw.WriteRecords(gpsDataList);
+					gpsDataList.Clear();
 				}
 			}
 			using (StreamWriter sw = new StreamWriter(csvPath + "\\ThermocoupleData.csv", append: true))
@@ -229,6 +233,7 @@ namespace GCS_Phoenix
 						cw.NextRecord();
 					}
 					cw.WriteRecords(thermocoupleDataList);
+					thermocoupleDataList.Clear();
 				}
 			}
     }
