@@ -33,7 +33,7 @@ namespace GCS_Phoenix.Managers
     {
       if (!packet.ValidatePacketValues())
       {
-        // Log error
+        Serilog.Log.Error("AccelerometerPacket: Invalid packet data:\n" + packet.ToString());
         return;
       }
       accelerometerDataList.Add(new AccelerometerModel
@@ -49,7 +49,7 @@ namespace GCS_Phoenix.Managers
     {
       if (!packet.ValidatePacketValues())
       {
-        // Log error
+        Serilog.Log.Error("AltimeterPacket: Invalid packet data:\n" + packet.ToString());
         return;
       }
       altimeterDataList.Add(new AltimeterModel
@@ -63,7 +63,7 @@ namespace GCS_Phoenix.Managers
     {
       if (!packet.ValidatePacketValues())
       {
-        // Log error
+        Serilog.Log.Error("GyroscopePacket: Invalid packet data:\n" + packet.ToString());
         return;
       }
       gyroscopeDataList.Add(new GyroscopeModel
@@ -79,7 +79,7 @@ namespace GCS_Phoenix.Managers
     {
       if (!packet.ValidatePacketValues())
       {
-        // Log error
+        Serilog.Log.Error("GPSPacket: Invalid packet data:\n" + packet.ToString());
         return;
       }
       gpsDataList.Add(new GPSModel
@@ -98,7 +98,7 @@ namespace GCS_Phoenix.Managers
     {
       if (!packet.ValidatePacketValues())
       {
-        // Log error
+        Serilog.Log.Error("ThermocouplePacket: Invalid packet data:\n" + packet.ToString());
         return;
       }
       thermocoupleDataList.Add(new ThermocoupleModel

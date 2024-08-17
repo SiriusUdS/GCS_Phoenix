@@ -68,5 +68,14 @@ namespace GCS_Phoenix.Communication.Packet
     {
       return rawData == null || rawData.Length != 8;
     }
+
+    public override string ToString()
+    {
+      return "AccelerometerPacket: " +
+        "TimeStamp_ms: " + _timeStamp_ms +
+        ", AccelerationX_g: " + _accelerationX_g +
+        ", AccelerationY_g: " + _accelerationY_g +
+        ", AccelerationZ_g: " + _accelerationZ_g;
+    }
   }
 }

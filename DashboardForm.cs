@@ -59,11 +59,11 @@ namespace GCS_Phoenix
                 displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
 
                 csvFileManager.AddAccelerometerData(packet);
-                Serilog.Log.Information("Decoded accelerometer packet with values: " + 
-                  packet.getAccelerationX_g() + " " + 
-                  packet.getAccelerationY_g() + " " + 
-                  packet.getAccelerationZ_g() + " " + 
-                  packet.getTimeStamp_ms()
+                Serilog.Log.Information("Decoded accelerometer packet with values:\n" + 
+                  "\tAcc. X: " + packet.getAccelerationX_g() + "\n" + 
+                  "\tAcc. Y: " + packet.getAccelerationY_g() + "\n" + 
+                  "\tAcc. Z: " + packet.getAccelerationZ_g() + "\n" + 
+                  "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
               }
               break;
@@ -78,8 +78,8 @@ namespace GCS_Phoenix
 
                 csvFileManager.AddAltimeterData(packet);
                 Serilog.Log.Information("Decoded altimeter packet with values: " + 
-                  packet.getAltitude_m() + " " + 
-                  packet.getTimeStamp_ms()
+                  "\tAltitude: " + packet.getAltitude_m() + "\n" +
+                  "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
               }
               break;
@@ -96,10 +96,10 @@ namespace GCS_Phoenix
 
                 csvFileManager.AddGyroscopeData(packet);
                 Serilog.Log.Information("Decoded gyroscope packet with values: " + 
-                  packet.getRotationX_dps() + " " + 
-                  packet.getRotationY_dps() + " " + 
-                  packet.getRotationZ_dps() + " " + 
-                  packet.getTimeStamp_ms()
+                  "\tRot. X: " + packet.getRotationX_dps() + "\n" +
+                  "\tRot. Y: " + packet.getRotationY_dps() + "\n" +
+                  "\tRot. Z: " + packet.getRotationZ_dps() + "\n" +
+                  "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
               }
               break;
@@ -115,9 +115,9 @@ namespace GCS_Phoenix
 
                 csvFileManager.AddGPSData(packet);
                 Serilog.Log.Information("Decoded GPS packet with values: " + 
-                  packet.getLatitudeFormatted() + " " + 
-                  packet.getLongitudeFormatted() + " " + 
-                  packet.getTimeStamp_ms()
+                  "\tLatitude: " + packet.getLatitudeFormatted() + "\n" + 
+                  "\tLongitude: " + packet.getLongitudeFormatted() + "\n" +
+                  "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
               }
               break;
@@ -140,9 +140,24 @@ namespace GCS_Phoenix
                 displayText += "Resistance PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
 
                 csvFileManager.AddThermocoupleData(packetPC0);
-                Serilog.Log.Information("Decoded thermocouple packet with values: " + 
-                  packetPC0.getTemperature_C() + " " + 
-                  packetPC0.getTimeStamp_ms()
+                csvFileManager.AddThermocoupleData(packetPC1);
+                csvFileManager.AddThermocoupleData(packetPC2);
+                csvFileManager.AddThermocoupleData(packetPC3);
+                Serilog.Log.Information("Decoded thermocouple PC0 packet with values: " + 
+                  "\tTemperature: " + packetPC0.getTemperature_C() + "\n" +
+                  "\tTimestamp: " + packetPC0.getTimeStamp_ms()
+                );
+                Serilog.Log.Information("Decoded thermocouple PC1 packet with values: " +
+                  "\tTemperature: " + packetPC1.getTemperature_C() + "\n" +
+                  "\tTimestamp: " + packetPC1.getTimeStamp_ms()
+                );
+                Serilog.Log.Information("Decoded thermocouple PC2 packet with values: " +
+                  "\tTemperature: " + packetPC2.getTemperature_C() + "\n" +
+                  "\tTimestamp: " + packetPC2.getTimeStamp_ms()
+                );
+                Serilog.Log.Information("Decoded thermocouple PC3 packet with values: " +
+                  "\tTemperature: " + packetPC3.getTemperature_C() + "\n" +
+                  "\tTimestamp: " + packetPC3.getTimeStamp_ms()
                 );
               }
               break;

@@ -107,5 +107,17 @@ namespace GCS_Phoenix.Communication.Packet
     {
       return rawData == null || rawData.Length != 14;
     }
+
+    public override string ToString()
+    {
+      return "GPSPacket: " +
+        "TimeStamp_ms: " + _timeStamp_ms +
+        ", Latitude direction: " + _latitudeDirection +
+        ", Latitude degrees: " + _latitudeDegrees +
+        ", Latitude minutes: " + _latitudeMinutes +
+        ", Longitude direction: " + _longitudeDirection +
+        ", Longitude degrees: " + _longitudeDegrees +
+        ", Longitude minutes: " + _longitudeMinutes;
+    }
   }
 }

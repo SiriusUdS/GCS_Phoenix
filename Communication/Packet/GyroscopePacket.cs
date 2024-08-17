@@ -68,5 +68,14 @@ namespace GCS_Phoenix.Communication.Packet
     {
       return rawData == null || rawData.Length != 8;
     }
+
+    public override string ToString()
+    {
+      return "GyroscopePacket: " +
+        "TimeStamp_ms: " + _timeStamp_ms +
+        ", RotationX_dps: " + _rotationX_dps +
+        ", RotationY_dps: " + _rotationY_dps +
+        ", RotationZ_dps: " + _rotationZ_dps;
+    }
   }
 }

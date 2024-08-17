@@ -50,5 +50,12 @@ namespace GCS_Phoenix.Communication.Packet
     {
       return rawData == null || rawData.Length != 4;
     }
+
+    public override string ToString()
+    {
+      return "ThermocouplePacket: " +
+        "TimeStamp_ms: " + _timeStamp_ms +
+        ", Temperature_C: " + _temperature_C;
+    }
   }
 }
