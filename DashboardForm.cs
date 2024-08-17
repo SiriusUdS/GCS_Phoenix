@@ -7,6 +7,9 @@ using GCS_Phoenix.Communication;
 using GCS_Phoenix.Exception;
 using System.Text;
 using GCS_Phoenix.Communication.Packet;
+using GCS_Phoenix.Models.Sensors;
+using CsvHelper;
+using System.Globalization;
 
 namespace GCS_Phoenix
 {
@@ -19,6 +22,14 @@ namespace GCS_Phoenix
 
 		private List<byte> uartBuffer = new List<byte>();
 
+		private readonly string csvPath = Directory.GetCurrentDirectory() + "\\Data";
+
+		private List<AccelerometerModel> accelerometerDataList = new List<AccelerometerModel>();
+		private List<AltimeterModel> altimeterDataList = new List<AltimeterModel>();
+		private List<GyroscopeModel> gyroscopeDataList = new List<GyroscopeModel>();
+		private List<GPSModel> gpsDataList = new List<GPSModel>();
+		private List<ThermocoupleModel> thermocoupleDataList = new List<ThermocoupleModel>();
+
 		public DashboardForm()
 		{
 			InitializeComponent();
@@ -29,96 +40,197 @@ namespace GCS_Phoenix
 			AddPointToMap(5, 5);
     }
 
-    private void SerialPortManager_DataReceived(object? sender, byte[] e)
+    private void SerialPortManager_DataReceived(object? sender, byte[] data)
     {
-		string displayText = "";
-		if (e is null || e.Length <= 0)
-		{
-			return;
-		}
-
-		for (int i = 0; i < e.Length - 3; i++)
-		{
-            displayText = "";
-            if (e[i] == 0x5AU && e[i + 1] == 0xA5U && e[i + 3] == 0xA5U)
+			string displayText = "";
+			if (data is null || data.Length <= 0)
 			{
-				switch (e[i + 2])
+				return;
+			}
+
+			for (int i = 0; i < data.Length - 3; i++)
+			{
+			  displayText = "";
+			  if (data[i] == 0x5AU && data[i + 1] == 0xA5U && data[i + 3] == 0xA5U)
 				{
-					case (byte)0x10U:
-						if (e.Length - (i + 3) > 8)
-						{
-							byte[] accelerometerData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11] };
-							AccelerometerPacket packet = new AccelerometerPacket(accelerometerData);
+					switch (data[i + 2])
+					{
+						case (byte)0x10U:
+							if (data.Length - (i + 3) > 8)
+							{
+								byte[] accelerometerData = { data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8], data[i + 9], data[i + 10], data[i + 11] };
+								AccelerometerPacket packet = new AccelerometerPacket(accelerometerData);
 
-                            displayText += "TimeStamp Accelerometre : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
-                            displayText += "Acceleration Y : " + packet.getAccelerationY_g().ToString() + Environment.NewLine;
-                            displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
-                        }
-						break;
-                    case (byte)0x20U:
-                        if (e.Length - (i + 3) > 4)
-                        {
-                            byte[] altimeterData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
-                            AltimeterPacket packet = new AltimeterPacket(altimeterData);
+			          displayText += "TimeStamp Accelerometre : " + packet.getTimeStamp_ms() + Environment.NewLine;
+			          displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
+			          displayText += "Acceleration Y : " + packet.getAccelerationY_g().ToString() + Environment.NewLine;
+			          displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
 
-                            displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
-                        }
-                        break;
-                    case (byte)0x30U:
-                        if (e.Length - (i + 3) > 8)
-                        {
-                            byte[] gyroscopeData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11] };
-                            GyroscopePacket packet = new GyroscopePacket(gyroscopeData);
+								accelerometerDataList.Add(new AccelerometerModel
+                {
+                  TimeStamp_ms =		packet.getTimeStamp_ms(),
+                  AccelerationX_g = packet.getAccelerationX_g(),
+                  AccelerationY_g = packet.getAccelerationY_g(),
+                  AccelerationZ_g = packet.getAccelerationZ_g()
+                });
 
-                            displayText += "TimeStamp Gyroscope : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Rotation X : " + packet.getRotationX_dps().ToString() + Environment.NewLine;
-                            displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
-                            displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
-                        }
-                        break;
-                    case (byte)0x40U:
-                        if (e.Length - (i + 3) > 14)
-                        {
-                            byte[] gpsData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11], e[i + 12], e[i + 13], e[i + 14], e[i + 15], e[i + 16], e[i + 17] };
-                            GPSPacket packet = new GPSPacket(gpsData);
+			        }
+							break;
+			      case (byte)0x20U:
+			        if (data.Length - (i + 3) > 4)
+			        {
+			          byte[] altimeterData = { data[i + 4], data[i + 5], data[i + 6], data[i + 7] };
+			          AltimeterPacket packet = new AltimeterPacket(altimeterData);
 
-                            displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Latitude : " + packet.getLatitude() + Environment.NewLine;
-                            displayText += "Longitude : " + packet.getLongitude() + Environment.NewLine;
-                        }
-                        break;
-                    case (byte)0x50U:
-                        if (e.Length - (i + 3) > 10)
-                        {
-                            byte[] thermocouplePC0Data = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
-                            byte[] thermocouplePC1Data = { e[i + 4], e[i + 5], e[i + 8], e[i + 9] };
-                            byte[] thermocouplePC2Data = { e[i + 4], e[i + 5], e[i + 10], e[i + 11] };
-                            byte[] thermocouplePC3Data = { e[i + 4], e[i + 5], e[i + 12], e[i + 13] };
-                            ThermocouplePacket packetPC0 = new ThermocouplePacket(thermocouplePC0Data);
-                            ThermocouplePacket packetPC1 = new ThermocouplePacket(thermocouplePC1Data);
-                            ThermocouplePacket packetPC2 = new ThermocouplePacket(thermocouplePC2Data);
-                            ThermocouplePacket packetPC3 = new ThermocouplePacket(thermocouplePC3Data);
+			          displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
+			          displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
 
-                            displayText += "TimeStamp Thermocouple : " + packetPC0.getTimeStamp_ms() + Environment.NewLine;
-                            displayText += "Resistance PC0 : " + packetPC0.getTemperature_C().ToString() + Environment.NewLine;
-                            displayText += "Resistance PC1 : " + packetPC1.getTemperature_C().ToString() + Environment.NewLine;
-                            displayText += "Resistance PC2 : " + packetPC2.getTemperature_C().ToString() + Environment.NewLine;
-                            displayText += "Resistance PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
-                        }
-                        break;
-                    default:
-						break;
+								altimeterDataList.Add(new AltimeterModel
+                {
+                  TimeStamp_ms =	packet.getTimeStamp_ms(),
+                  Altitude_m =		packet.getAltitude_m()
+                });
+			        }
+			        break;
+			      case (byte)0x30U:
+			        if (data.Length - (i + 3) > 8)
+			        {
+			          byte[] gyroscopeData = { data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8], data[i + 9], data[i + 10], data[i + 11] };
+			          GyroscopePacket packet = new GyroscopePacket(gyroscopeData);
+
+			          displayText += "TimeStamp Gyroscope : " + packet.getTimeStamp_ms() + Environment.NewLine;
+			          displayText += "Rotation X : " + packet.getRotationX_dps().ToString() + Environment.NewLine;
+			          displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
+			          displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
+
+								gyroscopeDataList.Add(new GyroscopeModel
+                {
+                  TimeStamp_ms =	packet.getTimeStamp_ms(),
+                  RotationX_dps = packet.getRotationX_dps(),
+                  RotationY_dps = packet.getRotationY_dps(),
+                  RotationZ_dps = packet.getRotationZ_dps()
+                });
+			        }
+			        break;
+			      case (byte)0x40U:
+			        if (data.Length - (i + 3) > 14)
+			        {
+			          byte[] gpsData = { data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8], data[i + 9], data[i + 10], data[i + 11], data[i + 12], data[i + 13], data[i + 14], data[i + 15], data[i + 16], data[i + 17] };
+			          GPSPacket packet = new GPSPacket(gpsData);
+
+			          displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
+			          displayText += "Latitude : " + packet.getLatitudeFormatted() + Environment.NewLine;
+			          displayText += "Longitude : " + packet.getLongitudeFormatted() + Environment.NewLine;
+
+								gpsDataList.Add(new GPSModel
+                {
+                  TimeStamp_ms =	packet.getTimeStamp_ms(),
+									LatitudeDirection = packet.getLatitudeDirection(),
+									LatitudeDegrees = packet.getLatitudeDegrees(),
+									LatitudeMinutes = packet.getLatitudeMinutes(),
+									LongitudeDirection = packet.getLongitudeDirection(),
+									LongitudeDegrees = packet.getLongitudeDegrees(),
+									LongitudeMinutes = packet.getLongitudeMinutes()
+                });
+			        }
+			        break;
+			      case (byte)0x50U:
+			        if (data.Length - (i + 3) > 10)
+			        {
+			          byte[] thermocouplePC0Data = { data[i + 4], data[i + 5], data[i + 6], data[i + 7] };
+			          byte[] thermocouplePC1Data = { data[i + 4], data[i + 5], data[i + 8], data[i + 9] };
+			          byte[] thermocouplePC2Data = { data[i + 4], data[i + 5], data[i + 10], data[i + 11] };
+			          byte[] thermocouplePC3Data = { data[i + 4], data[i + 5], data[i + 12], data[i + 13] };
+			          ThermocouplePacket packetPC0 = new ThermocouplePacket(thermocouplePC0Data);
+			          ThermocouplePacket packetPC1 = new ThermocouplePacket(thermocouplePC1Data);
+			          ThermocouplePacket packetPC2 = new ThermocouplePacket(thermocouplePC2Data);
+			          ThermocouplePacket packetPC3 = new ThermocouplePacket(thermocouplePC3Data);
+
+			          displayText += "TimeStamp Thermocouple : " + packetPC0.getTimeStamp_ms() + Environment.NewLine;
+			          displayText += "Resistance PC0 : " + packetPC0.getTemperature_C().ToString() + Environment.NewLine;
+			          displayText += "Resistance PC1 : " + packetPC1.getTemperature_C().ToString() + Environment.NewLine;
+			          displayText += "Resistance PC2 : " + packetPC2.getTemperature_C().ToString() + Environment.NewLine;
+			          displayText += "Resistance PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
+
+								thermocoupleDataList.Add(new ThermocoupleModel
+                {
+                  TimeStamp_ms = packetPC0.getTimeStamp_ms(),
+                  Temperature_C = packetPC0.getTemperature_C()
+                });
+			        }
+			        break;
+			      default:
+							break;
+					}
+				}
+				AppendToSerialDataBox(displayText, addNewLine: false);
+			}
+			// TODO: Check if new data is available for sensor before opening the file
+			using (StreamWriter sw = new StreamWriter(csvPath + "\\AccelerometerData.csv", append: true))
+			{
+				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
+				{
+					cw.Context.RegisterClassMap<AccelerometerMap>();
+					if (sw.BaseStream.Length == 0)
+					{
+						cw.WriteHeader<AccelerometerModel>();
+						cw.NextRecord();
+					}
+					cw.WriteRecords(accelerometerDataList);
 				}
 			}
-			//float floatValue = BitConverter.ToSingle(e, 0);
-			AppendToSerialDataBox(displayText, addNewLine: false);
-			//byte[] singleByteArray = new byte[] { e[i] };
-			//string hexValue = singleByteArray[0].ToString("X2");
-			//AppendToSerialDataBox(hexValue, addNewLine: false);
-			//AppendToSerialDataBox(ASCIIEncoding.ASCII.GetString(singleByteArray), addNewLine: false);
-		}
+			using (StreamWriter sw = new StreamWriter(csvPath + "\\AltimeterData.csv", append: true))
+			{
+				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
+				{
+					cw.Context.RegisterClassMap<AltimeterMap>();
+					if (sw.BaseStream.Length == 0)
+					{
+						cw.WriteHeader<AltimeterModel>();
+						cw.NextRecord();
+					}
+					cw.WriteRecords(altimeterDataList);
+				}
+			}
+			using (StreamWriter sw = new StreamWriter(csvPath + "\\GyroscopeData.csv", append: true))
+			{
+				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
+				{
+					cw.Context.RegisterClassMap<GyroscopeMap>();
+					if (sw.BaseStream.Length == 0)
+					{
+						cw.WriteHeader<GyroscopeModel>();
+						cw.NextRecord();
+					}
+					cw.WriteRecords(gyroscopeDataList);
+				}
+			}
+			using (StreamWriter sw = new StreamWriter(csvPath + "\\GPSData.csv", append: true))
+			{
+				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
+				{
+					cw.Context.RegisterClassMap<GPSMap>();
+					if (sw.BaseStream.Length == 0)
+					{
+						cw.WriteHeader<GPSModel>();
+						cw.NextRecord();
+					}
+					cw.WriteRecords(gpsDataList);
+				}
+			}
+			using (StreamWriter sw = new StreamWriter(csvPath + "\\ThermocoupleData.csv", append: true))
+			{
+				using (CsvWriter cw = new CsvWriter(sw, CultureInfo.InvariantCulture))
+				{
+					cw.Context.RegisterClassMap<ThermocoupleMap>();
+					if (sw.BaseStream.Length == 0)
+					{
+						cw.WriteHeader<ThermocoupleModel>();
+						cw.NextRecord();
+					}
+					cw.WriteRecords(thermocoupleDataList);
+				}
+			}
     }
 
     public void InitializeMap()

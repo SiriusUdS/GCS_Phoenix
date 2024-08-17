@@ -62,12 +62,42 @@ namespace GCS_Phoenix.Communication.Packet
             return _timeStamp_ms;
         }
 
-        public string getLatitude()
+        public char getLatitudeDirection()
+        {
+            return _latitudeDirection;
+        }
+
+        public uint getLatitudeDegrees()
+        {
+            return _latitudeDegrees;
+        }
+
+        public float getLatitudeMinutes()
+        {
+            return _latitudeMinutes;
+        }
+
+        public char getLongitudeDirection()
+        {
+            return _longitudeDirection;
+        }
+
+        public uint getLongitudeDegrees()
+        {
+            return _longitudeDegrees;
+        }
+
+        public float getLongitudeMinutes()
+        {
+            return _longitudeMinutes;
+        }
+
+        public string getLatitudeFormatted()
         {
             return "" + _latitudeDegrees + "°" + _latitudeMinutes + "'" + _latitudeDirection;
         }
 
-        public string getLongitude()
+        public string getLongitudeFormatted()
         {
             return "" + _longitudeDegrees + "°" + _longitudeMinutes + "'" + _longitudeDirection;
         }
