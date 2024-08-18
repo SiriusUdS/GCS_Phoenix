@@ -307,7 +307,7 @@ namespace GCS_Phoenix
                        DateTime.Now.ToString("yyyy-MM-dd HHmmss"),
                        0,
                        0);
-      csvFileManager.csvSessionFolderName = customDataOutputFolderName;
+      csvFileManager.CsvSessionFolderName = customDataOutputFolderName;
       csvFileManager.Initialize();
       Serilog.Log.Information($"Custom folder name for flight data: {customDataOutputFolderName}");
 

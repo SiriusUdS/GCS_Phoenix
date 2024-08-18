@@ -16,17 +16,28 @@ namespace GCS_Phoenix.Managers
     private static string csvAltimeterOutputFile = "\\AltimeterData.csv";
     private static string csvGPSOutputFile = "\\GPSData.csv";
 
+    private string csvSessionFolderName = "";
+
     private List<AccelerometerModel> accelerometerDataList = new List<AccelerometerModel>();
     private List<AltimeterModel> altimeterDataList = new List<AltimeterModel>();
     private List<GyroscopeModel> gyroscopeDataList = new List<GyroscopeModel>();
     private List<GPSModel> gpsDataList = new List<GPSModel>();
     private List<ThermocoupleModel> thermocoupleDataList = new List<ThermocoupleModel>();
 
-    public string csvSessionFolderName { get; set; } = "";
+    //public string csvSessionFolderName { get; set; } = "";
+    public string CsvSessionFolderName
+    {
+      get => csvSessionFolderName;
+      set
+      {
+        csvSessionFolderName = csvBaseOutputPath + "\\" + value;
+        //InitializeOutputDirectory();
+      }
+    }
 
     public CsvFileManager()
     {
-      Initialize();
+      //Initialize();
     }
 
     public void AddAccelerometerData(AccelerometerPacket packet)
@@ -116,9 +127,11 @@ namespace GCS_Phoenix.Managers
 
     private void InitializeOutputDirectory()
     {
-      if (!Directory.Exists(csvBaseOutputPath + csvSessionFolderName))
+      //if (!Directory.Exists(csvBaseOutputPath + csvSessionFolderName))
+      if (!Directory.Exists(csvSessionFolderName))
       {
-        Directory.CreateDirectory(csvBaseOutputPath + csvSessionFolderName);
+        Directory.CreateDirectory(csvSessionFolderName);
+        //Directory.CreateDirectory(csvBaseOutputPath + csvSessionFolderName);
       }
     }
 
@@ -188,7 +201,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteAccelerometerDataToCsvFile(List<AccelerometerModel> accelerometerData)
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvAccelerometerOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvAccelerometerOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<AccelerometerMap>();
@@ -198,7 +211,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteGyroscopeDataToCsvFile(List<GyroscopeModel> gyroscopeData)
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvGyroscopeOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvGyroscopeOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<GyroscopeMap>();
@@ -208,7 +221,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteThermocoupleDataToCsvFile(List<ThermocoupleModel> thermocoupleData)
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvThermocoupleOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvThermocoupleOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<ThermocoupleMap>();
@@ -218,7 +231,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteAltimeterDataToCsvFile(List<AltimeterModel> altimeterData)
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvAltimeterOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvAltimeterOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<AltimeterMap>();
@@ -228,7 +241,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteGPSDataToCsvFile(List<GPSModel> gpsData)
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvGPSOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvGPSOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<GPSMap>();
@@ -238,7 +251,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteAccelerometerDataToCsvFile()
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvAccelerometerOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvAccelerometerOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<AccelerometerMap>();
@@ -249,7 +262,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteGyroscopeDataToCsvFile()
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvGyroscopeOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvGyroscopeOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<GyroscopeMap>();
@@ -260,7 +273,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteThermocoupleDataToCsvFile()
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvThermocoupleOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvThermocoupleOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<ThermocoupleMap>();
@@ -271,7 +284,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteAltimeterDataToCsvFile()
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvAltimeterOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvAltimeterOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<AltimeterMap>();
@@ -282,7 +295,7 @@ namespace GCS_Phoenix.Managers
 
     public void WriteGPSDataToCsvFile()
     {
-      using (var writer = new StreamWriter(csvBaseOutputPath + csvSessionFolderName + csvGPSOutputFile))
+      using (var writer = new StreamWriter(csvSessionFolderName + csvGPSOutputFile))
       using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
       {
         csv.Context.RegisterClassMap<GPSMap>();
