@@ -93,6 +93,7 @@
       comboBaud.Name = "comboBaud";
       comboBaud.Size = new Size(198, 40);
       comboBaud.TabIndex = 4;
+      comboBaud.SelectedIndexChanged += comboBaud_SelectedIndexChanged;
       // 
       // comboPorts
       // 
@@ -102,6 +103,7 @@
       comboPorts.Name = "comboPorts";
       comboPorts.Size = new Size(198, 40);
       comboPorts.TabIndex = 8;
+      comboPorts.SelectedIndexChanged += comboPorts_SelectedIndexChanged;
       // 
       // comPortLabel
       // 
@@ -141,6 +143,7 @@
       // 
       // connectSerialButton
       // 
+      connectSerialButton.Enabled = false;
       connectSerialButton.ForeColor = SystemColors.ActiveCaptionText;
       connectSerialButton.Location = new Point(17, 193);
       connectSerialButton.Margin = new Padding(4, 5, 4, 5);
@@ -527,6 +530,7 @@
       // 
       // disconnectSerialButton
       // 
+      disconnectSerialButton.Enabled = false;
       disconnectSerialButton.ForeColor = SystemColors.ActiveCaptionText;
       disconnectSerialButton.Location = new Point(17, 268);
       disconnectSerialButton.Margin = new Padding(4, 5, 4, 5);

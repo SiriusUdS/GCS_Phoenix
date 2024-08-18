@@ -7,11 +7,11 @@ using System.Windows.Forms;
 using ScottPlot;
 using GCS_Phoenix.Communication;
 using GCS_Phoenix.Exception;
-using System.Text;
 using GCS_Phoenix.Communication.Packet;
 using MissionPlanner.Maps;
 using System.Net;
 using GMap.NET.WindowsForms.Markers;
+using GCS_Phoenix.Managers;
 
 namespace GCS_Phoenix
 {
@@ -49,73 +49,103 @@ namespace GCS_Phoenix
 
     }
 
-    private void SerialPortManager_DataReceived(object? sender, byte[] e)
+    private void SerialPortManager_DataReceived(object? sender, byte[] data)
     {
       string displayText = "";
-      if (e is null || e.Length <= 0)
+      if (data is null || data.Length <= 0)
       {
         return;
       }
 
-      for (int i = 0; i < e.Length - 3; i++)
+      Serilog.Log.Information("Data received: " + BitConverter.ToString(data));
+      for (int i = 0; i < data.Length - 3; i++)
       {
         displayText = "";
-        if (e[i] == 0x5AU && e[i + 1] == 0xA5U && e[i + 3] == 0xA5U)
+        if (data[i] == 0x5AU && data[i + 1] == 0xA5U && data[i + 3] == 0xA5U)
         {
-          switch (e[i + 2])
+          switch (data[i + 2])
           {
             case (byte)0x10U:
-              if (e.Length - (i + 3) > 8)
+              if (data.Length - (i + 3) > 8)
               {
-                byte[] accelerometerData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11] };
+                byte[] accelerometerData = { data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8], data[i + 9], data[i + 10], data[i + 11] };
                 AccelerometerPacket packet = new AccelerometerPacket(accelerometerData);
 
                 displayText += "TimeStamp Accelerometre : " + packet.getTimeStamp_ms() + Environment.NewLine;
                 displayText += "Acceleration X : " + packet.getAccelerationX_g().ToString() + Environment.NewLine;
                 displayText += "Acceleration Y : " + packet.getAccelerationY_g().ToString() + Environment.NewLine;
                 displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
+
+                csvFileManager.AddAccelerometerData(packet);
+                Serilog.Log.Information("Decoded accelerometer packet with values:\n" + 
+                  "\tAcc. X: " + packet.getAccelerationX_g() + "\n" + 
+                  "\tAcc. Y: " + packet.getAccelerationY_g() + "\n" + 
+                  "\tAcc. Z: " + packet.getAccelerationZ_g() + "\n" + 
+                  "\tTimestamp: " + packet.getTimeStamp_ms()
+                );
               }
               break;
             case (byte)0x20U:
-              if (e.Length - (i + 3) > 4)
+              if (data.Length - (i + 3) > 4)
               {
-                byte[] altimeterData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
+                byte[] altimeterData = { data[i + 4], data[i + 5], data[i + 6], data[i + 7] };
                 AltimeterPacket packet = new AltimeterPacket(altimeterData);
 
                 displayText += "TimeStamp Altimetre : " + packet.getTimeStamp_ms() + Environment.NewLine;
                 displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
+
+                csvFileManager.AddAltimeterData(packet);
+                Serilog.Log.Information("Decoded altimeter packet with values: " + 
+                  "\tAltitude: " + packet.getAltitude_m() + "\n" +
+                  "\tTimestamp: " + packet.getTimeStamp_ms()
+                );
               }
               break;
             case (byte)0x30U:
-              if (e.Length - (i + 3) > 8)
+              if (data.Length - (i + 3) > 8)
               {
-                byte[] gyroscopeData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11] };
+                byte[] gyroscopeData = { data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8], data[i + 9], data[i + 10], data[i + 11] };
                 GyroscopePacket packet = new GyroscopePacket(gyroscopeData);
 
                 displayText += "TimeStamp Gyroscope : " + packet.getTimeStamp_ms() + Environment.NewLine;
                 displayText += "Rotation X : " + packet.getRotationX_dps().ToString() + Environment.NewLine;
                 displayText += "Rotation Y : " + packet.getRotationY_dps().ToString() + Environment.NewLine;
                 displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
+
+                csvFileManager.AddGyroscopeData(packet);
+                Serilog.Log.Information("Decoded gyroscope packet with values: " + 
+                  "\tRot. X: " + packet.getRotationX_dps() + "\n" +
+                  "\tRot. Y: " + packet.getRotationY_dps() + "\n" +
+                  "\tRot. Z: " + packet.getRotationZ_dps() + "\n" +
+                  "\tTimestamp: " + packet.getTimeStamp_ms()
+                );
               }
               break;
             case (byte)0x40U:
-              if (e.Length - (i + 3) > 14)
+              if (data.Length - (i + 3) > 14)
               {
-                byte[] gpsData = { e[i + 4], e[i + 5], e[i + 6], e[i + 7], e[i + 8], e[i + 9], e[i + 10], e[i + 11], e[i + 12], e[i + 13], e[i + 14], e[i + 15], e[i + 16], e[i + 17] };
+                byte[] gpsData = { data[i + 4], data[i + 5], data[i + 6], data[i + 7], data[i + 8], data[i + 9], data[i + 10], data[i + 11], data[i + 12], data[i + 13], data[i + 14], data[i + 15], data[i + 16], data[i + 17] };
                 GPSPacket packet = new GPSPacket(gpsData);
 
                 displayText += "TimeStamp GPS : " + packet.getTimeStamp_ms() + Environment.NewLine;
-                displayText += "Latitude : " + packet.getLatitude() + Environment.NewLine;
-                displayText += "Longitude : " + packet.getLongitude() + Environment.NewLine;
+                displayText += "Latitude : " + packet.getLatitudeFormatted() + Environment.NewLine;
+                displayText += "Longitude : " + packet.getLongitudeFormatted() + Environment.NewLine;
+
+                csvFileManager.AddGPSData(packet);
+                Serilog.Log.Information("Decoded GPS packet with values: " + 
+                  "\tLatitude: " + packet.getLatitudeFormatted() + "\n" + 
+                  "\tLongitude: " + packet.getLongitudeFormatted() + "\n" +
+                  "\tTimestamp: " + packet.getTimeStamp_ms()
+                );
               }
               break;
             case (byte)0x50U:
-              if (e.Length - (i + 3) > 10)
+              if (data.Length - (i + 3) > 10)
               {
-                byte[] thermocouplePC0Data = { e[i + 4], e[i + 5], e[i + 6], e[i + 7] };
-                byte[] thermocouplePC1Data = { e[i + 4], e[i + 5], e[i + 8], e[i + 9] };
-                byte[] thermocouplePC2Data = { e[i + 4], e[i + 5], e[i + 10], e[i + 11] };
-                byte[] thermocouplePC3Data = { e[i + 4], e[i + 5], e[i + 12], e[i + 13] };
+                byte[] thermocouplePC0Data = { data[i + 4], data[i + 5], data[i + 6], data[i + 7] };
+                byte[] thermocouplePC1Data = { data[i + 4], data[i + 5], data[i + 8], data[i + 9] };
+                byte[] thermocouplePC2Data = { data[i + 4], data[i + 5], data[i + 10], data[i + 11] };
+                byte[] thermocouplePC3Data = { data[i + 4], data[i + 5], data[i + 12], data[i + 13] };
                 ThermocouplePacket packetPC0 = new ThermocouplePacket(thermocouplePC0Data);
                 ThermocouplePacket packetPC1 = new ThermocouplePacket(thermocouplePC1Data);
                 ThermocouplePacket packetPC2 = new ThermocouplePacket(thermocouplePC2Data);
@@ -126,19 +156,37 @@ namespace GCS_Phoenix
                 displayText += "Resistance PC1 : " + packetPC1.getTemperature_C().ToString() + Environment.NewLine;
                 displayText += "Resistance PC2 : " + packetPC2.getTemperature_C().ToString() + Environment.NewLine;
                 displayText += "Resistance PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
+
+                csvFileManager.AddThermocoupleData(packetPC0);
+                csvFileManager.AddThermocoupleData(packetPC1);
+                csvFileManager.AddThermocoupleData(packetPC2);
+                csvFileManager.AddThermocoupleData(packetPC3);
+                Serilog.Log.Information("Decoded thermocouple PC0 packet with values: " + 
+                  "\tTemperature: " + packetPC0.getTemperature_C() + "\n" +
+                  "\tTimestamp: " + packetPC0.getTimeStamp_ms()
+                );
+                Serilog.Log.Information("Decoded thermocouple PC1 packet with values: " +
+                  "\tTemperature: " + packetPC1.getTemperature_C() + "\n" +
+                  "\tTimestamp: " + packetPC1.getTimeStamp_ms()
+                );
+                Serilog.Log.Information("Decoded thermocouple PC2 packet with values: " +
+                  "\tTemperature: " + packetPC2.getTemperature_C() + "\n" +
+                  "\tTimestamp: " + packetPC2.getTimeStamp_ms()
+                );
+                Serilog.Log.Information("Decoded thermocouple PC3 packet with values: " +
+                  "\tTemperature: " + packetPC3.getTemperature_C() + "\n" +
+                  "\tTimestamp: " + packetPC3.getTimeStamp_ms()
+                );
               }
               break;
             default:
               break;
           }
         }
-        //float floatValue = BitConverter.ToSingle(e, 0);
         AppendToSerialDataBox(displayText, addNewLine: false);
-        //byte[] singleByteArray = new byte[] { e[i] };
-        //string hexValue = singleByteArray[0].ToString("X2");
-        //AppendToSerialDataBox(hexValue, addNewLine: false);
-        //AppendToSerialDataBox(ASCIIEncoding.ASCII.GetString(singleByteArray), addNewLine: false);
       }
+      // TODO: Check if new data is available for sensor before opening the file
+      csvFileManager.WriteDataFiles();
     }
 
     public void InitializeMap()
@@ -254,6 +302,15 @@ namespace GCS_Phoenix
       string portName = GetSelectedSerialPort();
       int baudRate = GetSelectedBaudRate();
 
+      string customDataOutputFolderName = Microsoft.VisualBasic.Interaction.InputBox("Custom folder name for flight data:",
+                       "Custom folder name",
+                       DateTime.Now.ToString(),
+                       0,
+                       0);
+      csvFileManager.csvSessionFolderName = customDataOutputFolderName;
+      csvFileManager.Initialize();
+      Serilog.Log.Information($"Custom folder name for flight data: {customDataOutputFolderName}");
+
       serialPortManager = new SerialPortManager(new SerialSettings(portName, baudRate));
       serialPortManager.DataReceived += SerialPortManager_DataReceived;
 
@@ -263,6 +320,10 @@ namespace GCS_Phoenix
         serialConnectivityLabel.Text = "Connected";
         serialConnectivityLabel.ForeColor = Color.Green;
         connectedLed.Color = Color.Green;
+        disconnectSerialButton.Enabled = true;
+        comboPorts.Enabled = false; 
+        comboBaud.Enabled = false;
+        Serilog.Log.Information($"Serial port connected to port: {portName} with baud rate: {baudRate}.");
       }
       catch (CannotConnectSerialPortException ex)
       {
@@ -297,6 +358,11 @@ namespace GCS_Phoenix
       serialConnectivityLabel.Text = "Disconnected";
       serialConnectivityLabel.ForeColor = Color.Red;
       connectedLed.Color = Color.Red;
+      disconnectSerialButton.Enabled = false;
+      connectSerialButton.Enabled = true;
+      comboPorts.Enabled = true;
+      comboBaud.Enabled = true;
+      Serilog.Log.Information("Serial port disconnected.");
     }
 
     private void DashboardForm_Load(object sender, EventArgs e)
@@ -307,7 +373,7 @@ namespace GCS_Phoenix
 
     private void SetupGraphAccelero()
     {
-      acceleroPlot.Plot.Axes.Left.Label.Text = "Accelerometers (M/S²)";
+      acceleroPlot.Plot.Axes.Left.Label.Text = "Accelerometers (M/Sï¿½)";
       acceleroPlot.Plot.Axes.Left.IsVisible = true;
       acceleroPlot.Plot.FigureBackground.Color = ScottPlot.Color.FromHex("163020");
       acceleroPlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
@@ -372,6 +438,32 @@ namespace GCS_Phoenix
       };
 
       plot.Interaction = interaction;
+    }
+
+    private void comboPorts_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      if (comboPorts.SelectedItem == null || comboPorts.GetItemText(comboPorts.SelectedItem) == String.Empty)
+      {
+        return;
+      }
+      if (comboBaud.SelectedItem == null || comboBaud.GetItemText(comboBaud.SelectedItem) == String.Empty)
+      {
+        return;
+      }
+      connectSerialButton.Enabled = true;
+    }
+
+    private void comboBaud_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      if (comboPorts.SelectedItem == null || comboPorts.GetItemText(comboPorts.SelectedItem) == String.Empty)
+      {
+        return;
+      }
+      if (comboBaud.SelectedItem == null || comboBaud.GetItemText(comboBaud.SelectedItem) == String.Empty)
+      {
+        return;
+      }
+      connectSerialButton.Enabled = true;
     }
   }
 }
