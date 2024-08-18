@@ -65,22 +65,26 @@
       groupBox1 = new GroupBox();
       groupBox2 = new GroupBox();
       disconnectSerialButton = new Button();
-      currentStageLabel = new Label();
       gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
       mapGroupBox = new GroupBox();
       groupBox3 = new GroupBox();
       serialDataBox = new RichTextBox();
       acceleroPlot = new ScottPlot.WinForms.FormsPlot();
       altitudePlot = new ScottPlot.WinForms.FormsPlot();
-      groupBox4 = new GroupBox();
-      msgReceivedLabel = new Label();
-      rxErrorsLabel = new Label();
+      grpCommands = new GroupBox();
+      btn_saveDataOff = new Button();
+      btn_gatherDataOff = new Button();
+      btn_igniteSmoke = new Button();
+      btn_gatherDataOn = new Button();
+      btn_clearFlash = new Button();
+      btn_readFlash = new Button();
+      btn_saveDataOn = new Button();
       pictureBox1 = new PictureBox();
       groupBox1.SuspendLayout();
       groupBox2.SuspendLayout();
       mapGroupBox.SuspendLayout();
       groupBox3.SuspendLayout();
-      groupBox4.SuspendLayout();
+      grpCommands.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
       SuspendLayout();
       // 
@@ -132,7 +136,7 @@
       // resetButton
       // 
       resetButton.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-      resetButton.Location = new Point(647, 697);
+      resetButton.Location = new Point(656, 697);
       resetButton.Margin = new Padding(4, 5, 4, 5);
       resetButton.Name = "resetButton";
       resetButton.Size = new Size(146, 38);
@@ -503,7 +507,7 @@
       groupBox1.Margin = new Padding(4, 5, 4, 5);
       groupBox1.Name = "groupBox1";
       groupBox1.Padding = new Padding(4, 5, 4, 5);
-      groupBox1.Size = new Size(390, 748);
+      groupBox1.Size = new Size(291, 748);
       groupBox1.TabIndex = 41;
       groupBox1.TabStop = false;
       groupBox1.Text = "STATUS";
@@ -519,11 +523,11 @@
       groupBox2.Controls.Add(comboBaud);
       groupBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       groupBox2.ForeColor = Color.FromArgb(198, 169, 105);
-      groupBox2.Location = new Point(1253, 893);
+      groupBox2.Location = new Point(1136, 893);
       groupBox2.Margin = new Padding(4, 5, 4, 5);
       groupBox2.Name = "groupBox2";
       groupBox2.Padding = new Padding(4, 5, 4, 5);
-      groupBox2.Size = new Size(356, 415);
+      groupBox2.Size = new Size(473, 415);
       groupBox2.TabIndex = 42;
       groupBox2.TabStop = false;
       groupBox2.Text = "SERIAL";
@@ -540,18 +544,6 @@
       disconnectSerialButton.Text = "Disconnect";
       disconnectSerialButton.UseVisualStyleBackColor = true;
       disconnectSerialButton.Click += DisconnectSerialButton_Click;
-      // 
-      // currentStageLabel
-      // 
-      currentStageLabel.AutoSize = true;
-      currentStageLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-      currentStageLabel.ForeColor = Color.FromArgb(198, 169, 105);
-      currentStageLabel.Location = new Point(9, 55);
-      currentStageLabel.Margin = new Padding(4, 0, 4, 0);
-      currentStageLabel.Name = "currentStageLabel";
-      currentStageLabel.Size = new Size(222, 32);
-      currentStageLabel.TabIndex = 43;
-      currentStageLabel.Text = "CURRENT STAGE : 0";
       // 
       // gMapControl1
       // 
@@ -586,11 +578,11 @@
       mapGroupBox.Controls.Add(gMapControl1);
       mapGroupBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       mapGroupBox.ForeColor = Color.FromArgb(198, 169, 105);
-      mapGroupBox.Location = new Point(436, 560);
+      mapGroupBox.Location = new Point(318, 560);
       mapGroupBox.Margin = new Padding(4, 5, 4, 5);
       mapGroupBox.Name = "mapGroupBox";
       mapGroupBox.Padding = new Padding(4, 5, 4, 5);
-      mapGroupBox.Size = new Size(801, 748);
+      mapGroupBox.Size = new Size(810, 748);
       mapGroupBox.TabIndex = 47;
       mapGroupBox.TabStop = false;
       mapGroupBox.Text = "MAP";
@@ -640,45 +632,110 @@
       altitudePlot.Size = new Size(777, 522);
       altitudePlot.TabIndex = 50;
       // 
-      // groupBox4
+      // grpCommands
       // 
-      groupBox4.Controls.Add(msgReceivedLabel);
-      groupBox4.Controls.Add(rxErrorsLabel);
-      groupBox4.Controls.Add(currentStageLabel);
-      groupBox4.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-      groupBox4.ForeColor = Color.FromArgb(198, 169, 105);
-      groupBox4.Location = new Point(1253, 560);
-      groupBox4.Margin = new Padding(4, 5, 4, 5);
-      groupBox4.Name = "groupBox4";
-      groupBox4.Padding = new Padding(4, 5, 4, 5);
-      groupBox4.Size = new Size(356, 323);
-      groupBox4.TabIndex = 52;
-      groupBox4.TabStop = false;
-      groupBox4.Text = "STATS";
+      grpCommands.Controls.Add(btn_saveDataOff);
+      grpCommands.Controls.Add(btn_gatherDataOff);
+      grpCommands.Controls.Add(btn_igniteSmoke);
+      grpCommands.Controls.Add(btn_gatherDataOn);
+      grpCommands.Controls.Add(btn_clearFlash);
+      grpCommands.Controls.Add(btn_readFlash);
+      grpCommands.Controls.Add(btn_saveDataOn);
+      grpCommands.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+      grpCommands.ForeColor = Color.FromArgb(198, 169, 105);
+      grpCommands.Location = new Point(1136, 560);
+      grpCommands.Margin = new Padding(4, 5, 4, 5);
+      grpCommands.Name = "grpCommands";
+      grpCommands.Padding = new Padding(4, 5, 4, 5);
+      grpCommands.Size = new Size(473, 323);
+      grpCommands.TabIndex = 52;
+      grpCommands.TabStop = false;
+      grpCommands.Text = "COMMANDS";
       // 
-      // msgReceivedLabel
+      // btn_saveDataOff
       // 
-      msgReceivedLabel.AutoSize = true;
-      msgReceivedLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-      msgReceivedLabel.ForeColor = Color.FromArgb(198, 169, 105);
-      msgReceivedLabel.Location = new Point(9, 155);
-      msgReceivedLabel.Margin = new Padding(4, 0, 4, 0);
-      msgReceivedLabel.Name = "msgReceivedLabel";
-      msgReceivedLabel.Size = new Size(249, 32);
-      msgReceivedLabel.TabIndex = 45;
-      msgReceivedLabel.Text = "PACKETS RECEIVED : 0";
+      btn_saveDataOff.Enabled = false;
+      btn_saveDataOff.ForeColor = SystemColors.ActiveCaptionText;
+      btn_saveDataOff.Location = new Point(239, 168);
+      btn_saveDataOff.Name = "btn_saveDataOff";
+      btn_saveDataOff.Size = new Size(216, 50);
+      btn_saveDataOff.TabIndex = 56;
+      btn_saveDataOff.Text = "Save Data OFF";
+      btn_saveDataOff.UseVisualStyleBackColor = true;
+      btn_saveDataOff.Click += btn_saveDataOff_Click;
       // 
-      // rxErrorsLabel
+      // btn_gatherDataOff
       // 
-      rxErrorsLabel.AutoSize = true;
-      rxErrorsLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
-      rxErrorsLabel.ForeColor = Color.FromArgb(198, 169, 105);
-      rxErrorsLabel.Location = new Point(9, 107);
-      rxErrorsLabel.Margin = new Padding(4, 0, 4, 0);
-      rxErrorsLabel.Name = "rxErrorsLabel";
-      rxErrorsLabel.Size = new Size(166, 32);
-      rxErrorsLabel.TabIndex = 44;
-      rxErrorsLabel.Text = "RX ERRORS : 0";
+      btn_gatherDataOff.Enabled = false;
+      btn_gatherDataOff.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+      btn_gatherDataOff.ForeColor = SystemColors.ActiveCaptionText;
+      btn_gatherDataOff.Location = new Point(241, 235);
+      btn_gatherDataOff.Name = "btn_gatherDataOff";
+      btn_gatherDataOff.Size = new Size(216, 50);
+      btn_gatherDataOff.TabIndex = 58;
+      btn_gatherDataOff.Text = "Gather Data OFF";
+      btn_gatherDataOff.UseVisualStyleBackColor = true;
+      btn_gatherDataOff.Click += btn_gatherDataOff_Click;
+      // 
+      // btn_igniteSmoke
+      // 
+      btn_igniteSmoke.Enabled = false;
+      btn_igniteSmoke.ForeColor = SystemColors.ActiveCaptionText;
+      btn_igniteSmoke.Location = new Point(16, 103);
+      btn_igniteSmoke.Name = "btn_igniteSmoke";
+      btn_igniteSmoke.Size = new Size(216, 50);
+      btn_igniteSmoke.TabIndex = 56;
+      btn_igniteSmoke.Text = "Ignite Smoke";
+      btn_igniteSmoke.UseVisualStyleBackColor = true;
+      btn_igniteSmoke.Click += btn_igniteSmoke_Click;
+      // 
+      // btn_gatherDataOn
+      // 
+      btn_gatherDataOn.Enabled = false;
+      btn_gatherDataOn.ForeColor = SystemColors.ActiveCaptionText;
+      btn_gatherDataOn.Location = new Point(17, 235);
+      btn_gatherDataOn.Name = "btn_gatherDataOn";
+      btn_gatherDataOn.Size = new Size(216, 50);
+      btn_gatherDataOn.TabIndex = 57;
+      btn_gatherDataOn.Text = "Gather Data ON";
+      btn_gatherDataOn.UseVisualStyleBackColor = true;
+      btn_gatherDataOn.Click += btn_gatherDataOn_Click;
+      // 
+      // btn_clearFlash
+      // 
+      btn_clearFlash.Enabled = false;
+      btn_clearFlash.ForeColor = SystemColors.ActiveCaptionText;
+      btn_clearFlash.Location = new Point(241, 37);
+      btn_clearFlash.Name = "btn_clearFlash";
+      btn_clearFlash.Size = new Size(216, 50);
+      btn_clearFlash.TabIndex = 55;
+      btn_clearFlash.Text = "Clear Flash";
+      btn_clearFlash.UseVisualStyleBackColor = true;
+      btn_clearFlash.Click += btn_clearFlash_Click;
+      // 
+      // btn_readFlash
+      // 
+      btn_readFlash.Enabled = false;
+      btn_readFlash.ForeColor = SystemColors.ActiveCaptionText;
+      btn_readFlash.Location = new Point(16, 37);
+      btn_readFlash.Name = "btn_readFlash";
+      btn_readFlash.Size = new Size(216, 50);
+      btn_readFlash.TabIndex = 54;
+      btn_readFlash.Text = "Read Flash";
+      btn_readFlash.UseVisualStyleBackColor = true;
+      btn_readFlash.Click += btn_readFlash_Click;
+      // 
+      // btn_saveDataOn
+      // 
+      btn_saveDataOn.Enabled = false;
+      btn_saveDataOn.ForeColor = SystemColors.ActiveCaptionText;
+      btn_saveDataOn.Location = new Point(17, 168);
+      btn_saveDataOn.Name = "btn_saveDataOn";
+      btn_saveDataOn.Size = new Size(216, 50);
+      btn_saveDataOn.TabIndex = 55;
+      btn_saveDataOn.Text = "Save Data ON";
+      btn_saveDataOn.UseVisualStyleBackColor = true;
+      btn_saveDataOn.Click += btn_saveDataOn_Click;
       // 
       // pictureBox1
       // 
@@ -698,7 +755,7 @@
       BackColor = Color.FromArgb(22, 48, 32);
       ClientSize = new Size(2034, 1357);
       Controls.Add(pictureBox1);
-      Controls.Add(groupBox4);
+      Controls.Add(grpCommands);
       Controls.Add(groupBox3);
       Controls.Add(altitudePlot);
       Controls.Add(acceleroPlot);
@@ -717,8 +774,7 @@
       groupBox2.PerformLayout();
       mapGroupBox.ResumeLayout(false);
       groupBox3.ResumeLayout(false);
-      groupBox4.ResumeLayout(false);
-      groupBox4.PerformLayout();
+      grpCommands.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
       ResumeLayout(false);
     }
@@ -767,9 +823,16 @@
         private ScottPlot.WinForms.FormsPlot acceleroPlot;
         private ScottPlot.WinForms.FormsPlot altitudePlot;
         private GroupBox groupBox3;
-        private GroupBox groupBox4;
+        private GroupBox grpCommands;
         private Label rxErrorsLabel;
         private Label msgReceivedLabel;
         private PictureBox pictureBox1;
+        private Button btn_readFlash;
+        private Button btn_igniteSmoke;
+        private Button btn_clearFlash;
+        private Button btn_saveDataOn;
+        private Button btn_saveDataOff;
+        private Button btn_gatherDataOn;
+        private Button btn_gatherDataOff;
   }
 }

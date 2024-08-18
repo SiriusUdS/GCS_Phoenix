@@ -323,6 +323,13 @@ namespace GCS_Phoenix
         disconnectSerialButton.Enabled = true;
         comboPorts.Enabled = false; 
         comboBaud.Enabled = false;
+        btn_clearFlash.Enabled = true;
+        btn_igniteSmoke.Enabled = true;
+        btn_readFlash.Enabled = true;
+        btn_saveDataOff.Enabled = true;
+        btn_saveDataOn.Enabled = true;
+        btn_gatherDataOff.Enabled = true;
+        btn_gatherDataOn.Enabled = true;
         Serilog.Log.Information($"Serial port connected to port: {portName} with baud rate: {baudRate}.");
       }
       catch (CannotConnectSerialPortException ex)
@@ -362,6 +369,13 @@ namespace GCS_Phoenix
       connectSerialButton.Enabled = true;
       comboPorts.Enabled = true;
       comboBaud.Enabled = true;
+      btn_clearFlash.Enabled = false;
+      btn_igniteSmoke.Enabled = false;
+      btn_readFlash.Enabled = false;
+      btn_saveDataOff.Enabled = false;
+      btn_saveDataOn.Enabled = false;
+      btn_gatherDataOff.Enabled = false;
+      btn_gatherDataOn.Enabled = false;
       Serilog.Log.Information("Serial port disconnected.");
     }
 
@@ -464,6 +478,83 @@ namespace GCS_Phoenix
         return;
       }
       connectSerialButton.Enabled = true;
+    }
+
+    private void btn_readFlash_Click(object sender, EventArgs e)
+    {
+      //byte[] command = { 0xA5, 0x80, 0x00, 0x00, 0x00, 0x00 };
+      //byte[] command = { 0x80, 0xA5, 0x00, 0x00, 0x00, 0x00 };
+
+      //serialPortManager.Write(command, command.Length);
+      serialPortManager.Write("f");
+    }
+
+    private void btn_clearFlash_Click(object sender, EventArgs e)
+    {
+      //byte[] command = { 0xA5, 0x81, 0x00, 0x01, 0x00, 0x01 };
+      //byte[] command = { 0x81, 0xA5, 0x01, 0x00, 0x01, 0x00 };
+
+      DialogResult result = MessageBox.Show("Are you sure you want to DELETE ALL STORED DATA ?",
+                                            "WARNING",
+                                            MessageBoxButtons.YesNo,
+                                            MessageBoxIcon.Question);
+
+      if (result == DialogResult.Yes)
+      {
+        //serialPortManager.Write(command, command.Length);
+        serialPortManager.Write("c");
+      }
+    }
+
+    private void btn_igniteSmoke_Click(object sender, EventArgs e)
+    {
+      //byte[] command = { 0xA5, 0x10, 0x00, 0x01, 0x00, 0x01 };
+      //byte[] command = { 0x10, 0xA5, 0x01, 0x00, 0x01, 0x00 };
+
+      DialogResult result = MessageBox.Show("Are you sure you want to IGNITE THE SMOKE BOMB ?",
+                                            "WARNING",
+                                            MessageBoxButtons.YesNo,
+                                            MessageBoxIcon.Question);
+
+      if (result == DialogResult.Yes)
+      {
+        //serialPortManager.Write(command, command.Length);
+        serialPortManager.Write("s");
+      }
+    }
+
+    private void btn_saveDataOn_Click(object sender, EventArgs e)
+    {
+      //byte[] command = { 0xA5, 0x20, 0x00, 0x01, 0x00, 0x01 };
+      //byte[] command = { 0x82, 0xA5, 0x01, 0x00, 0x01, 0x00 };
+
+      //serialPortManager.Write(command, command.Length);
+      serialPortManager.Write("p");
+    }
+
+    private void btn_saveDataOff_Click(object sender, EventArgs e)
+    {
+      //byte[] command = { 0xA5, 0x82, 0x00, 0x01, 0x00, 0x00 };
+      //byte[] command = { 0x82, 0xA5, 0x01, 0x00, 0x00, 0x00 };
+
+      //serialPortManager.Write(command, command.Length);
+      serialPortManager.Write("P");
+    }
+
+    private void btn_gatherDataOn_Click(object sender, EventArgs e)
+    {
+      //byte[] command = { 0x20, 0xA5, 0x01, 0x00, 0x01, 0x00 };
+
+      //serialPortManager.Write(command, command.Length);
+      serialPortManager.Write("g");
+    }
+
+    private void btn_gatherDataOff_Click(object sender, EventArgs e)
+    {
+      //byte[] command = { 0x20, 0xA5, 0x01, 0x00, 0x00, 0x00 };
+
+      //serialPortManager.Write(command, command.Length);
+      serialPortManager.Write("G");
     }
   }
 }
