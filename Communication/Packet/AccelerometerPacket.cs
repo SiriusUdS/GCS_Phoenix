@@ -23,7 +23,7 @@ namespace GCS_Phoenix.Communication.Packet
         byte[] accelerationYData = { rawData[4], rawData[5] };
         byte[] accelerationZData = { rawData[6], rawData[7] };
 
-        _timeStamp_ms = _rawDataParser.parseUInt16(timeStampData) * 10U;
+        _timeStamp_ms = _rawDataParser.parseUInt16(timeStampData) * 100U;
         _accelerationX_g = _rawDataParser.parseInt16(accelerationXData) / 1000.0f;
         _accelerationY_g = _rawDataParser.parseInt16(accelerationYData) / 1000.0f;
         _accelerationZ_g = _rawDataParser.parseInt16(accelerationZData) / 1000.0f;

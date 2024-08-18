@@ -23,7 +23,7 @@ namespace GCS_Phoenix.Communication.Packet
         byte[] rotationYData = { rawData[4], rawData[5] };
         byte[] rotationZData = { rawData[6], rawData[7] };
 
-        _timeStamp_ms = _rawDataParser.parseUInt16(timeStampData) * 10U;
+        _timeStamp_ms = _rawDataParser.parseUInt16(timeStampData) * 100U;
         _rotationX_dps = _rawDataParser.parseInt16(rotationXData) / 1000.0f;
         _rotationY_dps = _rawDataParser.parseInt16(rotationYData) / 1000.0f;
         _rotationZ_dps = _rawDataParser.parseInt16(rotationZData) / 1000.0f;
