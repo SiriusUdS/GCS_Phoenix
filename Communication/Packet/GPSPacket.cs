@@ -31,7 +31,7 @@ namespace GCS_Phoenix.Communication.Packet
         byte[] longitudeDegrees = { rawData[10], rawData[11] };
         byte[] longitudeMinutes = { rawData[12], rawData[13] };
 
-        _timeStamp_ms = _rawDataParser.parseUInt16(timeStampData) * 10U;
+        _timeStamp_ms = _rawDataParser.parseUInt16(timeStampData) * 100U;
         _latitudeDirection = _rawDataParser.parseChar(latitudeDirection);
         _latitudeDegrees = _rawDataParser.parseUInt16(latitudeDegrees);
         _latitudeMinutes = _rawDataParser.parseUInt16(latitudeMinutes) / 1000.0f;

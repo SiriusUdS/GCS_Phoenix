@@ -73,7 +73,20 @@ namespace GCS_Phoenix.Communication
       _serialPort.Write(data);
     }
 
-    private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+    public void Write(byte[] data, int length)
+    {
+        if (_serialPort is null)
+        {
+            throw new NoSerialPortConnectedException();
+        }
+        if (!_serialPort.IsOpen)
+        {
+            throw new SerialPortClosedException();
+        }
+        _serialPort.Write(data, 0, length);
+    }
+
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
     {
       try
       {
