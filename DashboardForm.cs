@@ -77,10 +77,10 @@ namespace GCS_Phoenix
                 displayText += "Acceleration Z : " + packet.getAccelerationZ_g().ToString() + Environment.NewLine;
 
                 csvFileManager.AddAccelerometerData(packet);
-                Serilog.Log.Information("Decoded accelerometer packet with values:\n" + 
-                  "\tAcc. X: " + packet.getAccelerationX_g() + "\n" + 
-                  "\tAcc. Y: " + packet.getAccelerationY_g() + "\n" + 
-                  "\tAcc. Z: " + packet.getAccelerationZ_g() + "\n" + 
+                Serilog.Log.Information("Decoded accelerometer packet with values:\n" +
+                  "\tAcc. X: " + packet.getAccelerationX_g() + "\n" +
+                  "\tAcc. Y: " + packet.getAccelerationY_g() + "\n" +
+                  "\tAcc. Z: " + packet.getAccelerationZ_g() + "\n" +
                   "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
               }
@@ -95,7 +95,7 @@ namespace GCS_Phoenix
                 displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
 
                 csvFileManager.AddAltimeterData(packet);
-                Serilog.Log.Information("Decoded altimeter packet with values:\n" + 
+                Serilog.Log.Information("Decoded altimeter packet with values:\n" +
                   "\tAltitude: " + packet.getAltitude_m() + "\n" +
                   "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
@@ -113,7 +113,7 @@ namespace GCS_Phoenix
                 displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
 
                 csvFileManager.AddGyroscopeData(packet);
-                Serilog.Log.Information("Decoded gyroscope packet with values:\n" + 
+                Serilog.Log.Information("Decoded gyroscope packet with values:\n" +
                   "\tRot. X: " + packet.getRotationX_dps() + "\n" +
                   "\tRot. Y: " + packet.getRotationY_dps() + "\n" +
                   "\tRot. Z: " + packet.getRotationZ_dps() + "\n" +
@@ -134,8 +134,8 @@ namespace GCS_Phoenix
                 AddPointToMap(packet);
 
                 csvFileManager.AddGPSData(packet);
-                Serilog.Log.Information("Decoded GPS packet with values:\n" + 
-                  "\tLatitude: " + packet.getLatitudeFormatted() + "\n" + 
+                Serilog.Log.Information("Decoded GPS packet with values:\n" +
+                  "\tLatitude: " + packet.getLatitudeFormatted() + "\n" +
                   "\tLongitude: " + packet.getLongitudeFormatted() + "\n" +
                   "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
@@ -163,7 +163,7 @@ namespace GCS_Phoenix
                 csvFileManager.AddThermocoupleData(packetPC1);
                 csvFileManager.AddThermocoupleData(packetPC2);
                 csvFileManager.AddThermocoupleData(packetPC3);
-                Serilog.Log.Information("Decoded thermocouple PC0 packet with values:\n" + 
+                Serilog.Log.Information("Decoded thermocouple PC0 packet with values:\n" +
                   "\tTemperature: " + packetPC0.getTemperature_C() + "\n" +
                   "\tTimestamp: " + packetPC0.getTimeStamp_ms()
                 );
@@ -321,7 +321,7 @@ namespace GCS_Phoenix
         serialConnectivityLabel.ForeColor = Color.Green;
         connectedLed.Color = Color.Green;
         disconnectSerialButton.Enabled = true;
-        comboPorts.Enabled = false; 
+        comboPorts.Enabled = false;
         comboBaud.Enabled = false;
         btn_clearFlash.Enabled = true;
         btn_igniteSmoke.Enabled = true;
@@ -340,6 +340,10 @@ namespace GCS_Phoenix
 
     private void AppendToSerialDataBox(string data, bool addNewLine = true)
     {
+      if (data == null || data.Length <= 0)
+      {
+        return;
+      }
       if (serialDataBox.InvokeRequired)
       {
         serialDataBox.Invoke(new MethodInvoker(() => AppendToSerialDataBox(data)));
@@ -397,13 +401,13 @@ namespace GCS_Phoenix
 
 
       //Adding sample data
-      var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
-      var sigY = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .6));
-      var sigZ = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .9));
+      //var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
+      //var sigY = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .6));
+      //var sigZ = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .9));
 
-      sigX.Label = "X";
-      sigY.Label = "Y";
-      sigZ.Label = "Z";
+      //sigX.Label = "X";
+      //sigY.Label = "Y";
+      //sigZ.Label = "Z";
 
       acceleroPlot.Plot.Legend.IsVisible = true;
       acceleroPlot.Plot.Legend.Orientation = ScottPlot.Orientation.Horizontal;
@@ -420,18 +424,18 @@ namespace GCS_Phoenix
       altitudePlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
       altitudePlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
       altitudePlot.Plot.Axes.AutoScale();
-      SetGraphsBehaviors(altitudePlot);
-      SetGraphsBehaviors(acceleroPlot);
+      //SetGraphsBehaviors(altitudePlot);
+      //SetGraphsBehaviors(acceleroPlot);
 
-      double[] x = new double[239];
-      double[] y = new double[239];
-      for (int i = 0; i < 239; i++)
-      {
-        x[i] = i;
-        y[i] = -(0.0453337 * Math.Pow(i, 2)) + 2.26424 * i + 1878.92;
-      }
+      //double[] x = new double[239];
+      //double[] y = new double[239];
+      //for (int i = 0; i < 239; i++)
+      //{
+      //  x[i] = i;
+      //  y[i] = -(0.0453337 * Math.Pow(i, 2)) + 2.26424 * i + 1878.92;
+      //}
 
-      var alt = altitudePlot.Plot.Add.Scatter(x, y);
+      //var alt = altitudePlot.Plot.Add.Scatter(x, y);
     }
 
     private void SetGraphsBehaviors(ScottPlot.IPlotControl plot)
@@ -555,6 +559,11 @@ namespace GCS_Phoenix
 
       //serialPortManager.Write(command, command.Length);
       serialPortManager.Write("G");
+    }
+
+    private void btn_clearSerialConsole_Click(object sender, EventArgs e)
+    {
+      serialDataBox.Clear();
     }
   }
 }

@@ -80,6 +80,7 @@
       btn_readFlash = new Button();
       btn_saveDataOn = new Button();
       pictureBox1 = new PictureBox();
+      btn_clearSerialConsole = new Button();
       groupBox1.SuspendLayout();
       groupBox2.SuspendLayout();
       mapGroupBox.SuspendLayout();
@@ -634,6 +635,7 @@
       // 
       // grpCommands
       // 
+      grpCommands.Controls.Add(btn_clearSerialConsole);
       grpCommands.Controls.Add(btn_saveDataOff);
       grpCommands.Controls.Add(btn_gatherDataOff);
       grpCommands.Controls.Add(btn_igniteSmoke);
@@ -748,6 +750,17 @@
       pictureBox1.TabIndex = 53;
       pictureBox1.TabStop = false;
       // 
+      // btn_clearSerialConsole
+      // 
+      btn_clearSerialConsole.ForeColor = SystemColors.ActiveCaptionText;
+      btn_clearSerialConsole.Location = new Point(241, 103);
+      btn_clearSerialConsole.Name = "btn_clearSerialConsole";
+      btn_clearSerialConsole.Size = new Size(216, 50);
+      btn_clearSerialConsole.TabIndex = 59;
+      btn_clearSerialConsole.Text = "Clear console";
+      btn_clearSerialConsole.UseVisualStyleBackColor = true;
+      btn_clearSerialConsole.Click += btn_clearSerialConsole_Click;
+      // 
       // DashboardForm
       // 
       AutoScaleDimensions = new SizeF(10F, 25F);
@@ -834,5 +847,6 @@
         private Button btn_saveDataOff;
         private Button btn_gatherDataOn;
         private Button btn_gatherDataOff;
+    private Button btn_clearSerialConsole;
   }
 }
