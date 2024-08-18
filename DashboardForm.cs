@@ -52,12 +52,12 @@ namespace GCS_Phoenix
     private void SerialPortManager_DataReceived(object? sender, byte[] data)
     {
       string displayText = "";
+      Serilog.Log.Information("Data received: " + BitConverter.ToString(data));
       if (data is null || data.Length <= 0)
       {
         return;
       }
 
-      Serilog.Log.Information("Data received: " + BitConverter.ToString(data));
       for (int i = 0; i < data.Length - 3; i++)
       {
         displayText = "";
