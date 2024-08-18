@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GCS_Phoenix.Communication.Packet
 {
-    internal class AccelerometerPacket
+    public class AccelerometerPacket
     {
         private uint _timeStamp_ms;
         private float _accelerationX_g;

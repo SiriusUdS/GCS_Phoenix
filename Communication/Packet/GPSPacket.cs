@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GCS_Phoenix.Communication.Packet
 {
-    internal class GPSPacket
+    public class GPSPacket
     {
         private uint _timeStamp_ms;
 

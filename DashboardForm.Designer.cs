@@ -76,7 +76,6 @@
       msgReceivedLabel = new Label();
       rxErrorsLabel = new Label();
       pictureBox1 = new PictureBox();
-      btn_godRun = new Button();
       groupBox1.SuspendLayout();
       groupBox2.SuspendLayout();
       mapGroupBox.SuspendLayout();
@@ -579,7 +578,6 @@
       // 
       // mapGroupBox
       // 
-      mapGroupBox.Controls.Add(btn_godRun);
       mapGroupBox.Controls.Add(resetButton);
       mapGroupBox.Controls.Add(gMapControl1);
       mapGroupBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
@@ -689,17 +687,6 @@
       pictureBox1.TabIndex = 53;
       pictureBox1.TabStop = false;
       // 
-      // btn_godRun
-      // 
-      btn_godRun.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-      btn_godRun.Location = new Point(647, 655);
-      btn_godRun.Name = "btn_godRun";
-      btn_godRun.Size = new Size(146, 34);
-      btn_godRun.TabIndex = 47;
-      btn_godRun.Text = "God run";
-      btn_godRun.UseVisualStyleBackColor = true;
-      btn_godRun.Click += btn_godRun_Click;
-      // 
       // DashboardForm
       // 
       AutoScaleDimensions = new SizeF(10F, 25F);
@@ -780,6 +767,5 @@
         private Label rxErrorsLabel;
         private Label msgReceivedLabel;
         private PictureBox pictureBox1;
-    private Button btn_godRun;
   }
 }

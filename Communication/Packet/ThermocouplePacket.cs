@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GCS_Phoenix.Communication.Packet
 {
-    internal class ThermocouplePacket
+    public class ThermocouplePacket
     {
         private uint _timeStamp_ms;
         private float _temperature_C;

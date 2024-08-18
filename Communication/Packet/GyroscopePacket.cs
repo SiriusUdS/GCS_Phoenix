@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GCS_Phoenix.Communication.Packet
 {
-    internal class GyroscopePacket
+    public class GyroscopePacket
     {
         private uint _timeStamp_ms;
         private float _rotationX_dps;

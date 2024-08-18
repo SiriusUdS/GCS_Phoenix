@@ -11,6 +11,7 @@ using System.Text;
 using GCS_Phoenix.Communication.Packet;
 using MissionPlanner.Maps;
 using System.Net;
+using GMap.NET.WindowsForms.Markers;
 
 namespace GCS_Phoenix
 {
@@ -32,7 +33,7 @@ namespace GCS_Phoenix
       InitializeComPort();
 
       //TODO remove when we start to receive real values and move into another method.
-      AddPointToMap(5, 5);
+      //AddPointToMap(5, 5);
       mainTimer = new System.Windows.Forms.Timer();
       mainTimer.Interval = 1000; // Save every 10 seconds
       mainTimer.Tick += MainTimer_Tick;
@@ -47,6 +48,7 @@ namespace GCS_Phoenix
     {
 
     }
+
     private void SerialPortManager_DataReceived(object? sender, byte[] e)
     {
       string displayText = "";
@@ -151,31 +153,47 @@ namespace GCS_Phoenix
       gMapControl1.MinZoom = 1;
       gMapControl1.MaxZoom = 20;
       gMapControl1.Position = new GMap.NET.PointLatLng(48.486483, -81.328833);
+      gMapControl1.Overlays.Add(markersOverlay);
+      AddPointToMap(0, 48.486483, -81.328833);
     }
 
-    public void AddPointToMap(double _lat, double _long)
+    public void AddPointToMap(uint timestampt, double latitude, double longitude)
     {
-      double latitude = 48.486483; // Your received latitude;
-      double longitude = -81.328833; // Your received longitude;
-
       gMapControl1.Position = new PointLatLng(latitude, longitude);
-      gMapControl1.Zoom = 15;
-      for (int i = 0; i < 10; i++)
-      {
-        latitude += 0.0005;
-        longitude += 0.0005;
-        var marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
-            new PointLatLng(latitude, longitude),
-            GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_small
-        );
-        marker.ToolTipText = string.Format("Marker {0}", i);
-        markersOverlay.Markers.Add(marker);
-        gMapControl1.Overlays.Add(markersOverlay);
-      }
+      GMarkerCross marker = new GMap.NET.WindowsForms.Markers.GMarkerCross(
+        new PointLatLng(latitude, longitude)
+      );
+      marker.ToolTipText = string.Format($"Timestampt: {timestampt}, Latitude: {latitude}, Longitude: {longitude}");
+      markersOverlay.Markers.Add(marker);
+      //gMapControl1.Zoom = 15;
+      //for (int i = 0; i < 10; i++)
+      //{
+      //  latitude += 0.0005;
+      //  longitude += 0.0005;
+      //  var marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
+      //      new PointLatLng(latitude, longitude),
+      //      GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_small
+      //  );
+      //  marker.ToolTipText = string.Format("Marker {0}", i);
+      //  markersOverlay.Markers.Add(marker);
+      //  gMapControl1.Overlays.Add(markersOverlay);
+      //}
 
       gMapControl1.Update();
       gMapControl1.Refresh();
     }
+
+    //public void AddPointToMap(GPSPacket gpsPacket)
+    //{
+    //  gMapControl1.Position = new PointLatLng(gpsPacket.getLatitude(), longitude);
+    //  GMarkerCross marker = new GMap.NET.WindowsForms.Markers.GMarkerCross(
+    //    new PointLatLng(latitude, longitude)
+    //  );
+    //  marker.ToolTipText = string.Format($"Latitude: {latitude}, Longitude: {longitude}");
+    //  markersOverlay.Markers.Add(marker);
+    //  gMapControl1.Update();
+    //  gMapControl1.Refresh();
+    //}
 
     private void ResetButton_Click(object sender, EventArgs e)
     {

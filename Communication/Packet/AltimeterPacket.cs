@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GCS_Phoenix.Communication.Packet
 {
-    internal class AltimeterPacket
+    public class AltimeterPacket
     {
         private uint _timeStamp_ms;
         private float _altitude_m;
