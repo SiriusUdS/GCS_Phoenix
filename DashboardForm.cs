@@ -12,6 +12,7 @@ using MissionPlanner.Maps;
 using System.Net;
 using GMap.NET.WindowsForms.Markers;
 using GCS_Phoenix.Managers;
+using ScottPlot.Plottables;
 
 namespace GCS_Phoenix
 {
@@ -27,6 +28,11 @@ namespace GCS_Phoenix
     private CsvFileManager csvFileManager = new CsvFileManager();
 
     private System.Windows.Forms.Timer mainTimer;
+
+    public DataLogger sigX = new DataLogger();
+    public DataLogger sigY = new DataLogger();
+    public DataLogger sigZ = new DataLogger();
+    public DataLogger alt = new DataLogger();
 
     public DashboardForm()
     {
@@ -83,6 +89,18 @@ namespace GCS_Phoenix
                   "\tAcc. Z: " + packet.getAccelerationZ_g() + "\n" +
                   "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
+
+                sigX.Add(packet.getTimeStamp_ms(), packet.getAccelerationX_g());
+                sigY.Add(packet.getTimeStamp_ms(), packet.getAccelerationY_g());
+                sigZ.Add(packet.getTimeStamp_ms(), packet.getAccelerationZ_g());
+                if (acceleroPlot.InvokeRequired)
+                {
+                  acceleroPlot.Invoke(new Action(() => acceleroPlot.Refresh()));
+                }
+                else
+                {
+                  acceleroPlot.Refresh();
+                }
               }
               break;
             case (byte)0x20U:
@@ -99,6 +117,16 @@ namespace GCS_Phoenix
                   "\tAltitude: " + packet.getAltitude_m() + "\n" +
                   "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
+
+                alt.Add(packet.getTimeStamp_ms(), packet.getAltitude_m());
+                if (altitudePlot.InvokeRequired)
+                {
+                  altitudePlot.Invoke(new Action(() => altitudePlot.Refresh()));
+                }
+                else
+                {
+                  altitudePlot.Refresh();
+                }
               }
               break;
             case (byte)0x30U:
@@ -205,7 +233,19 @@ namespace GCS_Phoenix
       gMapControl1.Position = new GMap.NET.PointLatLng(48.486483, -81.328833);
     }
 
-    public void AddPointToMap(uint timestampt, double latitude, double longitude)
+    public void SetupData()
+    {
+      alt = altitudePlot.Plot.Add.DataLogger();
+      sigX = acceleroPlot.Plot.Add.DataLogger();
+      sigY = acceleroPlot.Plot.Add.DataLogger();
+      sigZ = acceleroPlot.Plot.Add.DataLogger();
+
+      sigX.LegendText = "X";
+      sigY.LegendText = "Y";
+      sigZ.LegendText = "Z";
+    }
+
+      public void AddPointToMap(uint timestampt, double latitude, double longitude)
     {
       gMapControl1.Position = new PointLatLng(latitude, longitude);
       GMarkerGoogle marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
@@ -387,6 +427,7 @@ namespace GCS_Phoenix
     {
       SetupGraphAccelero();
       SetupGraphAltitude();
+      SetupData();
     }
 
     private void SetupGraphAccelero()
@@ -412,8 +453,8 @@ namespace GCS_Phoenix
       acceleroPlot.Plot.Legend.IsVisible = true;
       acceleroPlot.Plot.Legend.Orientation = ScottPlot.Orientation.Horizontal;
       acceleroPlot.Plot.Legend.OutlineStyle.Color = ScottPlot.Color.FromHex("C6A969");
-      acceleroPlot.Plot.Legend.BackgroundFill.Color = ScottPlot.Color.FromHex("304D30");
-      acceleroPlot.Plot.Legend.Font.Color = ScottPlot.Color.FromHex("C6A969");
+      acceleroPlot.Plot.Legend.BackgroundColor = ScottPlot.Color.FromHex("304D30");
+      acceleroPlot.Plot.Legend.FontColor = ScottPlot.Color.FromHex("C6A969");
     }
 
     private void SetupGraphAltitude()
@@ -491,6 +532,7 @@ namespace GCS_Phoenix
 
       //serialPortManager.Write(command, command.Length);
       serialPortManager.Write("f");
+      Serilog.Log.Information("Read flash memory command sent.");
     }
 
     private void btn_clearFlash_Click(object sender, EventArgs e)
@@ -508,6 +550,7 @@ namespace GCS_Phoenix
         //serialPortManager.Write(command, command.Length);
         serialPortManager.Write("c");
       }
+      Serilog.Log.Information("Clear flash memory command sent.");
     }
 
     private void btn_igniteSmoke_Click(object sender, EventArgs e)
@@ -525,6 +568,7 @@ namespace GCS_Phoenix
         //serialPortManager.Write(command, command.Length);
         serialPortManager.Write("s");
       }
+      Serilog.Log.Information("Ignite smoke bomb command sent.");
     }
 
     private void btn_saveDataOn_Click(object sender, EventArgs e)
@@ -534,6 +578,7 @@ namespace GCS_Phoenix
 
       //serialPortManager.Write(command, command.Length);
       serialPortManager.Write("p");
+      Serilog.Log.Information("Save data = on command sent.");
     }
 
     private void btn_saveDataOff_Click(object sender, EventArgs e)
@@ -543,6 +588,7 @@ namespace GCS_Phoenix
 
       //serialPortManager.Write(command, command.Length);
       serialPortManager.Write("P");
+      Serilog.Log.Information("Save data = off command sent.");
     }
 
     private void btn_gatherDataOn_Click(object sender, EventArgs e)
@@ -551,6 +597,7 @@ namespace GCS_Phoenix
 
       //serialPortManager.Write(command, command.Length);
       serialPortManager.Write("g");
+      Serilog.Log.Information("Gather data = on command sent.");
     }
 
     private void btn_gatherDataOff_Click(object sender, EventArgs e)
@@ -559,11 +606,13 @@ namespace GCS_Phoenix
 
       //serialPortManager.Write(command, command.Length);
       serialPortManager.Write("G");
+      Serilog.Log.Information("Gather data = off command sent.");
     }
 
     private void btn_clearSerialConsole_Click(object sender, EventArgs e)
     {
       serialDataBox.Clear();
+      Serilog.Log.Information("Serial console cleared.");
     }
   }
 }
