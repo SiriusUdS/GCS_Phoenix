@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScottPlot.TickGenerators.TimeUnits;
+using System;
 namespace GCS_Phoenix.Communication.Packet
 {
   public class GPSPacket
@@ -66,6 +67,17 @@ namespace GCS_Phoenix.Communication.Packet
       return _latitudeMinutes;
     }
 
+    public double getLatitudeValuesDegrees()
+    {
+      if (_latitudeDirection == 'S')
+      {
+        return -(_latitudeDegrees + (_latitudeMinutes / 60.0));
+      } else
+      {
+        return _latitudeDegrees + (_latitudeMinutes / 60.0);
+      }
+    }
+
     public char getLongitudeDirection()
     {
       return _longitudeDirection;
@@ -79,6 +91,18 @@ namespace GCS_Phoenix.Communication.Packet
     public float getLongitudeMinutes()
     {
       return _longitudeMinutes;
+    }
+
+    public double getLongitudeValuesDegrees()
+    {
+      if (_longitudeDirection == 'W')
+      {
+        return -(_longitudeDegrees + (_longitudeMinutes / 60.0));
+      }
+      else
+      {
+        return _longitudeDegrees + (_longitudeMinutes / 60.0);
+      }
     }
 
     public string getLatitudeFormatted()

@@ -24,6 +24,8 @@ namespace GCS_Phoenix
 
     private List<byte> uartBuffer = new List<byte>();
 
+    private CsvFileManager csvFileManager = new CsvFileManager();
+
     private System.Windows.Forms.Timer mainTimer;
 
     public DashboardForm()
@@ -95,7 +97,7 @@ namespace GCS_Phoenix
                 displayText += "Altitude : " + packet.getAltitude_m().ToString() + Environment.NewLine;
 
                 csvFileManager.AddAltimeterData(packet);
-                Serilog.Log.Information("Decoded altimeter packet with values: " + 
+                Serilog.Log.Information("Decoded altimeter packet with values:\n" + 
                   "\tAltitude: " + packet.getAltitude_m() + "\n" +
                   "\tTimestamp: " + packet.getTimeStamp_ms()
                 );
@@ -113,7 +115,7 @@ namespace GCS_Phoenix
                 displayText += "Rotation Z : " + packet.getRotationZ_dps().ToString() + Environment.NewLine;
 
                 csvFileManager.AddGyroscopeData(packet);
-                Serilog.Log.Information("Decoded gyroscope packet with values: " + 
+                Serilog.Log.Information("Decoded gyroscope packet with values:\n" + 
                   "\tRot. X: " + packet.getRotationX_dps() + "\n" +
                   "\tRot. Y: " + packet.getRotationY_dps() + "\n" +
                   "\tRot. Z: " + packet.getRotationZ_dps() + "\n" +
@@ -131,8 +133,10 @@ namespace GCS_Phoenix
                 displayText += "Latitude : " + packet.getLatitudeFormatted() + Environment.NewLine;
                 displayText += "Longitude : " + packet.getLongitudeFormatted() + Environment.NewLine;
 
+                AddPointToMap(packet);
+
                 csvFileManager.AddGPSData(packet);
-                Serilog.Log.Information("Decoded GPS packet with values: " + 
+                Serilog.Log.Information("Decoded GPS packet with values:\n" + 
                   "\tLatitude: " + packet.getLatitudeFormatted() + "\n" + 
                   "\tLongitude: " + packet.getLongitudeFormatted() + "\n" +
                   "\tTimestamp: " + packet.getTimeStamp_ms()
@@ -161,19 +165,19 @@ namespace GCS_Phoenix
                 csvFileManager.AddThermocoupleData(packetPC1);
                 csvFileManager.AddThermocoupleData(packetPC2);
                 csvFileManager.AddThermocoupleData(packetPC3);
-                Serilog.Log.Information("Decoded thermocouple PC0 packet with values: " + 
+                Serilog.Log.Information("Decoded thermocouple PC0 packet with values:\n" + 
                   "\tTemperature: " + packetPC0.getTemperature_C() + "\n" +
                   "\tTimestamp: " + packetPC0.getTimeStamp_ms()
                 );
-                Serilog.Log.Information("Decoded thermocouple PC1 packet with values: " +
+                Serilog.Log.Information("Decoded thermocouple PC1 packet with values:\n" +
                   "\tTemperature: " + packetPC1.getTemperature_C() + "\n" +
                   "\tTimestamp: " + packetPC1.getTimeStamp_ms()
                 );
-                Serilog.Log.Information("Decoded thermocouple PC2 packet with values: " +
+                Serilog.Log.Information("Decoded thermocouple PC2 packet with values:\n" +
                   "\tTemperature: " + packetPC2.getTemperature_C() + "\n" +
                   "\tTimestamp: " + packetPC2.getTimeStamp_ms()
                 );
-                Serilog.Log.Information("Decoded thermocouple PC3 packet with values: " +
+                Serilog.Log.Information("Decoded thermocouple PC3 packet with values:\n" +
                   "\tTemperature: " + packetPC3.getTemperature_C() + "\n" +
                   "\tTimestamp: " + packetPC3.getTimeStamp_ms()
                 );
@@ -200,19 +204,21 @@ namespace GCS_Phoenix
       gMapControl1.ShowCenter = false;
       gMapControl1.MinZoom = 1;
       gMapControl1.MaxZoom = 20;
+      gMapControl1.Zoom = 15;
       gMapControl1.Position = new GMap.NET.PointLatLng(48.486483, -81.328833);
-      gMapControl1.Overlays.Add(markersOverlay);
-      AddPointToMap(0, 48.486483, -81.328833);
+      //AddPointToMap(0, 48.486483, -81.328833);
     }
 
     public void AddPointToMap(uint timestampt, double latitude, double longitude)
     {
       gMapControl1.Position = new PointLatLng(latitude, longitude);
-      GMarkerCross marker = new GMap.NET.WindowsForms.Markers.GMarkerCross(
-        new PointLatLng(latitude, longitude)
+      GMarkerGoogle marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
+        new PointLatLng(latitude, longitude),
+        GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_small
       );
       marker.ToolTipText = string.Format($"Timestampt: {timestampt}, Latitude: {latitude}, Longitude: {longitude}");
       markersOverlay.Markers.Add(marker);
+      gMapControl1.Overlays.Add(markersOverlay);
       //gMapControl1.Zoom = 15;
       //for (int i = 0; i < 10; i++)
       //{
@@ -231,17 +237,30 @@ namespace GCS_Phoenix
       gMapControl1.Refresh();
     }
 
-    //public void AddPointToMap(GPSPacket gpsPacket)
-    //{
-    //  gMapControl1.Position = new PointLatLng(gpsPacket.getLatitude(), longitude);
-    //  GMarkerCross marker = new GMap.NET.WindowsForms.Markers.GMarkerCross(
-    //    new PointLatLng(latitude, longitude)
-    //  );
-    //  marker.ToolTipText = string.Format($"Latitude: {latitude}, Longitude: {longitude}");
-    //  markersOverlay.Markers.Add(marker);
-    //  gMapControl1.Update();
-    //  gMapControl1.Refresh();
-    //}
+    public void AddPointToMap(GPSPacket gpsPacket)
+    {
+      double latitude = gpsPacket.getLatitudeValuesDegrees();
+      double longitude = gpsPacket.getLongitudeValuesDegrees();
+      //Serilog.Log.Debug("\n\n################# Adding point to map: " + latitude + ", " + longitude + "#################\n\n\n");
+      GMarkerGoogle marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
+        new PointLatLng(latitude, longitude),
+        GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_dot
+      );
+      marker.ToolTipText = string.Format($"Latitude: {latitude}, Longitude: {longitude}");
+      markersOverlay.Markers.Add(marker);
+      //gMapControl1.Position = new PointLatLng(latitude, longitude);
+      if (gMapControl1.InvokeRequired)
+      {
+        gMapControl1.Invoke(new Action(() => AddPointToMap(gpsPacket)));
+      }
+      else
+      {
+        gMapControl1.Position = new PointLatLng(latitude, longitude);
+        gMapControl1.Overlays.Add(markersOverlay);
+        gMapControl1.Update();
+        gMapControl1.Refresh();
+      }
+    }
 
     private void ResetButton_Click(object sender, EventArgs e)
     {
@@ -304,7 +323,7 @@ namespace GCS_Phoenix
 
       string customDataOutputFolderName = Microsoft.VisualBasic.Interaction.InputBox("Custom folder name for flight data:",
                        "Custom folder name",
-                       DateTime.Now.ToString(),
+                       DateTime.Now.ToString("yyyy-MM-dd HHmmss"),
                        0,
                        0);
       csvFileManager.csvSessionFolderName = customDataOutputFolderName;
