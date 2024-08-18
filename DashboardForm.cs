@@ -243,9 +243,14 @@ namespace GCS_Phoenix
       sigX.LegendText = "X";
       sigY.LegendText = "Y";
       sigZ.LegendText = "Z";
+
+      alt.ViewSlide();
+      sigX.ViewSlide();
+      sigY.ViewSlide();
+      sigZ.ViewSlide();
     }
 
-      public void AddPointToMap(uint timestampt, double latitude, double longitude)
+    public void AddPointToMap(uint timestampt, double latitude, double longitude)
     {
       gMapControl1.Position = new PointLatLng(latitude, longitude);
       GMarkerGoogle marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
@@ -262,6 +267,11 @@ namespace GCS_Phoenix
 
     public void AddPointToMap(GPSPacket gpsPacket)
     {
+      if (gMapControl1.InvokeRequired)
+      {
+        gMapControl1.Invoke(new Action(() => AddPointToMap(gpsPacket)));
+        return;
+      }
       double latitude = gpsPacket.getLatitudeValuesDegrees();
       double longitude = gpsPacket.getLongitudeValuesDegrees();
       GMarkerGoogle marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
@@ -440,16 +450,6 @@ namespace GCS_Phoenix
       acceleroPlot.Plot.Axes.AutoScale();
       acceleroPlot.Interaction.Disable();
 
-
-      //Adding sample data
-      //var sigX = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .3));
-      //var sigY = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .6));
-      //var sigZ = acceleroPlot.Plot.Add.Signal(Generate.Sin(25, phase: .9));
-
-      //sigX.Label = "X";
-      //sigY.Label = "Y";
-      //sigZ.Label = "Z";
-
       acceleroPlot.Plot.Legend.IsVisible = true;
       acceleroPlot.Plot.Legend.Orientation = ScottPlot.Orientation.Horizontal;
       acceleroPlot.Plot.Legend.OutlineStyle.Color = ScottPlot.Color.FromHex("C6A969");
@@ -465,18 +465,6 @@ namespace GCS_Phoenix
       altitudePlot.Plot.DataBackground.Color = ScottPlot.Color.FromHex("304D30");
       altitudePlot.Plot.Axes.Color(ScottPlot.Color.FromHex("C6A969"));
       altitudePlot.Plot.Axes.AutoScale();
-      //SetGraphsBehaviors(altitudePlot);
-      //SetGraphsBehaviors(acceleroPlot);
-
-      //double[] x = new double[239];
-      //double[] y = new double[239];
-      //for (int i = 0; i < 239; i++)
-      //{
-      //  x[i] = i;
-      //  y[i] = -(0.0453337 * Math.Pow(i, 2)) + 2.26424 * i + 1878.92;
-      //}
-
-      //var alt = altitudePlot.Plot.Add.Scatter(x, y);
     }
 
     private void SetGraphsBehaviors(ScottPlot.IPlotControl plot)
@@ -613,6 +601,48 @@ namespace GCS_Phoenix
     {
       serialDataBox.Clear();
       Serilog.Log.Information("Serial console cleared.");
+    }
+
+    private void rb_graphSlide_CheckedChanged(object sender, EventArgs e)
+    {
+      RadioButton? radioButton = sender as RadioButton;
+      if (radioButton is not null && radioButton.Checked)
+      {
+        alt.ViewSlide();
+        sigX.ViewSlide();
+        sigY.ViewSlide();
+        sigZ.ViewSlide();
+      } 
+      else
+      {
+        alt.ViewFull();
+        sigX.ViewFull();
+        sigY.ViewFull();
+        sigZ.ViewFull();
+      }
+      acceleroPlot.Refresh();
+      altitudePlot.Refresh();
+    }
+
+    private void rb_graphFull_CheckedChanged(object sender, EventArgs e)
+    {
+      RadioButton? radioButton = sender as RadioButton;
+      if (radioButton is not null && radioButton.Checked)
+      {
+        alt.ViewFull();
+        sigX.ViewFull();
+        sigY.ViewFull();
+        sigZ.ViewFull();
+      }
+      else
+      {
+        alt.ViewSlide();
+        sigX.ViewSlide();
+        sigY.ViewSlide();
+        sigZ.ViewSlide();
+      }
+      acceleroPlot.Refresh();
+      altitudePlot.Refresh();
     }
   }
 }

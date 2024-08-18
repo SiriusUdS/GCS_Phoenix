@@ -72,6 +72,7 @@
       acceleroPlot = new ScottPlot.WinForms.FormsPlot();
       altitudePlot = new ScottPlot.WinForms.FormsPlot();
       grpCommands = new GroupBox();
+      btn_clearSerialConsole = new Button();
       btn_saveDataOff = new Button();
       btn_gatherDataOff = new Button();
       btn_igniteSmoke = new Button();
@@ -80,13 +81,16 @@
       btn_readFlash = new Button();
       btn_saveDataOn = new Button();
       pictureBox1 = new PictureBox();
-      btn_clearSerialConsole = new Button();
+      grp_GraphOptions = new GroupBox();
+      rb_graphFull = new RadioButton();
+      rb_graphSlide = new RadioButton();
       groupBox1.SuspendLayout();
       groupBox2.SuspendLayout();
       mapGroupBox.SuspendLayout();
       groupBox3.SuspendLayout();
       grpCommands.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+      grp_GraphOptions.SuspendLayout();
       SuspendLayout();
       // 
       // comboBaud
@@ -654,6 +658,17 @@
       grpCommands.TabStop = false;
       grpCommands.Text = "COMMANDS";
       // 
+      // btn_clearSerialConsole
+      // 
+      btn_clearSerialConsole.ForeColor = SystemColors.ActiveCaptionText;
+      btn_clearSerialConsole.Location = new Point(241, 103);
+      btn_clearSerialConsole.Name = "btn_clearSerialConsole";
+      btn_clearSerialConsole.Size = new Size(216, 50);
+      btn_clearSerialConsole.TabIndex = 59;
+      btn_clearSerialConsole.Text = "Clear console";
+      btn_clearSerialConsole.UseVisualStyleBackColor = true;
+      btn_clearSerialConsole.Click += btn_clearSerialConsole_Click;
+      // 
       // btn_saveDataOff
       // 
       btn_saveDataOff.Enabled = false;
@@ -742,7 +757,7 @@
       // pictureBox1
       // 
       pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-      pictureBox1.Location = new Point(-6, 45);
+      pictureBox1.Location = new Point(-5, 2);
       pictureBox1.Margin = new Padding(4, 5, 4, 5);
       pictureBox1.Name = "pictureBox1";
       pictureBox1.Size = new Size(414, 395);
@@ -750,16 +765,42 @@
       pictureBox1.TabIndex = 53;
       pictureBox1.TabStop = false;
       // 
-      // btn_clearSerialConsole
+      // grp_GraphOptions
       // 
-      btn_clearSerialConsole.ForeColor = SystemColors.ActiveCaptionText;
-      btn_clearSerialConsole.Location = new Point(241, 103);
-      btn_clearSerialConsole.Name = "btn_clearSerialConsole";
-      btn_clearSerialConsole.Size = new Size(216, 50);
-      btn_clearSerialConsole.TabIndex = 59;
-      btn_clearSerialConsole.Text = "Clear console";
-      btn_clearSerialConsole.UseVisualStyleBackColor = true;
-      btn_clearSerialConsole.Click += btn_clearSerialConsole_Click;
+      grp_GraphOptions.Controls.Add(rb_graphFull);
+      grp_GraphOptions.Controls.Add(rb_graphSlide);
+      grp_GraphOptions.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+      grp_GraphOptions.ForeColor = Color.FromArgb(198, 169, 105);
+      grp_GraphOptions.Location = new Point(19, 405);
+      grp_GraphOptions.Name = "grp_GraphOptions";
+      grp_GraphOptions.Size = new Size(390, 150);
+      grp_GraphOptions.TabIndex = 54;
+      grp_GraphOptions.TabStop = false;
+      grp_GraphOptions.Text = "GRAPH OPTIONS";
+      // 
+      // rb_graphFull
+      // 
+      rb_graphFull.AutoSize = true;
+      rb_graphFull.Location = new Point(12, 83);
+      rb_graphFull.Name = "rb_graphFull";
+      rb_graphFull.Size = new Size(131, 36);
+      rb_graphFull.TabIndex = 1;
+      rb_graphFull.Text = "View full";
+      rb_graphFull.UseVisualStyleBackColor = true;
+      rb_graphFull.CheckedChanged += rb_graphFull_CheckedChanged;
+      // 
+      // rb_graphSlide
+      // 
+      rb_graphSlide.AutoSize = true;
+      rb_graphSlide.Checked = true;
+      rb_graphSlide.Location = new Point(12, 38);
+      rb_graphSlide.Name = "rb_graphSlide";
+      rb_graphSlide.Size = new Size(146, 36);
+      rb_graphSlide.TabIndex = 0;
+      rb_graphSlide.TabStop = true;
+      rb_graphSlide.Text = "View slide";
+      rb_graphSlide.UseVisualStyleBackColor = true;
+      rb_graphSlide.CheckedChanged += rb_graphSlide_CheckedChanged;
       // 
       // DashboardForm
       // 
@@ -767,6 +808,7 @@
       AutoScaleMode = AutoScaleMode.Font;
       BackColor = Color.FromArgb(22, 48, 32);
       ClientSize = new Size(2034, 1357);
+      Controls.Add(grp_GraphOptions);
       Controls.Add(pictureBox1);
       Controls.Add(grpCommands);
       Controls.Add(groupBox3);
@@ -789,6 +831,8 @@
       groupBox3.ResumeLayout(false);
       grpCommands.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+      grp_GraphOptions.ResumeLayout(false);
+      grp_GraphOptions.PerformLayout();
       ResumeLayout(false);
     }
 
@@ -848,5 +892,8 @@
         private Button btn_gatherDataOn;
         private Button btn_gatherDataOff;
     private Button btn_clearSerialConsole;
+    private GroupBox grp_GraphOptions;
+    private RadioButton rb_graphFull;
+    private RadioButton rb_graphSlide;
   }
 }
