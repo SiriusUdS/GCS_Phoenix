@@ -34,10 +34,8 @@ namespace GCS_Phoenix
       InitializeMap();
       InitializeComPort();
 
-      //TODO remove when we start to receive real values and move into another method.
-      //AddPointToMap(5, 5);
       mainTimer = new System.Windows.Forms.Timer();
-      mainTimer.Interval = 1000; // Save every 10 seconds
+      mainTimer.Interval = 1000;
       mainTimer.Tick += MainTimer_Tick;
     }
 
@@ -196,7 +194,6 @@ namespace GCS_Phoenix
     public void InitializeMap()
     {
       gMapControl1.CacheLocation = cachePath;
-      //gMapControl1.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleSatelliteMap;
       gMapControl1.MapProvider = GMap.NET.MapProviders.GoogleSatelliteMapProvider.Instance;
       gMapControl1.Dock = DockStyle.Fill;
       GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
@@ -206,7 +203,6 @@ namespace GCS_Phoenix
       gMapControl1.MaxZoom = 20;
       gMapControl1.Zoom = 15;
       gMapControl1.Position = new GMap.NET.PointLatLng(48.486483, -81.328833);
-      //AddPointToMap(0, 48.486483, -81.328833);
     }
 
     public void AddPointToMap(uint timestampt, double latitude, double longitude)
@@ -219,19 +215,6 @@ namespace GCS_Phoenix
       marker.ToolTipText = string.Format($"Timestampt: {timestampt}, Latitude: {latitude}, Longitude: {longitude}");
       markersOverlay.Markers.Add(marker);
       gMapControl1.Overlays.Add(markersOverlay);
-      //gMapControl1.Zoom = 15;
-      //for (int i = 0; i < 10; i++)
-      //{
-      //  latitude += 0.0005;
-      //  longitude += 0.0005;
-      //  var marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
-      //      new PointLatLng(latitude, longitude),
-      //      GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_small
-      //  );
-      //  marker.ToolTipText = string.Format("Marker {0}", i);
-      //  markersOverlay.Markers.Add(marker);
-      //  gMapControl1.Overlays.Add(markersOverlay);
-      //}
 
       gMapControl1.Update();
       gMapControl1.Refresh();
@@ -241,14 +224,12 @@ namespace GCS_Phoenix
     {
       double latitude = gpsPacket.getLatitudeValuesDegrees();
       double longitude = gpsPacket.getLongitudeValuesDegrees();
-      //Serilog.Log.Debug("\n\n################# Adding point to map: " + latitude + ", " + longitude + "#################\n\n\n");
       GMarkerGoogle marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
         new PointLatLng(latitude, longitude),
         GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_dot
       );
       marker.ToolTipText = string.Format($"Latitude: {latitude}, Longitude: {longitude}");
       markersOverlay.Markers.Add(marker);
-      //gMapControl1.Position = new PointLatLng(latitude, longitude);
       if (gMapControl1.InvokeRequired)
       {
         gMapControl1.Invoke(new Action(() => AddPointToMap(gpsPacket)));
