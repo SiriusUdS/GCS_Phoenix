@@ -568,7 +568,7 @@ namespace GCS_Phoenix
       Serilog.Log.Information("Clear flash memory command sent.");
     }
 
-    private void btn_igniteSmoke_Click(object sender, EventArgs e)
+    private async void btn_igniteSmoke_Click(object sender, EventArgs e)
     {
       //byte[] command = { 0xA5, 0x10, 0x00, 0x01, 0x00, 0x01 };
       //byte[] command = { 0x10, 0xA5, 0x01, 0x00, 0x01, 0x00 };
@@ -580,8 +580,11 @@ namespace GCS_Phoenix
 
       if (result == DialogResult.Yes)
       {
-        //serialPortManager.Write(command, command.Length);
-        serialPortManager.Write("s");
+        for (int i = 0; i < 5; i++)
+        {
+          serialPortManager.Write("s");
+          await Task.Delay(1000);
+        }
       }
       Serilog.Log.Information("Ignite smoke bomb command sent.");
     }
