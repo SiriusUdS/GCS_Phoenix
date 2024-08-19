@@ -235,7 +235,8 @@ namespace GCS_Phoenix
       gMapControl1.MinZoom = 1;
       gMapControl1.MaxZoom = 20;
       gMapControl1.Zoom = 15;
-      gMapControl1.Position = new GMap.NET.PointLatLng(48.486483, -81.328833);
+      //gMapControl1.Position = new GMap.NET.PointLatLng(48.486483, -81.328833);
+      gMapControl1.Position = new GMap.NET.PointLatLng(47.989111, -81.853388);
     }
 
     public void SetupData()
