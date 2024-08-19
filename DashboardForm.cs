@@ -24,10 +24,13 @@ namespace GCS_Phoenix
     private SerialPortManager serialPortManager;
 
     private List<byte> uartBuffer = new List<byte>();
+    private List<GMarkerGoogle> addedMarkers = new List<GMarkerGoogle>();
+    private List<GMarkerGoogle> displayedMarkers = new List<GMarkerGoogle>();
 
     private CsvFileManager csvFileManager = new CsvFileManager();
 
     private System.Windows.Forms.Timer mainTimer;
+    Random random = new Random();
 
     public DataLogger sigX = new DataLogger();
     public DataLogger sigY = new DataLogger();
@@ -43,6 +46,8 @@ namespace GCS_Phoenix
       mainTimer = new System.Windows.Forms.Timer();
       mainTimer.Interval = 1000;
       mainTimer.Tick += MainTimer_Tick;
+
+      num_markersToDisplay.Enabled = false;
     }
 
     private void MainTimer_Tick(object sender, EventArgs e)
@@ -187,9 +192,9 @@ namespace GCS_Phoenix
                 displayText += "Resistance PC2 : " + packetPC2.getTemperature_C().ToString() + Environment.NewLine;
                 displayText += "Resistance PC3 : " + packetPC3.getTemperature_C().ToString() + Environment.NewLine;
 
-                csvFileManager.AddThermocoupleData(packetPC0);
-                csvFileManager.AddThermocoupleData(packetPC1);
-                csvFileManager.AddThermocoupleData(packetPC2);
+                //csvFileManager.AddThermocoupleData(packetPC0);
+                //csvFileManager.AddThermocoupleData(packetPC1);
+                //csvFileManager.AddThermocoupleData(packetPC2);
                 csvFileManager.AddThermocoupleData(packetPC3);
                 Serilog.Log.Information("Decoded thermocouple PC0 packet with values:\n" +
                   "\tTemperature: " + packetPC0.getTemperature_C() + "\n" +
@@ -244,23 +249,37 @@ namespace GCS_Phoenix
       sigY.LegendText = "Y";
       sigZ.LegendText = "Z";
 
-      alt.ViewSlide();
-      sigX.ViewSlide();
-      sigY.ViewSlide();
-      sigZ.ViewSlide();
+      alt.ViewFull();
+      sigX.ViewFull();
+      sigY.ViewFull();
+      sigZ.ViewFull();
     }
 
-    public void AddPointToMap(uint timestampt, double latitude, double longitude)
+    public void updateMapMarkers()
     {
-      gMapControl1.Position = new PointLatLng(latitude, longitude);
-      GMarkerGoogle marker = new GMap.NET.WindowsForms.Markers.GMarkerGoogle(
-        new PointLatLng(latitude, longitude),
-        GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_small
-      );
-      marker.ToolTipText = string.Format($"Timestampt: {timestampt}, Latitude: {latitude}, Longitude: {longitude}");
-      markersOverlay.Markers.Add(marker);
+      markersOverlay.Markers.Clear();
+      int adjustedNumberToDisplay = (int)num_markersToDisplay.Value;
+      if (num_markersToDisplay.Value > addedMarkers.Count)
+      {
+        adjustedNumberToDisplay = addedMarkers.Count;
+      }
+      displayedMarkers = addedMarkers.GetRange(addedMarkers.Count - adjustedNumberToDisplay, adjustedNumberToDisplay);
+      //displayedMarkers = addedMarkers.GetRange(addedMarkers.Count - (int)num_markersToDisplay.Value, (int)num_markersToDisplay.Value);
+      if (rb_onlyLastXMarkers.Checked)
+      {
+        foreach (GMarkerGoogle marker in displayedMarkers)
+        {
+          markersOverlay.Markers.Add(marker);
+        }
+      }
+      else
+      {
+        foreach (GMarkerGoogle marker in addedMarkers)
+        {
+          markersOverlay.Markers.Add(marker);
+        }
+      }
       gMapControl1.Overlays.Add(markersOverlay);
-
       gMapControl1.Update();
       gMapControl1.Refresh();
     }
@@ -279,7 +298,9 @@ namespace GCS_Phoenix
         GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_dot
       );
       marker.ToolTipText = string.Format($"Latitude: {latitude}, Longitude: {longitude}");
-      markersOverlay.Markers.Add(marker);
+      addedMarkers.Add(marker);
+      //displayedMarkers = addedMarkers.GetRange(addedMarkers.Count - (int)num_markersToDisplay.Value, (int)num_markersToDisplay.Value);
+      //markersOverlay.Markers.Add(marker);
       if (gMapControl1.InvokeRequired)
       {
         gMapControl1.Invoke(new Action(() => AddPointToMap(gpsPacket)));
@@ -287,9 +308,10 @@ namespace GCS_Phoenix
       else
       {
         gMapControl1.Position = new PointLatLng(latitude, longitude);
-        gMapControl1.Overlays.Add(markersOverlay);
-        gMapControl1.Update();
-        gMapControl1.Refresh();
+        //gMapControl1.Overlays.Add(markersOverlay);
+        //gMapControl1.Update();
+        //gMapControl1.Refresh();
+        updateMapMarkers();
       }
     }
 
@@ -390,6 +412,10 @@ namespace GCS_Phoenix
 
     private void AppendToSerialDataBox(string data, bool addNewLine = true)
     {
+      if (!chk_displayInConsole.Checked)
+      {
+        return; 
+      }
       if (data == null || data.Length <= 0)
       {
         return;
@@ -612,7 +638,7 @@ namespace GCS_Phoenix
         sigX.ViewSlide();
         sigY.ViewSlide();
         sigZ.ViewSlide();
-      } 
+      }
       else
       {
         alt.ViewFull();
@@ -643,6 +669,46 @@ namespace GCS_Phoenix
       }
       acceleroPlot.Refresh();
       altitudePlot.Refresh();
+    }
+
+    private void rb_onlyLastXMarkers_CheckedChanged(object sender, EventArgs e)
+    {
+      RadioButton? radioButton = sender as RadioButton;
+      if (radioButton is not null && radioButton.Checked)
+      {
+        num_markersToDisplay.Enabled = true;
+        int adjustedNumberToDisplay = (int)num_markersToDisplay.Value;
+        if (num_markersToDisplay.Value > addedMarkers.Count)
+        {
+          adjustedNumberToDisplay = addedMarkers.Count;
+        }
+        displayedMarkers = addedMarkers.GetRange(addedMarkers.Count - adjustedNumberToDisplay, adjustedNumberToDisplay);
+      }
+    }
+
+    private void rb_allMarkers_CheckedChanged(object sender, EventArgs e)
+    {
+      RadioButton? radioButton = sender as RadioButton;
+      if (radioButton is not null && radioButton.Checked)
+      {
+        num_markersToDisplay.Enabled = false;
+      }
+    }
+
+    private void num_markersToDisplay_ValueChanged(object sender, EventArgs e)
+    {
+      NumericUpDown? numericUpDown = sender as NumericUpDown;
+      if (numericUpDown is null)
+      {
+        return;
+      }
+      int adjustedNumberToDisplay = (int)num_markersToDisplay.Value;
+      if (num_markersToDisplay.Value > addedMarkers.Count)
+      {
+        adjustedNumberToDisplay = addedMarkers.Count;
+      }
+      displayedMarkers = addedMarkers.GetRange(addedMarkers.Count - adjustedNumberToDisplay, adjustedNumberToDisplay);
+      //displayedMarkers = addedMarkers.GetRange(addedMarkers.Count - (int)numericUpDown.Value, (int)numericUpDown.Value);
     }
   }
 }

@@ -84,6 +84,12 @@
       grp_GraphOptions = new GroupBox();
       rb_graphFull = new RadioButton();
       rb_graphSlide = new RadioButton();
+      grp_mapOptions = new GroupBox();
+      lbl_nbMkarkers = new Label();
+      num_markersToDisplay = new NumericUpDown();
+      rb_allMarkers = new RadioButton();
+      rb_onlyLastXMarkers = new RadioButton();
+      chk_displayInConsole = new CheckBox();
       groupBox1.SuspendLayout();
       groupBox2.SuspendLayout();
       mapGroupBox.SuspendLayout();
@@ -91,6 +97,8 @@
       grpCommands.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
       grp_GraphOptions.SuspendLayout();
+      grp_mapOptions.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)num_markersToDisplay).BeginInit();
       SuspendLayout();
       // 
       // comboBaud
@@ -508,17 +516,18 @@
       groupBox1.Controls.Add(touchdownLed);
       groupBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       groupBox1.ForeColor = Color.FromArgb(198, 169, 105);
-      groupBox1.Location = new Point(19, 560);
+      groupBox1.Location = new Point(19, 1257);
       groupBox1.Margin = new Padding(4, 5, 4, 5);
       groupBox1.Name = "groupBox1";
       groupBox1.Padding = new Padding(4, 5, 4, 5);
-      groupBox1.Size = new Size(291, 748);
+      groupBox1.Size = new Size(291, 51);
       groupBox1.TabIndex = 41;
       groupBox1.TabStop = false;
       groupBox1.Text = "STATUS";
       // 
       // groupBox2
       // 
+      groupBox2.Controls.Add(chk_displayInConsole);
       groupBox2.Controls.Add(disconnectSerialButton);
       groupBox2.Controls.Add(serialConnectivityLabel);
       groupBox2.Controls.Add(connectSerialButton);
@@ -771,9 +780,9 @@
       grp_GraphOptions.Controls.Add(rb_graphSlide);
       grp_GraphOptions.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       grp_GraphOptions.ForeColor = Color.FromArgb(198, 169, 105);
-      grp_GraphOptions.Location = new Point(19, 405);
+      grp_GraphOptions.Location = new Point(12, 407);
       grp_GraphOptions.Name = "grp_GraphOptions";
-      grp_GraphOptions.Size = new Size(390, 150);
+      grp_GraphOptions.Size = new Size(291, 150);
       grp_GraphOptions.TabIndex = 54;
       grp_GraphOptions.TabStop = false;
       grp_GraphOptions.Text = "GRAPH OPTIONS";
@@ -781,10 +790,12 @@
       // rb_graphFull
       // 
       rb_graphFull.AutoSize = true;
+      rb_graphFull.Checked = true;
       rb_graphFull.Location = new Point(12, 83);
       rb_graphFull.Name = "rb_graphFull";
       rb_graphFull.Size = new Size(131, 36);
       rb_graphFull.TabIndex = 1;
+      rb_graphFull.TabStop = true;
       rb_graphFull.Text = "View full";
       rb_graphFull.UseVisualStyleBackColor = true;
       rb_graphFull.CheckedChanged += rb_graphFull_CheckedChanged;
@@ -792,15 +803,82 @@
       // rb_graphSlide
       // 
       rb_graphSlide.AutoSize = true;
-      rb_graphSlide.Checked = true;
       rb_graphSlide.Location = new Point(12, 38);
       rb_graphSlide.Name = "rb_graphSlide";
       rb_graphSlide.Size = new Size(146, 36);
       rb_graphSlide.TabIndex = 0;
-      rb_graphSlide.TabStop = true;
       rb_graphSlide.Text = "View slide";
       rb_graphSlide.UseVisualStyleBackColor = true;
       rb_graphSlide.CheckedChanged += rb_graphSlide_CheckedChanged;
+      // 
+      // grp_mapOptions
+      // 
+      grp_mapOptions.Controls.Add(lbl_nbMkarkers);
+      grp_mapOptions.Controls.Add(num_markersToDisplay);
+      grp_mapOptions.Controls.Add(rb_allMarkers);
+      grp_mapOptions.Controls.Add(rb_onlyLastXMarkers);
+      grp_mapOptions.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+      grp_mapOptions.ForeColor = Color.FromArgb(198, 169, 105);
+      grp_mapOptions.Location = new Point(12, 560);
+      grp_mapOptions.Name = "grp_mapOptions";
+      grp_mapOptions.Size = new Size(291, 150);
+      grp_mapOptions.TabIndex = 55;
+      grp_mapOptions.TabStop = false;
+      grp_mapOptions.Text = "MAP OPTIONS";
+      // 
+      // lbl_nbMkarkers
+      // 
+      lbl_nbMkarkers.AutoSize = true;
+      lbl_nbMkarkers.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
+      lbl_nbMkarkers.Location = new Point(192, 40);
+      lbl_nbMkarkers.Name = "lbl_nbMkarkers";
+      lbl_nbMkarkers.Size = new Size(91, 30);
+      lbl_nbMkarkers.TabIndex = 3;
+      lbl_nbMkarkers.Text = "markers";
+      // 
+      // num_markersToDisplay
+      // 
+      num_markersToDisplay.Location = new Point(130, 37);
+      num_markersToDisplay.Name = "num_markersToDisplay";
+      num_markersToDisplay.Size = new Size(56, 39);
+      num_markersToDisplay.TabIndex = 2;
+      num_markersToDisplay.Value = new decimal(new int[] { 10, 0, 0, 0 });
+      num_markersToDisplay.ValueChanged += num_markersToDisplay_ValueChanged;
+      // 
+      // rb_allMarkers
+      // 
+      rb_allMarkers.AutoSize = true;
+      rb_allMarkers.Checked = true;
+      rb_allMarkers.Location = new Point(12, 83);
+      rb_allMarkers.Name = "rb_allMarkers";
+      rb_allMarkers.Size = new Size(157, 36);
+      rb_allMarkers.TabIndex = 1;
+      rb_allMarkers.TabStop = true;
+      rb_allMarkers.Text = "All markers";
+      rb_allMarkers.UseVisualStyleBackColor = true;
+      rb_allMarkers.CheckedChanged += rb_allMarkers_CheckedChanged;
+      // 
+      // rb_onlyLastXMarkers
+      // 
+      rb_onlyLastXMarkers.AutoSize = true;
+      rb_onlyLastXMarkers.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
+      rb_onlyLastXMarkers.Location = new Point(12, 38);
+      rb_onlyLastXMarkers.Name = "rb_onlyLastXMarkers";
+      rb_onlyLastXMarkers.Size = new Size(121, 34);
+      rb_onlyLastXMarkers.TabIndex = 0;
+      rb_onlyLastXMarkers.Text = "Only last";
+      rb_onlyLastXMarkers.UseVisualStyleBackColor = true;
+      rb_onlyLastXMarkers.CheckedChanged += rb_onlyLastXMarkers_CheckedChanged;
+      // 
+      // chk_displayInConsole
+      // 
+      chk_displayInConsole.AutoSize = true;
+      chk_displayInConsole.Location = new Point(233, 202);
+      chk_displayInConsole.Name = "chk_displayInConsole";
+      chk_displayInConsole.Size = new Size(233, 36);
+      chk_displayInConsole.TabIndex = 16;
+      chk_displayInConsole.Text = "Display in console";
+      chk_displayInConsole.UseVisualStyleBackColor = true;
       // 
       // DashboardForm
       // 
@@ -808,6 +886,7 @@
       AutoScaleMode = AutoScaleMode.Font;
       BackColor = Color.FromArgb(22, 48, 32);
       ClientSize = new Size(2034, 1357);
+      Controls.Add(grp_mapOptions);
       Controls.Add(grp_GraphOptions);
       Controls.Add(pictureBox1);
       Controls.Add(grpCommands);
@@ -833,6 +912,9 @@
       ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
       grp_GraphOptions.ResumeLayout(false);
       grp_GraphOptions.PerformLayout();
+      grp_mapOptions.ResumeLayout(false);
+      grp_mapOptions.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)num_markersToDisplay).EndInit();
       ResumeLayout(false);
     }
 
@@ -895,5 +977,11 @@
     private GroupBox grp_GraphOptions;
     private RadioButton rb_graphFull;
     private RadioButton rb_graphSlide;
+    private GroupBox grp_mapOptions;
+    private Label lbl_nbMkarkers;
+    private NumericUpDown num_markersToDisplay;
+    private RadioButton rb_allMarkers;
+    private RadioButton rb_onlyLastXMarkers;
+    private CheckBox chk_displayInConsole;
   }
 }
