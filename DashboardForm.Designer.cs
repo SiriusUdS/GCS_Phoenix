@@ -64,6 +64,7 @@
       connectedLed = new Bulb.LedBulb();
       groupBox1 = new GroupBox();
       groupBox2 = new GroupBox();
+      chk_displayInConsole = new CheckBox();
       disconnectSerialButton = new Button();
       gMapControl1 = new GMap.NET.WindowsForms.GMapControl();
       mapGroupBox = new GroupBox();
@@ -89,7 +90,6 @@
       num_markersToDisplay = new NumericUpDown();
       rb_allMarkers = new RadioButton();
       rb_onlyLastXMarkers = new RadioButton();
-      chk_displayInConsole = new CheckBox();
       groupBox1.SuspendLayout();
       groupBox2.SuspendLayout();
       mapGroupBox.SuspendLayout();
@@ -105,7 +105,7 @@
       // 
       comboBaud.FormattingEnabled = true;
       comboBaud.Items.AddRange(new object[] { "9600", "19200", "38400", "115200", "256000" });
-      comboBaud.Location = new Point(16, 117);
+      comboBaud.Location = new Point(17, 82);
       comboBaud.Margin = new Padding(4, 5, 4, 5);
       comboBaud.Name = "comboBaud";
       comboBaud.Size = new Size(198, 40);
@@ -115,7 +115,7 @@
       // comboPorts
       // 
       comboPorts.FormattingEnabled = true;
-      comboPorts.Location = new Point(17, 47);
+      comboPorts.Location = new Point(17, 32);
       comboPorts.Margin = new Padding(4, 5, 4, 5);
       comboPorts.Name = "comboPorts";
       comboPorts.Size = new Size(198, 40);
@@ -127,7 +127,7 @@
       comPortLabel.AutoSize = true;
       comPortLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       comPortLabel.ForeColor = Color.FromArgb(198, 169, 105);
-      comPortLabel.Location = new Point(226, 52);
+      comPortLabel.Location = new Point(226, 37);
       comPortLabel.Margin = new Padding(4, 0, 4, 0);
       comPortLabel.Name = "comPortLabel";
       comPortLabel.Size = new Size(132, 32);
@@ -139,7 +139,7 @@
       baudRateLabel.AutoSize = true;
       baudRateLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       baudRateLabel.ForeColor = Color.FromArgb(198, 169, 105);
-      baudRateLabel.Location = new Point(226, 122);
+      baudRateLabel.Location = new Point(227, 87);
       baudRateLabel.Margin = new Padding(4, 0, 4, 0);
       baudRateLabel.Name = "baudRateLabel";
       baudRateLabel.Size = new Size(135, 32);
@@ -149,7 +149,7 @@
       // resetButton
       // 
       resetButton.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-      resetButton.Location = new Point(656, 697);
+      resetButton.Location = new Point(530, 561);
       resetButton.Margin = new Padding(4, 5, 4, 5);
       resetButton.Name = "resetButton";
       resetButton.Size = new Size(146, 38);
@@ -162,7 +162,7 @@
       // 
       connectSerialButton.Enabled = false;
       connectSerialButton.ForeColor = SystemColors.ActiveCaptionText;
-      connectSerialButton.Location = new Point(17, 193);
+      connectSerialButton.Location = new Point(16, 132);
       connectSerialButton.Margin = new Padding(4, 5, 4, 5);
       connectSerialButton.Name = "connectSerialButton";
       connectSerialButton.Size = new Size(199, 53);
@@ -174,12 +174,12 @@
       // serialConnectivityLabel
       // 
       serialConnectivityLabel.AutoSize = true;
-      serialConnectivityLabel.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+      serialConnectivityLabel.Font = new Font("Segoe UI", 15.5F, FontStyle.Regular, GraphicsUnit.Point);
       serialConnectivityLabel.ForeColor = Color.Red;
-      serialConnectivityLabel.Location = new Point(21, 347);
+      serialConnectivityLabel.Location = new Point(16, 253);
       serialConnectivityLabel.Margin = new Padding(4, 0, 4, 0);
       serialConnectivityLabel.Name = "serialConnectivityLabel";
-      serialConnectivityLabel.Size = new Size(213, 45);
+      serialConnectivityLabel.Size = new Size(204, 42);
       serialConnectivityLabel.TabIndex = 14;
       serialConnectivityLabel.Text = "Disconnected";
       serialConnectivityLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -516,11 +516,11 @@
       groupBox1.Controls.Add(touchdownLed);
       groupBox1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       groupBox1.ForeColor = Color.FromArgb(198, 169, 105);
-      groupBox1.Location = new Point(19, 1257);
+      groupBox1.Location = new Point(19, 984);
       groupBox1.Margin = new Padding(4, 5, 4, 5);
       groupBox1.Name = "groupBox1";
       groupBox1.Padding = new Padding(4, 5, 4, 5);
-      groupBox1.Size = new Size(291, 51);
+      groupBox1.Size = new Size(291, 30);
       groupBox1.TabIndex = 41;
       groupBox1.TabStop = false;
       groupBox1.Text = "STATUS";
@@ -537,20 +537,30 @@
       groupBox2.Controls.Add(comboBaud);
       groupBox2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       groupBox2.ForeColor = Color.FromArgb(198, 169, 105);
-      groupBox2.Location = new Point(1136, 893);
+      groupBox2.Location = new Point(1010, 719);
       groupBox2.Margin = new Padding(4, 5, 4, 5);
       groupBox2.Name = "groupBox2";
       groupBox2.Padding = new Padding(4, 5, 4, 5);
-      groupBox2.Size = new Size(473, 415);
+      groupBox2.Size = new Size(473, 297);
       groupBox2.TabIndex = 42;
       groupBox2.TabStop = false;
       groupBox2.Text = "SERIAL";
+      // 
+      // chk_displayInConsole
+      // 
+      chk_displayInConsole.AutoSize = true;
+      chk_displayInConsole.Location = new Point(233, 132);
+      chk_displayInConsole.Name = "chk_displayInConsole";
+      chk_displayInConsole.Size = new Size(233, 36);
+      chk_displayInConsole.TabIndex = 16;
+      chk_displayInConsole.Text = "Display in console";
+      chk_displayInConsole.UseVisualStyleBackColor = true;
       // 
       // disconnectSerialButton
       // 
       disconnectSerialButton.Enabled = false;
       disconnectSerialButton.ForeColor = SystemColors.ActiveCaptionText;
-      disconnectSerialButton.Location = new Point(17, 268);
+      disconnectSerialButton.Location = new Point(16, 195);
       disconnectSerialButton.Margin = new Padding(4, 5, 4, 5);
       disconnectSerialButton.Name = "disconnectSerialButton";
       disconnectSerialButton.Size = new Size(199, 53);
@@ -567,7 +577,7 @@
       gMapControl1.GrayScaleMode = false;
       gMapControl1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
       gMapControl1.LevelsKeepInMemory = 5;
-      gMapControl1.Location = new Point(320, 142);
+      gMapControl1.Location = new Point(169, 168);
       gMapControl1.Margin = new Padding(4, 5, 4, 5);
       gMapControl1.MarkersEnabled = true;
       gMapControl1.MaxZoom = 2;
@@ -592,11 +602,11 @@
       mapGroupBox.Controls.Add(gMapControl1);
       mapGroupBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       mapGroupBox.ForeColor = Color.FromArgb(198, 169, 105);
-      mapGroupBox.Location = new Point(318, 560);
+      mapGroupBox.Location = new Point(318, 407);
       mapGroupBox.Margin = new Padding(4, 5, 4, 5);
       mapGroupBox.Name = "mapGroupBox";
       mapGroupBox.Padding = new Padding(4, 5, 4, 5);
-      mapGroupBox.Size = new Size(810, 748);
+      mapGroupBox.Size = new Size(684, 609);
       mapGroupBox.TabIndex = 47;
       mapGroupBox.TabStop = false;
       mapGroupBox.Text = "MAP";
@@ -606,11 +616,11 @@
       groupBox3.Controls.Add(serialDataBox);
       groupBox3.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       groupBox3.ForeColor = Color.FromArgb(198, 169, 105);
-      groupBox3.Location = new Point(1623, 560);
+      groupBox3.Location = new Point(1491, 407);
       groupBox3.Margin = new Padding(4, 5, 4, 5);
       groupBox3.Name = "groupBox3";
       groupBox3.Padding = new Padding(4, 5, 4, 5);
-      groupBox3.Size = new Size(394, 748);
+      groupBox3.Size = new Size(394, 610);
       groupBox3.TabIndex = 51;
       groupBox3.TabStop = false;
       groupBox3.Text = "SERIAL CONSOLE";
@@ -624,26 +634,26 @@
       serialDataBox.Location = new Point(9, 37);
       serialDataBox.Margin = new Padding(4, 5, 4, 5);
       serialDataBox.Name = "serialDataBox";
-      serialDataBox.Size = new Size(376, 698);
+      serialDataBox.Size = new Size(376, 556);
       serialDataBox.TabIndex = 48;
       serialDataBox.Text = "";
       // 
       // acceleroPlot
       // 
       acceleroPlot.DisplayScale = 1F;
-      acceleroPlot.Location = new Point(1190, 2);
+      acceleroPlot.Location = new Point(1183, 2);
       acceleroPlot.Margin = new Padding(4, 5, 4, 5);
       acceleroPlot.Name = "acceleroPlot";
-      acceleroPlot.Size = new Size(777, 522);
+      acceleroPlot.Size = new Size(709, 395);
       acceleroPlot.TabIndex = 49;
       // 
       // altitudePlot
       // 
       altitudePlot.DisplayScale = 1F;
-      altitudePlot.Location = new Point(417, 2);
+      altitudePlot.Location = new Point(485, 2);
       altitudePlot.Margin = new Padding(4, 5, 4, 5);
       altitudePlot.Name = "altitudePlot";
-      altitudePlot.Size = new Size(777, 522);
+      altitudePlot.Size = new Size(690, 395);
       altitudePlot.TabIndex = 50;
       // 
       // grpCommands
@@ -658,11 +668,11 @@
       grpCommands.Controls.Add(btn_saveDataOn);
       grpCommands.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
       grpCommands.ForeColor = Color.FromArgb(198, 169, 105);
-      grpCommands.Location = new Point(1136, 560);
+      grpCommands.Location = new Point(1010, 407);
       grpCommands.Margin = new Padding(4, 5, 4, 5);
       grpCommands.Name = "grpCommands";
       grpCommands.Padding = new Padding(4, 5, 4, 5);
-      grpCommands.Size = new Size(473, 323);
+      grpCommands.Size = new Size(473, 302);
       grpCommands.TabIndex = 52;
       grpCommands.TabStop = false;
       grpCommands.Text = "COMMANDS";
@@ -870,22 +880,12 @@
       rb_onlyLastXMarkers.UseVisualStyleBackColor = true;
       rb_onlyLastXMarkers.CheckedChanged += rb_onlyLastXMarkers_CheckedChanged;
       // 
-      // chk_displayInConsole
-      // 
-      chk_displayInConsole.AutoSize = true;
-      chk_displayInConsole.Location = new Point(233, 202);
-      chk_displayInConsole.Name = "chk_displayInConsole";
-      chk_displayInConsole.Size = new Size(233, 36);
-      chk_displayInConsole.TabIndex = 16;
-      chk_displayInConsole.Text = "Display in console";
-      chk_displayInConsole.UseVisualStyleBackColor = true;
-      // 
       // DashboardForm
       // 
       AutoScaleDimensions = new SizeF(10F, 25F);
       AutoScaleMode = AutoScaleMode.Font;
       BackColor = Color.FromArgb(22, 48, 32);
-      ClientSize = new Size(2034, 1357);
+      ClientSize = new Size(1898, 1024);
       Controls.Add(grp_mapOptions);
       Controls.Add(grp_GraphOptions);
       Controls.Add(pictureBox1);
