@@ -545,7 +545,6 @@ namespace GCS_Phoenix
       //byte[] command = { 0xA5, 0x80, 0x00, 0x00, 0x00, 0x00 };
       //byte[] command = { 0x80, 0xA5, 0x00, 0x00, 0x00, 0x00 };
 
-      //serialPortManager.Write(command, command.Length);
       serialPortManager.Write("f");
       Serilog.Log.Information("Read flash memory command sent.");
     }
@@ -562,7 +561,6 @@ namespace GCS_Phoenix
 
       if (result == DialogResult.Yes)
       {
-        //serialPortManager.Write(command, command.Length);
         serialPortManager.Write("c");
       }
       Serilog.Log.Information("Clear flash memory command sent.");
